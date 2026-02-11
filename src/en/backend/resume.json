@@ -1,0 +1,117 @@
+{
+    "basics": {
+        "name": "Sergio Acosta Quintana",
+        "label": "Backend Engineer",
+        "email": "sergioacostaquintana@gmail.com",
+        "phone": "+34 600 24 39 94",
+        "location": {
+            "city": "Las Palmas",
+            "countryCode": "ES",
+            "region": "Canary Islands"
+        },
+        "profiles": [
+            {
+                "network": "LinkedIn",
+                "username": "sergioacostaquintana",
+                "url": "https://linkedin.com/in/sergioacostaquintana"
+            },
+            {
+                "network": "GitHub",
+                "username": "sergioacostater",
+                "url": "https://github.com/sergioacostater"
+            },
+            {
+                "network": "Website",
+                "username": "sergioaco",
+                "url": "https://sergioaco.com"
+            }
+        ],
+        "summary": "Backend Engineer building scalable, event-driven systems in enterprise environments. Experience designing and migrating production microservices with Spring Boot, Kafka, and PostgreSQL, supporting multi-country operations and 400,000+ active users. Focused on automation, system reliability, and cloud-native architectures."
+    },
+    "work": [
+        {
+            "name": "BITBOX S.L (IKEA)",
+            "position": "Backend Engineer",
+            "location": "Canary Islands, Spain",
+            "startDate": "2025-01",
+            "endDate": null,
+            "highlights": [
+                "Designed and maintained backend services supporting IKEA loyalty card operations used by 100+ employees and managing 400,000+ active cards across multiple countries.",
+                "Migrated critical legacy services to Spring Boot microservices, improving deployment speed, test reliability, and production resilience.",
+                "Replaced 7 legacy PL/SQL batch processes with a unified automated workflow processing multiple data sources, reducing execution time by 55% and eliminating 40+ manual support hours per month.",
+                "Implemented event-driven integrations using Kafka and REST APIs to support scalable, distributed system communication.",
+                "Deployed and maintained services using Docker, CI/CD pipelines, and AWS-based infrastructure."
+            ]
+        }
+    ],
+    "skills": [
+        {
+            "name": "Programming Languages",
+            "keywords": [
+                "Java",
+                "SQL",
+                "Python",
+                "TypeScript",
+                "JavaScript"
+            ]
+        },
+        {
+            "name": "Backend & Architecture",
+            "keywords": [
+                "Spring Boot",
+                "Microservices",
+                "REST APIs",
+                "Kafka",
+                "Event-Driven Architecture",
+                "Node.js"
+            ]
+        },
+        {
+            "name": "Databases",
+            "keywords": [
+                "PostgreSQL",
+                "MongoDB",
+                "Redis",
+                "MySQL"
+            ]
+        },
+        {
+            "name": "Cloud & DevOps",
+            "keywords": [
+                "Docker",
+                "AWS",
+                "CI/CD",
+                "Git",
+                "Linux"
+            ]
+        }
+    ],
+    "education": [
+        {
+            "institution": "University of Las Palmas de Gran Canaria",
+            "area": "Computer Engineering",
+            "studyType": "Bachelor’s Degree (Expected 2026)",
+            "startDate": "2022-06",
+            "endDate": "2026-05",
+            "location": "Las Palmas, Spain"
+        },
+        {
+            "institution": "Halmstad University",
+            "area": "Computer Science",
+            "studyType": "Exchange Program",
+            "startDate": "2024-09",
+            "endDate": "2025-01",
+            "location": "Halmstad, Sweden"
+        }
+    ],
+    "languages": [
+        {
+            "language": "Spanish",
+            "fluency": "Native"
+        },
+        {
+            "language": "English",
+            "fluency": "Professional working proficiency (B2)"
+        }
+    ]
+}

@@ -1,0 +1,126 @@
+{
+    "basics": {
+        "name": "Sergio Acosta Quintana",
+        "label": "Full-Stack Engineer",
+        "email": "sergioacostaquintana@gmail.com",
+        "phone": "+34 600 24 39 94",
+        "location": {
+            "city": "Las Palmas",
+            "countryCode": "ES",
+            "region": "Canary Islands"
+        },
+        "profiles": [
+            {
+                "network": "LinkedIn",
+                "username": "sergioacostaquintana",
+                "url": "https://linkedin.com/in/sergioacostaquintana"
+            },
+            {
+                "network": "GitHub",
+                "username": "sergioacostater",
+                "url": "https://github.com/sergioacostater"
+            },
+            {
+                "network": "Website",
+                "username": "sergioaco",
+                "url": "https://sergioaco.com"
+            }
+        ],
+        "summary": "Full-Stack Engineer with experience delivering scalable web applications in enterprise environments. Strong backend foundation in Spring Boot and PostgreSQL combined with frontend experience in React and TypeScript. Experienced in microservices, cloud deployments, and event-driven architectures supporting high-volume production systems."
+    },
+    "work": [
+        {
+            "name": "BITBOX S.L (IKEA)",
+            "position": "Full-Stack Engineer",
+            "location": "Canary Islands, Spain",
+            "startDate": "2025-01",
+            "endDate": null,
+            "highlights": [
+                "Developed and maintained full-stack internal applications supporting IKEA loyalty card operations used by 100+ employees managing 400,000+ active cards.",
+                "Built backend microservices using Spring Boot and PostgreSQL while contributing to frontend interfaces in React when required.",
+                "Re-architected legacy PL/SQL processes into automated backend workflows, reducing processing time by 55% and eliminating 40+ hours of manual support monthly.",
+                "Integrated services using Kafka and REST APIs to enable scalable, event-driven communication between systems.",
+                "Containerized services with Docker and contributed to CI/CD pipelines and AWS deployments."
+            ]
+        }
+    ],
+    "skills": [
+        {
+            "name": "Programming Languages",
+            "keywords": [
+                "Java",
+                "JavaScript",
+                "TypeScript",
+                "SQL",
+                "Python"
+            ]
+        },
+        {
+            "name": "Backend",
+            "keywords": [
+                "Spring Boot",
+                "Node.js",
+                "Microservices",
+                "REST APIs",
+                "Kafka"
+            ]
+        },
+        {
+            "name": "Frontend",
+            "keywords": [
+                "React.js",
+                "Next.js",
+                "HTML5",
+                "CSS3",
+                "Tailwind"
+            ]
+        },
+        {
+            "name": "Databases",
+            "keywords": [
+                "PostgreSQL",
+                "MongoDB",
+                "Redis",
+                "MySQL"
+            ]
+        },
+        {
+            "name": "Cloud & DevOps",
+            "keywords": [
+                "Docker",
+                "AWS",
+                "CI/CD",
+                "Git",
+                "Linux"
+            ]
+        }
+    ],
+    "education": [
+        {
+            "institution": "University of Las Palmas de Gran Canaria",
+            "area": "Computer Engineering",
+            "studyType": "Bachelor’s Degree (Expected 2026)",
+            "startDate": "2022-06",
+            "endDate": "2026-05",
+            "location": "Las Palmas, Spain"
+        },
+        {
+            "institution": "Halmstad University",
+            "area": "Computer Science",
+            "studyType": "Exchange Program",
+            "startDate": "2024-09",
+            "endDate": "2025-01",
+            "location": "Halmstad, Sweden"
+        }
+    ],
+    "languages": [
+        {
+            "language": "Spanish",
+            "fluency": "Native"
+        },
+        {
+            "language": "English",
+            "fluency": "Professional working proficiency (B2)"
+        }
+    ]
+}
