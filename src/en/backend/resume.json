@@ -37,16 +37,16 @@
     },
     "work": [
         {
-            "name": "BITBOX S.L. (Client: IKEA)",
+            "name": "IKEA / BITBOX S.L.",
             "url": "https://bitboxonline.com/",
             "position": "Backend Software Engineer",
             "location": "Las Palmas, Spain",
             "startDate": "2025-01",
             "highlights": [
-                "Architected high-throughput Spring Boot microservices supporting IKEA’s loyalty platform, handling transactions for 400,000+ active users.",
-                "Decoupled legacy PL/SQL monoliths into an Event-Driven Architecture using Apache Kafka, significantly improving system fault tolerance.",
-                "Engineered automated data pipelines that replaced 7 manual batch jobs, reducing processing time by 55% and eliminating manual maintenance.",
-                "Implemented CI/CD workflows using Docker and GitHub Actions to accelerate deployment cycles from weekly to daily releases with zero downtime."
+                "Built high-throughput Spring Boot microservices supporting IKEA's loyalty platform, handling transactions for 400,000+ active users.",
+                "Migrated legacy PL/SQL monoliths to an Event-Driven Architecture using Apache Kafka, significantly improving system fault tolerance.",
+                "Automated data pipelines to replace 7 manual batch jobs, reducing processing time by 55% and eliminating manual maintenance.",
+                "Designed and implemented a multi-insurance provider aggregation system for retail insurance, using event-driven microservices to decouple provider integrations."
             ]
         }
     ],
@@ -57,9 +57,9 @@
             "url": "https://nexocloudpro.com",
             "startDate": "2025-09",
             "highlights": [
-                "Architected a cloud-native RAG backend, integrating Vector Search and LLMs for semantic data analysis.",
-                "Implemented an asynchronous ingestion pipeline using AWS S3 and Python, capable of indexing thousands of documents with minimal latency.",
-                "Reduced cloud infrastructure costs by 30% through optimized vector storage strategies and efficient resource allocation."
+                "Built a cloud-native RAG backend using Spring Boot, Redis queues, and Cloudflare R2 for scalable document storage and vector search.",
+                "Implemented asynchronous document processing pipeline handling 1,000+ documents/hour with p99 latency under 200ms.",
+                "Integrated OpenAI API and custom LLM endpoints, reducing infrastructure costs by 30% through optimized caching and request batching."
             ]
         }
     ],
@@ -114,7 +114,7 @@
             "studyType": "Bachelor's Degree",
             "startDate": "2022-06",
             "endDate": "2026-05",
-            "location": "Spain"
+            "location": "Las Palmas, Spain"
         },
         {
             "institution": "Halmstad University",
@@ -122,7 +122,7 @@
             "studyType": "Exchange Program",
             "startDate": "2024-09",
             "endDate": "2025-01",
-            "location": "Sweden"
+            "location": "Halmstad, Sweden"
         }
     ],
     "languages": [

@@ -37,16 +37,16 @@
   },
   "work": [
     {
-      "name": "BITBOX S.L. (Cliente: IKEA)",
+      "name": "IKEA / BITBOX S.L.",
       "url": "https://bitboxonline.com/",
       "position": "Ingeniero de Software Backend",
       "location": "Las Palmas, España",
       "startDate": "2025-01",
       "highlights": [
-        "Diseñó la arquitectura de microservicios en Spring Boot para la plataforma de fidelización de IKEA, gestionando transacciones para más de 400.000 usuarios activos.",
-        "Desacopló monolitos legacy en PL/SQL hacia una Arquitectura Orientada a Eventos con Apache Kafka, mejorando significativamente la tolerancia a fallos.",
-        "Desarrolló pipelines de datos automatizados que reemplazaron 7 procesos batch manuales, reduciendo el tiempo de procesamiento en un 55%.",
-        "Implementó flujos de trabajo CI/CD utilizando Docker y GitHub Actions para acelerar los ciclos de despliegue de semanales a diarios con cero inactividad."
+        "Construí microservicios Spring Boot para la plataforma de fidelización de IKEA, gestionando transacciones para más de 400.000 usuarios activos.",
+        "Migré monolitos legacy en PL/SQL a una Arquitectura Orientada a Eventos con Apache Kafka, mejorando significativamente la tolerancia a fallos.",
+        "Automaticé pipelines de datos que reemplazaron 7 procesos batch manuales, reduciendo el tiempo de procesamiento en un 55%.",
+        "Diseñé e implementé un sistema de agregación multi-proveedor de seguros para retail, usando microservicios orientados a eventos para desacoplar integraciones."
       ]
     }
   ],
@@ -57,9 +57,9 @@
       "url": "https://nexocloudpro.com",
       "startDate": "2025-09",
       "highlights": [
-        "Arquitecturó un backend RAG Cloud-Native, integrando Búsqueda Vectorial y LLMs para análisis semántico de datos.",
-        "Implementó un pipeline de ingesta asíncrona usando AWS S3 y Python, capaz de indexar miles de documentos con latencia mínima.",
-        "Redujo los costes de infraestructura cloud en un 30% mediante estrategias optimizadas de almacenamiento vectorial y asignación eficiente de recursos."
+        "Construí un backend RAG con Spring Boot, colas Redis y Cloudflare R2 para procesamiento escalable de documentos.",
+        "Implementé pipeline asíncrona procesando 1.000+ documentos/hora con latencia p99 inferior a 200ms.",
+        "Integré OpenAI API y búsqueda vectorial, reduciendo costes un 30% mediante caché inteligente y procesamiento por lotes."
       ]
     }
   ],
@@ -114,7 +114,7 @@
       "studyType": "Grado Universitario",
       "startDate": "2022-06",
       "endDate": "2026-05",
-      "location": "España"
+      "location": "Las Palmas, España"
     },
     {
       "institution": "Universidad de Halmstad",
@@ -122,7 +122,7 @@
       "studyType": "Programa de Intercambio",
       "startDate": "2024-09",
       "endDate": "2025-01",
-      "location": "Suecia"
+      "location": "Halmstad, Suecia"
     }
   ],
   "languages": [

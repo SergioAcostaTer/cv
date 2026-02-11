@@ -33,20 +33,20 @@
         "url": "https://sergioaco.com"
       }
     ],
-    "summary": "Ingeniero de Software enfocado en Backend con experiencia en producción desarrollando microservicios escalables orientados a eventos para entornos empresariales (IKEA). Especializado en la modernización de arquitecturas legacy a sistemas Cloud-Native con Spring Boot en AWS. Historial probado de reducción de latencia de procesamiento de datos en un 55% mediante automatización. Preparado para trabajo remoto y competente en React/TypeScript para autonomía full-stack."
+    "summary": "Ingeniero de Software enfocado en Backend con experiencia desarrollando microservicios escalables orientados a eventos para entornos empresariales (IKEA). Especializado en Spring Boot, Kafka y AWS. Historial probado de reducción de latencia de procesamiento un 55% mediante automatización. Competente en React/TypeScript para autonomía full-stack."
   },
   "work": [
     {
-      "name": "BITBOX S.L. (Cliente: IKEA)",
+      "name": "IKEA / BITBOX S.L.",
       "url": "https://bitboxonline.com/",
       "position": "Ingeniero de Software (Enfoque Backend)",
       "location": "Las Palmas, España",
       "startDate": "2025-01",
       "highlights": [
-        "Diseñó la arquitectura de microservicios de alto rendimiento en Spring Boot para la plataforma de fidelización de IKEA, gestionando transacciones para más de 400.000 usuarios activos.",
-        "Orquestó la migración de monolitos legacy en PL/SQL a una arquitectura orientada a eventos con Kafka, mejorando la tolerancia a fallos del sistema.",
-        "Desarrolló pipelines de datos automatizados que reemplazaron 7 procesos batch manuales, reduciendo el tiempo de procesamiento en un 55% y ahorrando más de 40 horas de ingeniería mensuales.",
-        "Implementó flujos de trabajo CI/CD utilizando Docker y GitHub Actions para acelerar los ciclos de despliegue de semanales a diarios con cero tiempo de inactividad."
+        "Construí microservicios Spring Boot para la plataforma de fidelización de IKEA, gestionando transacciones para 400.000+ usuarios activos.",
+        "Migré monolitos PL/SQL a arquitectura orientada a eventos con Kafka, mejorando la tolerancia a fallos del sistema.",
+        "Automaticé pipelines de datos que reemplazaron 7 procesos manuales, reduciendo el tiempo de procesamiento un 55%.",
+        "Diseñé e implementé un sistema de agregación multi-proveedor de seguros para retail, usando microservicios orientados a eventos para desacoplar integraciones."
       ]
     }
   ],
@@ -57,9 +57,9 @@
       "url": "https://nexocloudpro.com",
       "startDate": "2025-09",
       "highlights": [
-        "Construyó un sistema RAG listo para producción integrando Búsqueda Vectorial y LLMs para el análisis semántico de documentos.",
-        "Diseñó un pipeline de ingesta escalable utilizando Python y AWS S3 para procesar e indexar miles de documentos de forma asíncrona.",
-        "Optimizó las estrategias de almacenamiento de embeddings vectoriales, resultando en una reducción del 30% en los costes proyectados de infraestructura cloud."
+        "Construí sistema RAG con Spring Boot, Redis y Cloudflare R2 para procesamiento escalable de documentos.",
+        "Diseñé pipeline asíncrona procesando 1.000+ documentos/hora con latencia p99 <200ms.",
+        "Integré OpenAI API optimizando costes un 30% mediante caché inteligente y procesamiento por lotes."
       ]
     }
   ],
@@ -112,7 +112,8 @@
       "area": "Grado en Ingeniería Informática",
       "studyType": "Grado Universitario",
       "startDate": "2022-06",
-      "location": "España"
+      "endDate": "2026-05",
+      "location": "Las Palmas, España"
     },
     {
       "institution": "Universidad de Halmstad",
@@ -120,7 +121,7 @@
       "studyType": "Programa de Intercambio",
       "startDate": "2024-09",
       "endDate": "2025-01",
-      "location": "Suecia"
+      "location": "Halmstad, Suecia"
     }
   ],
   "languages": [

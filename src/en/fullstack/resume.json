@@ -37,16 +37,16 @@
     },
     "work": [
         {
-            "name": "BITBOX S.L. (Client: IKEA)",
+            "name": "IKEA / BITBOX S.L.",
             "url": "https://bitboxonline.com/",
             "position": "Software Engineer (Backend Focus)",
             "location": "Las Palmas, Spain",
             "startDate": "2025-01",
             "highlights": [
-                "Architected high-throughput Spring Boot microservices supporting IKEA’s loyalty platform, handling transactions for 400,000+ active users.",
-                "Orchestrated the migration from legacy PL/SQL monoliths to an event-driven Kafka architecture, improving system fault tolerance.",
-                "Engineered automated data pipelines that replaced 7 manual batch jobs, reducing processing time by 55% and saving 40+ engineering hours monthly.",
-                "Implemented CI/CD workflows using Docker and GitHub Actions to accelerate deployment cycles from weekly to daily releases with zero downtime."
+                "Built high-throughput Spring Boot microservices supporting IKEA's loyalty platform, handling transactions for 400,000+ active users.",
+                "Migrated legacy PL/SQL monoliths to an event-driven Kafka architecture, improving system fault tolerance.",
+                "Automated data pipelines to replace 7 manual batch jobs, reducing processing time by 55% and saving 40+ engineering hours monthly.",
+                "Designed and implemented a multi-insurance provider aggregation system for retail insurance, using event-driven microservices to decouple provider integrations."
             ]
         }
     ],
@@ -57,9 +57,9 @@
             "url": "https://nexocloudpro.com",
             "startDate": "2025-09",
             "highlights": [
-                "Built a production-ready RAG system integrating Vector Search and LLMs for semantic document analysis.",
-                "Designed a scalable ingestion pipeline using Python and AWS S3 to process and index thousands of documents asynchronously.",
-                "Optimized vector embedding storage strategies, resulting in a 30% reduction in projected cloud infrastructure costs."
+                "Built a production-ready RAG system using Spring Boot, Redis queues, and Cloudflare R2 for scalable document processing.",
+                "Designed asynchronous ingestion pipeline handling 1,000+ documents/hour with p99 latency under 200ms.",
+                "Integrated OpenAI API and vector search, optimizing costs by 30% through intelligent caching and batch processing."
             ]
         }
     ],
@@ -112,7 +112,8 @@
             "area": "B.S. Computer Engineering",
             "studyType": "Bachelor's Degree",
             "startDate": "2022-06",
-            "location": "Spain"
+            "endDate": "2026-05",
+            "location": "Las Palmas, Spain"
         },
         {
             "institution": "Halmstad University",
@@ -120,7 +121,7 @@
             "studyType": "Exchange Program",
             "startDate": "2024-09",
             "endDate": "2025-01",
-            "location": "Sweden"
+            "location": "Halmstad, Sweden"
         }
     ],
     "languages": [
