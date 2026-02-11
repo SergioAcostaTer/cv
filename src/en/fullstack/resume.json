@@ -1,14 +1,14 @@
 {
     "sectionLabels": {
         "experience": "PROFESSIONAL EXPERIENCE",
-        "projects": "FEATURED PROJECTS",
+        "projects": "SAAS & CLOUD PROJECTS",
         "education": "EDUCATION",
-        "skills": "TECH STACK",
-        "languages": "ADDITIONAL SKILLS"
+        "skills": "TECHNICAL ARSENAL",
+        "languages": "LANGUAGES"
     },
     "basics": {
         "name": "Sergio Acosta Quintana",
-        "label": "Full-Stack Engineer | Cloud & AI",
+        "label": "Full-Stack Engineer (Backend Focused) | Java & Cloud",
         "email": "sergioacostaquintana@gmail.com",
         "phone": "+34 600 24 39 94",
         "location": {
@@ -23,117 +23,114 @@
                 "url": "https://linkedin.com/in/sergioacostaquintana"
             },
             {
-                "network": "Website",
-                "username": "sergioaco",
-                "url": "https://sergioaco.com"
-            },
-            {
                 "network": "GitHub",
                 "username": "sergioacostater",
                 "url": "https://github.com/sergioacostater"
+            },
+            {
+                "network": "Portfolio",
+                "username": "sergioaco.com",
+                "url": "https://sergioaco.com"
             }
         ],
-        "summary": "Full-Stack Engineer with industry experience building scalable enterprise systems and AI-driven SaaS platforms. Proven track record at IKEA modernizing legacy PL/SQL to Spring Boot microservices, reducing processing time by 55%. Skilled in Cloud-Native architectures, RAG implementation, and designing event-driven systems for high-volume environments."
+        "summary": "Backend-focused Software Engineer with production experience building scalable, event-driven microservices for enterprise environments (IKEA). Specialized in modernizing legacy architectures to Cloud-Native Spring Boot systems on AWS. Proven track record of reducing data processing latency by 55% through automation. Remote-ready and proficient in React/TypeScript for full-stack autonomy."
     },
     "work": [
         {
-            "name": "BITBOX S.L (IKEA)",
+            "name": "BITBOX S.L. (Client: IKEA)",
             "url": "https://bitboxonline.com/",
-            "position": "Full-Stack Developer",
-            "location": "Canary Islands, Spain",
+            "position": "Software Engineer (Backend Focus)",
+            "location": "Remote / Spain",
             "startDate": "2025-01",
-            "endDate": null,
             "highlights": [
-                "Architect and maintain critical backend systems for IKEA's loyalty operations, supporting 100+ internal users and managing 400,000+ active credit cards across multiple markets.",
-                "Spearhead the migration of legacy monoliths to Spring Boot microservices, significantly improving CI/CD deployment speed and production fault tolerance.",
-                "Engineered a unified automated workflow replacing 7 legacy PL/SQL batch jobs, cutting data processing time by 55% and eliminating 40+ monthly hours of manual support.",
-                "Implemented an event-driven microservices architecture using Kafka and REST APIs to ensure scalable, real-time data synchronization between distributed systems."
+                "Architected high-throughput Spring Boot microservices supporting IKEA’s loyalty platform, handling transactions for 400,000+ active users.",
+                "Orchestrated the migration from legacy PL/SQL monoliths to an event-driven Kafka architecture, improving system fault tolerance.",
+                "Engineered automated data pipelines that replaced 7 manual batch jobs, reducing processing time by 55% and saving 40+ engineering hours monthly.",
+                "Implemented CI/CD workflows using Docker and GitHub Actions to accelerate deployment cycles from weekly to daily releases with zero downtime."
             ]
         }
     ],
     "projects": [
         {
-            "name": "NEXO CLOUD",
-            "description": "AI-Powered Intelligent Storage Platform (SaaS)",
+            "name": "NEXO CLOUD (SaaS)",
+            "description": "AI-Powered Intelligent Document Platform",
             "url": "https://nexocloudpro.com",
             "startDate": "2025-09",
-            "endDate": null,
             "highlights": [
-                "Designed a cloud-native ETL pipeline for document ingestion, processing, and semantic indexing from scratch.",
-                "Deployed a production-ready RAG (Retrieval-Augmented Generation) system, integrating hybrid search (Keyword + Vector) and LLM synthesis.",
-                "Optimized vector embedding generation and storage strategies to maximize retrieval accuracy while minimizing cloud infrastructure costs."
+                "Built a production-ready RAG system integrating Vector Search and LLMs for semantic document analysis.",
+                "Designed a scalable ingestion pipeline using Python and AWS S3 to process and index thousands of documents asynchronously.",
+                "Optimized vector embedding storage strategies, resulting in a 30% reduction in projected cloud infrastructure costs."
             ]
         }
     ],
     "skills": [
         {
-            "name": "Backend & AI Engineering",
+            "name": "Core Backend",
             "keywords": [
-                "Java (Spring Boot)",
+                "Java 21",
+                "Spring Boot 3",
                 "Microservices",
-                "Kafka",
-                "RAG / Vector Search",
-                "LLM Integration",
+                "Apache Kafka",
+                "PostgreSQL",
                 "Node.js"
             ]
         },
         {
-            "name": "Frontend Development",
+            "name": "Cloud & DevOps",
+            "keywords": [
+                "AWS (EC2, S3, RDS)",
+                "Docker",
+                "Kubernetes",
+                "CI/CD Pipelines",
+                "Linux",
+                "Terraform"
+            ]
+        },
+        {
+            "name": "Frontend",
             "keywords": [
                 "React.js",
-                "Next.js",
                 "TypeScript",
-                "Tailwind CSS",
-                "JavaScript (ES6+)"
+                "Next.js",
+                "Tailwind CSS"
             ]
         },
         {
-            "name": "Cloud & Infrastructure",
+            "name": "Architecture",
             "keywords": [
-                "Docker",
-                "AWS",
-                "PostgreSQL",
-                "Redis",
-                "CI/CD Pipelines",
-                "Linux Administration"
-            ]
-        },
-        {
-            "name": "Methodologies",
-            "keywords": [
-                "Agile (Scrum)",
+                "Event-Driven Design",
+                "RESTful APIs",
                 "System Design",
-                "SOLID Principles",
-                "Clean Architecture"
+                "Agile/Scrum",
+                "TDD"
             ]
         }
     ],
     "education": [
         {
             "institution": "University of Las Palmas de Gran Canaria",
-            "area": "Computer Engineering",
-            "studyType": "Bachelor’s Degree",
+            "area": "B.S. Computer Engineering",
+            "studyType": "Bachelor's Degree",
             "startDate": "2022-06",
-            "endDate": "2026-05 (Expected)",
-            "location": "Las Palmas, Spain"
+            "location": "Spain"
         },
         {
             "institution": "Halmstad University",
-            "area": "Computer Science",
+            "area": "Computer Science (Intelligent Systems)",
             "studyType": "Exchange Program",
             "startDate": "2024-09",
             "endDate": "2025-01",
-            "location": "Halmstad, Sweden"
+            "location": "Sweden"
         }
     ],
     "languages": [
         {
-            "language": "Spanish",
-            "fluency": "Native"
+            "language": "English",
+            "fluency": "Professional Working Proficiency (B2/C1)"
         },
         {
-            "language": "English",
-            "fluency": "Professional Working Proficiency (B2)"
+            "language": "Spanish",
+            "fluency": "Native"
         }
     ]
 }

@@ -109,7 +109,12 @@ const build = async () => {
                 bottom: '0px',
                 left: '0px',
                 right: '0px'
-            }
+            },
+            tagged: true,
+            displayHeaderFooter: false,
+            preferCSSPageSize: false,
+            omitBackground: false,
+            scale: 0.98
         });
         
         console.log(`✅ Generated PDF: ${outputPath}`);
