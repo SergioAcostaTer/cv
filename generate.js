@@ -85,12 +85,18 @@ const build = async () => {
     for (const filePath of jsonFiles) {
         let resumeData = JSON.parse(fs.readFileSync(filePath, 'utf8'));
         
+        // Extract language from path (e.g. src/backend/es/resume.json -> 'es')
+        const relativePath = path.relative(CONFIG.srcDir, filePath);
+        const pathParts = relativePath.split(path.sep);
+        const lang = (pathParts.length >= 2) ? pathParts[pathParts.length - 2] : 'en';
+
         // Apply persona-specific overrides if they exist
         resumeData = configLoader.applyOverrides(resumeData);
 
         const htmlContent = template({
             resume: resumeData,
             css: css,
+            lang: lang,
             meta: {
                 generatedAt: new Date().toLocaleDateString(),
                 theme: selectedTheme
@@ -134,9 +140,25 @@ Handlebars.registerHelper('formatDate', function(dateString, options) {
         const labels = options.data.root.resume && options.data.root.resume.labels;
         return (labels && labels.present) ? labels.present : 'Present';
     }
+
+    // Get language from context, default to English
+    const lang = options.data.root.lang || 'en';
+    const localeMap = {
+        'en': 'en-US',
+        'es': 'es-ES'
+    };
+    const locale = localeMap[lang] || 'en-US';
+
     const date = new Date(dateString);
-    const formatted = date.toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
-    // Add space between month and year: "Jan2025" -> "Jan 2025"
+    let formatted = date.toLocaleDateString(locale, { year: 'numeric', month: 'short' });
+
+    // Custom fix for Spanish: "ene" -> "Ene" and remove dots if present
+    if (lang === 'es') {
+        formatted = formatted.replace('.', ''); // Remove dot (ene.)
+        formatted = formatted.charAt(0).toUpperCase() + formatted.slice(1); // Capitalize
+    }
+
+    // Ensure space between month and year if missing
     return formatted.replace(/([A-Za-z]+)(\d)/, '$1 $2');
 });
 
