@@ -40,7 +40,7 @@
             "name": "BITBOX S.L. (Client: IKEA)",
             "url": "https://bitboxonline.com/",
             "position": "Software Engineer (Backend Focus)",
-            "location": "Remote / Spain",
+            "location": "Las Palmas, Spain",
             "startDate": "2025-01",
             "highlights": [
                 "Architected high-throughput Spring Boot microservices supporting IKEA’s loyalty platform, handling transactions for 400,000+ active users.",

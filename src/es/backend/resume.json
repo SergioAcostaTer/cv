@@ -1,14 +1,14 @@
 {
   "sectionLabels": {
     "experience": "EXPERIENCIA PROFESIONAL",
-    "projects": "PROYECTOS",
-    "education": "FORMACIÓN ACADÉMICA",
-    "skills": "HABILIDADES TÉCNICAS",
+    "projects": "ARQUITECTURA CLOUD Y SAAS",
+    "education": "EDUCACIÓN",
+    "skills": "COMPETENCIAS TÉCNICAS",
     "languages": "IDIOMAS"
   },
   "basics": {
     "name": "Sergio Acosta Quintana",
-    "label": "Ingeniero Backend",
+    "label": "Ingeniero de Software Backend | Java y Sistemas Distribuidos",
     "email": "sergioacostaquintana@gmail.com",
     "phone": "+34 600 24 39 94",
     "location": {
@@ -28,98 +28,111 @@
         "url": "https://github.com/sergioacostater"
       },
       {
-        "network": "Website",
-        "username": "sergioaco",
+        "network": "Portfolio",
+        "username": "sergioaco.com",
         "url": "https://sergioaco.com"
       }
     ],
-    "summary": "Ingeniero Backend desarrollando sistemas escalables orientados a eventos en entornos empresariales. Experiencia en el diseño y migración de microservicios en producción con Spring Boot, Kafka y PostgreSQL, dando soporte a operaciones multinacionales y más de 400.000 usuarios activos. Enfocado en la automatización, fiabilidad del sistema y arquitecturas cloud-native."
+    "summary": "Ingeniero Backend con experiencia en producción diseñando microservicios de alta disponibilidad para entornos empresariales (IKEA). Especializado en la construcción de sistemas distribuidos tolerantes a fallos utilizando Spring Boot, Kafka y AWS. Historial probado de reducción de latencia de datos en un 55% mediante automatización. Enfocado en Clean Architecture, optimización de bases de datos y fiabilidad CI/CD."
   },
   "work": [
     {
-      "name": "BITBOX S.L (IKEA)",
+      "name": "BITBOX S.L. (Cliente: IKEA)",
       "url": "https://bitboxonline.com/",
-      "position": "Ingeniero Backend",
-      "location": "Islas Canarias, España",
+      "position": "Ingeniero de Software Backend",
+      "location": "Las Palmas, España",
       "startDate": "2025-01",
-      "endDate": null,
       "highlights": [
-        "Diseño y mantenimiento de servicios backend para operaciones de tarjetas de fidelización IKEA, utilizados por más de 100 empleados y gestionando más de 400.000 tarjetas activas en múltiples países.",
-        "Migración de servicios legacy críticos a microservicios Spring Boot, mejorando la velocidad de despliegue, fiabilidad de los tests y resiliencia en producción.",
-        "Sustitución de 7 procesos batch legacy en PL/SQL por un flujo de trabajo automatizado unificado, reduciendo el tiempo de ejecución en un 55% y eliminando más de 40 horas mensuales de soporte manual.",
-        "Implementación de integraciones orientadas a eventos utilizando Kafka y APIs REST para soportar comunicación escalable en sistemas distribuidos.",
-        "Despliegue y mantenimiento de servicios utilizando Docker, pipelines CI/CD e infraestructura basada en AWS."
+        "Diseñó la arquitectura de microservicios en Spring Boot para la plataforma de fidelización de IKEA, gestionando transacciones para más de 400.000 usuarios activos.",
+        "Desacopló monolitos legacy en PL/SQL hacia una Arquitectura Orientada a Eventos con Apache Kafka, mejorando significativamente la tolerancia a fallos.",
+        "Desarrolló pipelines de datos automatizados que reemplazaron 7 procesos batch manuales, reduciendo el tiempo de procesamiento en un 55%.",
+        "Implementó flujos de trabajo CI/CD utilizando Docker y GitHub Actions para acelerar los ciclos de despliegue de semanales a diarios con cero inactividad."
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "name": "NEXO CLOUD (SaaS)",
+      "description": "Sistema de Procesamiento Inteligente de Documentos",
+      "url": "https://nexocloudpro.com",
+      "startDate": "2025-09",
+      "highlights": [
+        "Arquitecturó un backend RAG Cloud-Native, integrando Búsqueda Vectorial y LLMs para análisis semántico de datos.",
+        "Implementó un pipeline de ingesta asíncrona usando AWS S3 y Python, capaz de indexar miles de documentos con latencia mínima.",
+        "Redujo los costes de infraestructura cloud en un 30% mediante estrategias optimizadas de almacenamiento vectorial y asignación eficiente de recursos."
       ]
     }
   ],
   "skills": [
     {
-      "name": "Lenguajes de Programación",
+      "name": "Ingeniería Backend",
       "keywords": [
-        "Java",
-        "SQL",
-        "Python",
-        "TypeScript",
-        "JavaScript"
-      ]
-    },
-    {
-      "name": "Backend y Arquitectura",
-      "keywords": [
-        "Spring Boot",
+        "Java 21",
+        "Spring Boot 3",
         "Microservicios",
-        "APIs REST",
-        "Kafka",
-        "Arquitectura Orientada a Eventos",
-        "Node.js"
-      ]
-    },
-    {
-      "name": "Bases de Datos",
-      "keywords": [
-        "PostgreSQL",
-        "MongoDB",
-        "Redis",
-        "MySQL"
+        "Apache Kafka",
+        "Node.js",
+        "Python"
       ]
     },
     {
       "name": "Cloud y DevOps",
       "keywords": [
+        "AWS (EC2, S3, RDS)",
         "Docker",
-        "AWS",
-        "CI/CD",
-        "Git",
-        "Linux"
+        "Kubernetes",
+        "CI/CD Pipelines",
+        "Linux",
+        "Terraform"
+      ]
+    },
+    {
+      "name": "Datos y Almacenamiento",
+      "keywords": [
+        "PostgreSQL",
+        "Redis",
+        "Bases de Datos Vectoriales",
+        "PL/SQL",
+        "Hibernate/JPA"
+      ]
+    },
+    {
+      "name": "Diseño de Sistemas",
+      "keywords": [
+        "Arquitectura Orientada a Eventos",
+        "APIs RESTful",
+        "Sistemas Distribuidos",
+        "TDD",
+        "SOLID"
       ]
     }
   ],
   "education": [
     {
       "institution": "Universidad de Las Palmas de Gran Canaria",
-      "area": "Ingeniería Informática",
-      "studyType": "Grado (Esperado 2026)",
+      "area": "Grado en Ingeniería Informática",
+      "studyType": "Grado Universitario",
       "startDate": "2022-06",
       "endDate": "2026-05",
-      "location": "Las Palmas, España"
+      "location": "España"
     },
     {
-      "institution": "Halmstad University",
-      "area": "Ciencias de la Computación",
+      "institution": "Universidad de Halmstad",
+      "area": "Sistemas Distribuidos y Agentes Inteligentes",
       "studyType": "Programa de Intercambio",
       "startDate": "2024-09",
       "endDate": "2025-01",
-      "location": "Halmstad, Suecia"
+      "location": "Suecia"
     }
   ],
   "languages": [
     {
-      "language": "Español",
-      "fluency": "Nativo"
+      "language": "Inglés",
+      "fluency": "Competencia Profesional Completa (B2/C1)"
     },
     {
-      "language": "Inglés",
-      "fluency": "Competencia profesional completa (B2)"
+      "language": "Español",
+      "fluency": "Nativo"
     }
   ]
 }

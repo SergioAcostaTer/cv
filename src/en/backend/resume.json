@@ -1,14 +1,14 @@
 {
     "sectionLabels": {
         "experience": "PROFESSIONAL EXPERIENCE",
-        "projects": "PROJECTS",
+        "projects": "CLOUD ARCHITECTURE & SAAS",
         "education": "EDUCATION",
-        "skills": "SKILLS",
+        "skills": "TECHNICAL EXPERTISE",
         "languages": "LANGUAGES"
     },
     "basics": {
         "name": "Sergio Acosta Quintana",
-        "label": "Backend Engineer",
+        "label": "Backend Software Engineer | Java & Distributed Systems",
         "email": "sergioacostaquintana@gmail.com",
         "phone": "+34 600 24 39 94",
         "location": {
@@ -28,98 +28,111 @@
                 "url": "https://github.com/sergioacostater"
             },
             {
-                "network": "Website",
-                "username": "sergioaco",
+                "network": "Portfolio",
+                "username": "sergioaco.com",
                 "url": "https://sergioaco.com"
             }
         ],
-        "summary": "Backend Engineer building scalable, event-driven systems in enterprise environments. Experience designing and migrating production microservices with Spring Boot, Kafka, and PostgreSQL, supporting multi-country operations and 400,000+ active users. Focused on automation, system reliability, and cloud-native architectures."
+        "summary": "Backend Engineer with production experience designing high-availability microservices for enterprise-scale environments (IKEA). Specialized in building fault-tolerant distributed systems using Spring Boot, Kafka, and AWS. Proven track record of reducing data processing latency by 55% through automation. Focused on Clean Architecture, database optimization, and CI/CD reliability."
     },
     "work": [
         {
-            "name": "BITBOX S.L (IKEA)",
+            "name": "BITBOX S.L. (Client: IKEA)",
             "url": "https://bitboxonline.com/",
-            "position": "Backend Engineer",
-            "location": "Canary Islands, Spain",
+            "position": "Backend Software Engineer",
+            "location": "Las Palmas, Spain",
             "startDate": "2025-01",
-            "endDate": null,
             "highlights": [
-                "Designed and maintained backend services supporting IKEA loyalty card operations used by 100+ employees and managing 400,000+ active cards across multiple countries.",
-                "Migrated critical legacy services to Spring Boot microservices, improving deployment speed, test reliability, and production resilience.",
-                "Replaced 7 legacy PL/SQL batch processes with a unified automated workflow processing multiple data sources, reducing execution time by 55% and eliminating 40+ manual support hours per month.",
-                "Implemented event-driven integrations using Kafka and REST APIs to support scalable, distributed system communication.",
-                "Deployed and maintained services using Docker, CI/CD pipelines, and AWS-based infrastructure."
+                "Architected high-throughput Spring Boot microservices supporting IKEA’s loyalty platform, handling transactions for 400,000+ active users.",
+                "Decoupled legacy PL/SQL monoliths into an Event-Driven Architecture using Apache Kafka, significantly improving system fault tolerance.",
+                "Engineered automated data pipelines that replaced 7 manual batch jobs, reducing processing time by 55% and eliminating manual maintenance.",
+                "Implemented CI/CD workflows using Docker and GitHub Actions to accelerate deployment cycles from weekly to daily releases with zero downtime."
+            ]
+        }
+    ],
+    "projects": [
+        {
+            "name": "NEXO CLOUD (SaaS)",
+            "description": "Enterprise Intelligent Document Processing System",
+            "url": "https://nexocloudpro.com",
+            "startDate": "2025-09",
+            "highlights": [
+                "Architected a cloud-native RAG backend, integrating Vector Search and LLMs for semantic data analysis.",
+                "Implemented an asynchronous ingestion pipeline using AWS S3 and Python, capable of indexing thousands of documents with minimal latency.",
+                "Reduced cloud infrastructure costs by 30% through optimized vector storage strategies and efficient resource allocation."
             ]
         }
     ],
     "skills": [
         {
-            "name": "Programming Languages",
+            "name": "Backend Engineering",
             "keywords": [
-                "Java",
-                "SQL",
-                "Python",
-                "TypeScript",
-                "JavaScript"
-            ]
-        },
-        {
-            "name": "Backend & Architecture",
-            "keywords": [
-                "Spring Boot",
+                "Java 21",
+                "Spring Boot 3",
                 "Microservices",
-                "REST APIs",
-                "Kafka",
-                "Event-Driven Architecture",
-                "Node.js"
+                "Apache Kafka",
+                "Node.js",
+                "Python"
             ]
         },
         {
-            "name": "Databases",
+            "name": "Infrastructure & Cloud",
+            "keywords": [
+                "AWS (EC2, S3, RDS)",
+                "Docker",
+                "Kubernetes",
+                "CI/CD Pipelines",
+                "Linux",
+                "Terraform"
+            ]
+        },
+        {
+            "name": "Data & Storage",
             "keywords": [
                 "PostgreSQL",
-                "MongoDB",
                 "Redis",
-                "MySQL"
+                "Vector Databases",
+                "PL/SQL",
+                "Hibernate/JPA"
             ]
         },
         {
-            "name": "Cloud & DevOps",
+            "name": "System Design",
             "keywords": [
-                "Docker",
-                "AWS",
-                "CI/CD",
-                "Git",
-                "Linux"
+                "Event-Driven Architecture",
+                "RESTful APIs",
+                "Distributed Systems",
+                "TDD / Unit Testing",
+                "SOLID"
             ]
         }
     ],
     "education": [
         {
             "institution": "University of Las Palmas de Gran Canaria",
-            "area": "Computer Engineering",
-            "studyType": "Bachelor’s Degree (Expected 2026)",
+            "area": "B.S. Computer Engineering",
+            "studyType": "Bachelor's Degree",
             "startDate": "2022-06",
             "endDate": "2026-05",
-            "location": "Las Palmas, Spain"
+            "location": "Spain"
         },
         {
             "institution": "Halmstad University",
-            "area": "Computer Science",
+            "area": "Distributed Systems & Intelligent Agents",
             "studyType": "Exchange Program",
             "startDate": "2024-09",
             "endDate": "2025-01",
-            "location": "Halmstad, Sweden"
+            "location": "Sweden"
         }
     ],
     "languages": [
         {
-            "language": "Spanish",
-            "fluency": "Native"
+            "language": "English",
+            "fluency": "Professional Working Proficiency (B2/C1)"
         },
         {
-            "language": "English",
-            "fluency": "Professional working proficiency (B2)"
+            "language": "Spanish",
+            "fluency": "Native"
         }
     ]
 }
