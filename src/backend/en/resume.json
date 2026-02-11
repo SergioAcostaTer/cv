@@ -48,7 +48,7 @@
             "highlights": [
                 "Developed mission-critical systems for IKEA’s loyalty program (400k+ active cards), migrating legacy backends to Spring Boot 3. Boosted resilience and delivery speed by 40% via CI/CD automation.",
                 "Replaced 7 legacy PL/SQL jobs with an automated Spring Batch workflow, cutting processing time by 55% (saving 40h/month of support) and eliminating critical failure points.",
-                "Architected a decoupled insurance platform integrating providers (Mapfre, Adeslas) via Kafka & microservices. Enforced strict isolation to ensure scalability and prevent vendor lock-in."
+                "Architected a decoupled insurance platform integrating providers (Mapfre, Adeslas) via Kafka and microservices. Enforced strict isolation to ensure scalability and prevent vendor lock-in."
             ]
         }
     ],
@@ -78,7 +78,7 @@
             ]
         },
         {
-            "name": "Cloud & DevOps",
+            "name": "Cloud and DevOps",
             "keywords": [
                 "AWS (EC2, S3, RDS)",
                 "Docker",
@@ -89,7 +89,7 @@
             ]
         },
         {
-            "name": "Data & Storage",
+            "name": "Data and Storage",
             "keywords": [
                 "PostgreSQL",
                 "Redis",
@@ -99,7 +99,7 @@
             ]
         },
         {
-            "name": "Architecture & Testing",
+            "name": "Architecture and Testing",
             "keywords": [
                 "Clean Architecture",
                 "Event-Driven",
