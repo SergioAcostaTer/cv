@@ -1,7 +1,7 @@
 {
   "sectionLabels": {
     "experience": "EXPERIENCIA PROFESIONAL",
-    "projects": "ARQUITECTURA CLOUD Y SAAS",
+    "projects": "PROYECTOS",
     "education": "EDUCACIÓN",
     "skills": "COMPETENCIAS TÉCNICAS",
     "languages": "IDIOMAS"
@@ -33,7 +33,7 @@
         "url": "https://sergioaco.com"
       }
     ],
-    "summary": "Ingeniero Backend con experiencia en producción diseñando microservicios de alta disponibilidad para entornos empresariales (IKEA). Especializado en la construcción de sistemas distribuidos tolerantes a fallos utilizando Spring Boot, Kafka y AWS. Historial probado de reducción de latencia de datos en un 55% mediante automatización. Enfocado en Clean Architecture, optimización de bases de datos y fiabilidad CI/CD."
+    "summary": "Ingeniero Backend especializado en microservicios Java de alta disponibilidad y arquitecturas orientadas a eventos. Modernización de sistemas empresariales en IKEA mejorando latencia, confiabilidad y eficiencia operacional. Enfocado en sistemas distribuidos, infraestructura cloud (AWS) y automatización en producción. Experiencia en Clean Architecture, observabilidad (Prometheus/Grafana) y CI/CD con GitHub Actions."
   },
   "work": [
     {
@@ -43,10 +43,10 @@
       "location": "Las Palmas, España",
       "startDate": "2025-01",
       "highlights": [
-        "Construí microservicios Spring Boot para la plataforma de fidelización de IKEA, gestionando transacciones para más de 400.000 usuarios activos.",
-        "Migré monolitos legacy en PL/SQL a una Arquitectura Orientada a Eventos con Apache Kafka, mejorando significativamente la tolerancia a fallos.",
-        "Automaticé pipelines de datos que reemplazaron 7 procesos batch manuales, reduciendo el tiempo de procesamiento en un 55%.",
-        "Diseñé e implementé un sistema de agregación multi-proveedor de seguros para retail, usando microservicios orientados a eventos para desacoplar integraciones."
+        "Arquitecté microservicios Spring Boot para plataforma de fidelización IKEA procesando 2M+ transacciones mensuales para 400k+ usuarios con 99.9% uptime.",
+        "Lideré migración desde monolitos PL/SQL a Arquitectura Orientada a Eventos con Kafka (15+ topics, 50k+ eventos diarios), implementando circuit breakers y estrategias de reintentos.",
+        "Automaticé pipelines vía GitHub Actions reemplazando 7 trabajos manuales, reduciendo procesamiento 55% y habilitando despliegues blue-green.",
+        "Diseñé agregación multi-proveedor de seguros usando microservicios async con autenticación JWT, RBAC y dashboards de monitoreo Prometheus/Grafana."
       ]
     }
   ],
@@ -57,9 +57,9 @@
       "url": "https://nexocloudpro.com",
       "startDate": "2025-09",
       "highlights": [
-        "Construí un backend RAG con Spring Boot, colas Redis y Cloudflare R2 para procesamiento escalable de documentos.",
-        "Implementé pipeline asíncrona procesando 1.000+ documentos/hora con latencia p99 inferior a 200ms.",
-        "Integré OpenAI API y búsqueda vectorial, reduciendo costes un 30% mediante caché inteligente y procesamiento por lotes."
+        "Diseñé arquitectura S3 + RDS + Redis para flujos de ingesta asíncrona de documentos. Procesa 30k+ docs mensuales en entornos multi-tenant de producción.",
+        "Implementé pipeline end-to-end orientado a eventos (1k+ docs/hora, p99 <200ms) con dead letter queues, consumidores idempotentes y backups PostgreSQL automatizados.",
+        "Integré OpenAI API con optimización de queries, index tuning y batch processing, reduciendo costes 30%. Construí dashboard React de monitoreo con Tailwind."
       ]
     }
   ],
@@ -69,10 +69,10 @@
       "keywords": [
         "Java 21",
         "Spring Boot 3",
-        "Microservicios",
+        "Arquitectura de Microservicios",
         "Apache Kafka",
         "Node.js",
-        "Python"
+        "REST APIs"
       ]
     },
     {
@@ -80,10 +80,10 @@
       "keywords": [
         "AWS (EC2, S3, RDS)",
         "Docker",
-        "Kubernetes",
-        "CI/CD Pipelines",
-        "Linux",
-        "Terraform"
+        "GitHub Actions CI/CD",
+        "Terraform",
+        "Prometheus",
+        "Grafana"
       ]
     },
     {
@@ -92,26 +92,26 @@
         "PostgreSQL",
         "Redis",
         "Bases de Datos Vectoriales",
-        "PL/SQL",
-        "Hibernate/JPA"
+        "Hibernate/JPA",
+        "Optimización de Queries"
       ]
     },
     {
-      "name": "Diseño de Sistemas",
+      "name": "Arquitectura y Testing",
       "keywords": [
         "Arquitectura Orientada a Eventos",
-        "APIs RESTful",
-        "Sistemas Distribuidos",
-        "TDD",
-        "SOLID"
+        "Clean Architecture",
+        "Domain-Driven Design",
+        "Integration Testing",
+        "OAuth2/JWT"
       ]
     }
   ],
   "education": [
     {
       "institution": "Universidad de Las Palmas de Gran Canaria",
-      "area": "Grado en Ingeniería Informática",
-      "studyType": "Grado Universitario",
+      "area": "Grado en Ingeniería Informática — Finaliza Mayo 2026",
+      "studyType": "Último Año",
       "startDate": "2022-06",
       "endDate": "2026-05",
       "location": "Las Palmas, España"

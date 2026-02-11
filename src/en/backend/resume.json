@@ -1,9 +1,9 @@
 {
     "sectionLabels": {
         "experience": "PROFESSIONAL EXPERIENCE",
-        "projects": "CLOUD ARCHITECTURE & SAAS",
+        "projects": "PROJECTS",
         "education": "EDUCATION",
-        "skills": "TECHNICAL EXPERTISE",
+        "skills": "TECHNICAL SKILLS",
         "languages": "LANGUAGES"
     },
     "basics": {
@@ -33,7 +33,7 @@
                 "url": "https://sergioaco.com"
             }
         ],
-        "summary": "Backend Engineer with production experience designing high-availability microservices for enterprise-scale environments (IKEA). Specialized in building fault-tolerant distributed systems using Spring Boot, Kafka, and AWS. Proven track record of reducing data processing latency by 55% through automation. Focused on Clean Architecture, database optimization, and CI/CD reliability."
+        "summary": "Backend Engineer specializing in high-availability Java microservices and event-driven architectures. Modernized enterprise systems at IKEA, improving latency, reliability, and operational efficiency. Focused on distributed systems, cloud infrastructure (AWS), and production automation. Experienced in Clean Architecture, observability (Prometheus/Grafana), and GitHub Actions CI/CD."
     },
     "work": [
         {
@@ -43,10 +43,10 @@
             "location": "Las Palmas, Spain",
             "startDate": "2025-01",
             "highlights": [
-                "Built high-throughput Spring Boot microservices supporting IKEA's loyalty platform, handling transactions for 400,000+ active users.",
-                "Migrated legacy PL/SQL monoliths to an Event-Driven Architecture using Apache Kafka, significantly improving system fault tolerance.",
-                "Automated data pipelines to replace 7 manual batch jobs, reducing processing time by 55% and eliminating manual maintenance.",
-                "Designed and implemented a multi-insurance provider aggregation system for retail insurance, using event-driven microservices to decouple provider integrations."
+                "Architected high-throughput Spring Boot microservices for IKEA's loyalty platform processing 2M+ monthly transactions for 400k+ users with 99.9% uptime.",
+                "Led migration from PL/SQL monoliths to Event-Driven Architecture with Apache Kafka (15+ topics, 50k+ daily events), implementing circuit breakers and retry strategies.",
+                "Automated data pipelines via GitHub Actions, replacing 7 manual batch jobs, reducing processing time 55% and enabling blue-green deployments.",
+                "Designed multi-provider insurance aggregation using async microservices with JWT auth, RBAC, and Prometheus/Grafana monitoring dashboards."
             ]
         }
     ],
@@ -57,9 +57,9 @@
             "url": "https://nexocloudpro.com",
             "startDate": "2025-09",
             "highlights": [
-                "Built a cloud-native RAG backend using Spring Boot, Redis queues, and Cloudflare R2 for scalable document storage and vector search.",
-                "Implemented asynchronous document processing pipeline handling 1,000+ documents/hour with p99 latency under 200ms.",
-                "Integrated OpenAI API and custom LLM endpoints, reducing infrastructure costs by 30% through optimized caching and request batching."
+                "Designed S3 + RDS + Redis architecture for async document ingestion workflows. Processes 30k+ docs monthly across multi-tenant production environments.",
+                "Implemented end-to-end event-driven pipeline (1k+ docs/hour, p99 <200ms) with dead letter queues, idempotent consumers, and automated PostgreSQL backups.",
+                "Integrated OpenAI API with query optimization, index tuning, and batch processing, cutting costs 30%. Built React monitoring dashboard with Tailwind."
             ]
         }
     ],
@@ -69,21 +69,21 @@
             "keywords": [
                 "Java 21",
                 "Spring Boot 3",
-                "Microservices",
+                "Microservices Architecture",
                 "Apache Kafka",
                 "Node.js",
-                "Python"
+                "REST APIs"
             ]
         },
         {
-            "name": "Infrastructure & Cloud",
+            "name": "Cloud & DevOps",
             "keywords": [
                 "AWS (EC2, S3, RDS)",
                 "Docker",
-                "Kubernetes",
-                "CI/CD Pipelines",
-                "Linux",
-                "Terraform"
+                "GitHub Actions CI/CD",
+                "Terraform",
+                "Prometheus",
+                "Grafana"
             ]
         },
         {
@@ -91,27 +91,27 @@
             "keywords": [
                 "PostgreSQL",
                 "Redis",
-                "Vector Databases",
-                "PL/SQL",
-                "Hibernate/JPA"
+                "Vector DBs",
+                "Hibernate/JPA",
+                "Query Optimization"
             ]
         },
         {
-            "name": "System Design",
+            "name": "Architecture & Testing",
             "keywords": [
                 "Event-Driven Architecture",
-                "RESTful APIs",
-                "Distributed Systems",
-                "TDD / Unit Testing",
-                "SOLID"
+                "Clean Architecture",
+                "Domain-Driven Design",
+                "Integration Testing",
+                "OAuth2/JWT"
             ]
         }
     ],
     "education": [
         {
             "institution": "University of Las Palmas de Gran Canaria",
-            "area": "B.S. Computer Engineering",
-            "studyType": "Bachelor's Degree",
+            "area": "BSc Computer Engineering — Expected May 2026",
+            "studyType": "Final Year Student",
             "startDate": "2022-06",
             "endDate": "2026-05",
             "location": "Las Palmas, Spain"
