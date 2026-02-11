@@ -54,10 +54,10 @@ const getOutputFilename = (filePath) => {
     const relativePath = path.relative(CONFIG.srcDir, filePath);
     const pathParts = relativePath.split(path.sep);
 
-    // Expected structure: [lang]/[role]/resume.json
+    // Expected structure: [role]/[lang]/resume.json
     if (pathParts.length >= 2) {
-        const lang = pathParts[0].toLowerCase();
-        const role = pathParts[pathParts.length - 2].toLowerCase();
+        const role = pathParts[0].toLowerCase();
+        const lang = pathParts[pathParts.length - 2].toLowerCase();
         return configLoader.resolveOutputFilename(lang, role);
     }
     
