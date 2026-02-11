@@ -85,6 +85,46 @@
     </section>
     {{/if}}
 
+    <!-- Projects -->
+    {{#if resume.projects}}
+    {{#if resume.projects.length}}
+    <section class="section projects">
+        <h3>{{resume.sectionLabels.projects}}</h3>
+        {{#each resume.projects}}
+        <div class="item">
+            <div class="item-header">
+                <div class="row">
+                    <div class="left-col">
+                        <div class="company">
+                            {{#if this.url}}
+                            <a href="{{this.url}}">{{this.name}}</a>
+                            {{else}}
+                            {{this.name}}
+                            {{/if}}
+                        </div>
+                        <div class="position">{{this.description}}</div>
+                    </div>
+                    <div class="right-col">
+                        <div class="date">{{formatDate this.startDate}} – {{#if this.endDate}}{{formatDate this.endDate}}{{else}}Present{{/if}}</div>
+                    </div>
+                </div>
+            </div>
+            
+            {{#if this.highlights}}
+            {{#if this.highlights.length}}
+            <ul class="highlights">
+                {{#each this.highlights}}
+                <li>{{this}}</li>
+                {{/each}}
+            </ul>
+            {{/if}}
+            {{/if}}
+        </div>
+        {{/each}}
+    </section>
+    {{/if}}
+    {{/if}}
+
     <!-- Education -->
     {{#if resume.education.length}}
     <section class="section education">

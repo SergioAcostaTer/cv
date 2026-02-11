@@ -1,13 +1,14 @@
 {
     "sectionLabels": {
         "experience": "PROFESSIONAL EXPERIENCE",
+        "projects": "FEATURED PROJECTS",
         "education": "EDUCATION",
         "skills": "TECH STACK",
         "languages": "ADDITIONAL SKILLS"
     },
     "basics": {
         "name": "Sergio Acosta Quintana",
-        "label": "Full-Stack Developer",
+        "label": "Full-Stack Engineer | Cloud & AI",
         "email": "sergioacostaquintana@gmail.com",
         "phone": "+34 600 24 39 94",
         "location": {
@@ -32,93 +33,78 @@
                 "url": "https://github.com/sergioacostater"
             }
         ],
-        "summary": "Full-Stack Developer with industry experience building scalable, production-ready applications for enterprise environments. Skilled in Java (Spring Boot), PostgreSQL, JavaScript (React, Node.js), and microservices. Focused on automation, system reliability, and delivering business-critical solutions in agile, cloud-based teams."
+        "summary": "Full-Stack Engineer with industry experience building scalable enterprise systems and AI-driven SaaS platforms. Proven track record at IKEA modernizing legacy PL/SQL to Spring Boot microservices, reducing processing time by 55%. Skilled in Cloud-Native architectures, RAG implementation, and designing event-driven systems for high-volume environments."
     },
     "work": [
         {
             "name": "BITBOX S.L (IKEA)",
+            "url": "https://bitboxonline.com/",
             "position": "Full-Stack Developer",
             "location": "Canary Islands, Spain",
             "startDate": "2025-01",
             "endDate": null,
             "highlights": [
-                "Develop and maintain internal tools and systems for IKEA's loyalty card operations, used by 100+ employees and managing over 400,000 active credit/debit cards across multiple countries.",
-                "Migrate critical backend services to Spring Boot, improving deployment speed, test reliability, and production resilience.",
-                "Replace 7 legacy PL/SQL jobs with a single automated workflow capable of handling multiple data sources, reducing processing time by 55% and eliminating 40+ hours of manual support per month.",
-                "Contribute to the design and implementation of a microservices architecture, integrating systems through Kafka, REST APIs, and internal authentication services to support scalable, event-driven processes."
+                "Architect and maintain critical backend systems for IKEA's loyalty operations, supporting 100+ internal users and managing 400,000+ active credit cards across multiple markets.",
+                "Spearhead the migration of legacy monoliths to Spring Boot microservices, significantly improving CI/CD deployment speed and production fault tolerance.",
+                "Engineered a unified automated workflow replacing 7 legacy PL/SQL batch jobs, cutting data processing time by 55% and eliminating 40+ monthly hours of manual support.",
+                "Implemented an event-driven microservices architecture using Kafka and REST APIs to ensure scalable, real-time data synchronization between distributed systems."
+            ]
+        }
+    ],
+    "projects": [
+        {
+            "name": "NEXO CLOUD",
+            "description": "AI-Powered Intelligent Storage Platform (SaaS)",
+            "url": "https://nexocloudpro.com",
+            "startDate": "2025-09",
+            "endDate": null,
+            "highlights": [
+                "Designed a cloud-native ETL pipeline for document ingestion, processing, and semantic indexing from scratch.",
+                "Deployed a production-ready RAG (Retrieval-Augmented Generation) system, integrating hybrid search (Keyword + Vector) and LLM synthesis.",
+                "Optimized vector embedding generation and storage strategies to maximize retrieval accuracy while minimizing cloud infrastructure costs."
             ]
         }
     ],
     "skills": [
         {
-            "name": "Programming Languages",
+            "name": "Backend & AI Engineering",
             "keywords": [
-                "Java",
-                "JavaScript (ES6+)",
-                "TypeScript",
-                "SQL",
-                "Python"
-            ]
-        },
-        {
-            "name": "Backend & Architecture",
-            "keywords": [
-                "Spring Boot",
-                "Node.js",
-                "Express.js",
-                "REST APIs",
+                "Java (Spring Boot)",
                 "Microservices",
                 "Kafka",
-                "MinIO"
+                "RAG / Vector Search",
+                "LLM Integration",
+                "Node.js"
             ]
         },
         {
-            "name": "Databases",
-            "keywords": [
-                "PostgreSQL",
-                "MongoDB",
-                "Redis",
-                "MySQL"
-            ]
-        },
-        {
-            "name": "Frontend",
+            "name": "Frontend Development",
             "keywords": [
                 "React.js",
                 "Next.js",
-                "HTML5",
-                "CSS3",
-                "Sass",
-                "Tailwind CSS"
+                "TypeScript",
+                "Tailwind CSS",
+                "JavaScript (ES6+)"
             ]
         },
         {
-            "name": "Cloud & DevOps",
+            "name": "Cloud & Infrastructure",
             "keywords": [
                 "Docker",
                 "AWS",
-                "Git",
-                "GitHub/GitLab",
-                "CI/CD pipelines"
+                "PostgreSQL",
+                "Redis",
+                "CI/CD Pipelines",
+                "Linux Administration"
             ]
         },
         {
-            "name": "Systems & Infrastructure",
+            "name": "Methodologies",
             "keywords": [
-                "Linux server management",
-                "VPS deployments",
-                "systemd",
-                "Nginx",
-                "SSL (Let's Encrypt)"
-            ]
-        },
-        {
-            "name": "Methodologies & Practices",
-            "keywords": [
-                "Agile (Scrum, Kanban)",
-                "SOLID principles",
-                "Clean code practices",
-                "Backend design patterns"
+                "Agile (Scrum)",
+                "System Design",
+                "SOLID Principles",
+                "Clean Architecture"
             ]
         }
     ],
@@ -128,7 +114,7 @@
             "area": "Computer Engineering",
             "studyType": "Bachelor’s Degree",
             "startDate": "2022-06",
-            "endDate": "2026-05",
+            "endDate": "2026-05 (Expected)",
             "location": "Las Palmas, Spain"
         },
         {
@@ -147,7 +133,7 @@
         },
         {
             "language": "English",
-            "fluency": "Professional fluency (B2 CEFR)"
+            "fluency": "Professional Working Proficiency (B2)"
         }
     ]
 }
