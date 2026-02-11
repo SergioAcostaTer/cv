@@ -6,8 +6,8 @@
 @import url('https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
 @page {
-    margin: 15pt 42pt; /* Top/Bottom 15pt, Sides 45pt (~1.5cm) */
-    size: letter;
+    margin: 38pt;
+    size: A4;
 }
 
 body {
@@ -42,7 +42,7 @@ a {
     font-style: normal;
     text-transform: none;
     color: #000000;
-    margin: 0 0 2pt 0; /* Very compact */
+    margin: 0 0 1pt 0; /* Extremely compact */
     padding: 0;
     line-height: 1.1;
     letter-spacing: normal;
@@ -63,7 +63,7 @@ a {
 }
 
 .contact-line {
-    margin-bottom: 2pt; /* Very compact */
+    margin-bottom: 0.5pt; /* Extremely compact */
 }
 
 .contact-info span.separator {
@@ -91,7 +91,7 @@ a {
 hr.header-line,
 hr {
     border: none;
-    border-top: 2pt solid #000000; /* Much thicker separator - doubled */
+    border-top: 1pt solid #000000; /* Much thicker separator - doubled */
     margin: 6pt 0;
     width: 100%;
 }
@@ -124,7 +124,7 @@ h3 {
     text-transform: uppercase;
     text-align: left;
     color: #000000;
-    border-bottom: 2pt solid #000000;
+    border-bottom: 1pt solid #000000;
     margin-top: 2pt; /* Very tight between sections */
     margin-bottom: 8pt;
     padding-bottom: 0pt;

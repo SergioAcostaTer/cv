@@ -1,14 +1,13 @@
 {
     "sectionLabels": {
         "experience": "PROFESSIONAL EXPERIENCE",
-        "projects": "PROJECTS",
         "education": "EDUCATION",
-        "skills": "SKILLS",
-        "languages": "LANGUAGES"
+        "skills": "TECH STACK",
+        "languages": "ADDITIONAL SKILLS"
     },
     "basics": {
         "name": "Sergio Acosta Quintana",
-        "label": "Full-Stack Engineer",
+        "label": "Full-Stack Developer",
         "email": "sergioacostaquintana@gmail.com",
         "phone": "+34 600 24 39 94",
         "location": {
@@ -23,32 +22,30 @@
                 "url": "https://linkedin.com/in/sergioacostaquintana"
             },
             {
-                "network": "GitHub",
-                "username": "sergioacostater",
-                "url": "https://github.com/sergioacostater"
-            },
-            {
                 "network": "Website",
                 "username": "sergioaco",
                 "url": "https://sergioaco.com"
+            },
+            {
+                "network": "GitHub",
+                "username": "sergioacostater",
+                "url": "https://github.com/sergioacostater"
             }
         ],
-        "summary": "Full-Stack Engineer with experience delivering scalable web applications in enterprise environments. Strong backend foundation in Spring Boot and PostgreSQL combined with frontend experience in React and TypeScript. Experienced in microservices, cloud deployments, and event-driven architectures supporting high-volume production systems."
+        "summary": "Full-Stack Developer with industry experience building scalable, production-ready applications for enterprise environments. Skilled in Java (Spring Boot), PostgreSQL, JavaScript (React, Node.js), and microservices. Focused on automation, system reliability, and delivering business-critical solutions in agile, cloud-based teams."
     },
     "work": [
         {
             "name": "BITBOX S.L (IKEA)",
-            "url": "https://bitboxonline.com/",
-            "position": "Full-Stack Engineer",
+            "position": "Full-Stack Developer",
             "location": "Canary Islands, Spain",
             "startDate": "2025-01",
             "endDate": null,
             "highlights": [
-                "Developed and maintained full-stack internal applications supporting IKEA loyalty card operations used by 100+ employees managing 400,000+ active cards.",
-                "Built backend microservices using Spring Boot and PostgreSQL while contributing to frontend interfaces in React when required.",
-                "Re-architected legacy PL/SQL processes into automated backend workflows, reducing processing time by 55% and eliminating 40+ hours of manual support monthly.",
-                "Integrated services using Kafka and REST APIs to enable scalable, event-driven communication between systems.",
-                "Containerized services with Docker and contributed to CI/CD pipelines and AWS deployments."
+                "Develop and maintain internal tools and systems for IKEA's loyalty card operations, used by 100+ employees and managing over 400,000 active credit/debit cards across multiple countries.",
+                "Migrate critical backend services to Spring Boot, improving deployment speed, test reliability, and production resilience.",
+                "Replace 7 legacy PL/SQL jobs with a single automated workflow capable of handling multiple data sources, reducing processing time by 55% and eliminating 40+ hours of manual support per month.",
+                "Contribute to the design and implementation of a microservices architecture, integrating systems through Kafka, REST APIs, and internal authentication services to support scalable, event-driven processes."
             ]
         }
     ],
@@ -57,30 +54,22 @@
             "name": "Programming Languages",
             "keywords": [
                 "Java",
-                "JavaScript",
+                "JavaScript (ES6+)",
                 "TypeScript",
                 "SQL",
                 "Python"
             ]
         },
         {
-            "name": "Backend",
+            "name": "Backend & Architecture",
             "keywords": [
                 "Spring Boot",
                 "Node.js",
-                "Microservices",
+                "Express.js",
                 "REST APIs",
-                "Kafka"
-            ]
-        },
-        {
-            "name": "Frontend",
-            "keywords": [
-                "React.js",
-                "Next.js",
-                "HTML5",
-                "CSS3",
-                "Tailwind"
+                "Microservices",
+                "Kafka",
+                "MinIO"
             ]
         },
         {
@@ -93,13 +82,43 @@
             ]
         },
         {
+            "name": "Frontend",
+            "keywords": [
+                "React.js",
+                "Next.js",
+                "HTML5",
+                "CSS3",
+                "Sass",
+                "Tailwind CSS"
+            ]
+        },
+        {
             "name": "Cloud & DevOps",
             "keywords": [
                 "Docker",
                 "AWS",
-                "CI/CD",
                 "Git",
-                "Linux"
+                "GitHub/GitLab",
+                "CI/CD pipelines"
+            ]
+        },
+        {
+            "name": "Systems & Infrastructure",
+            "keywords": [
+                "Linux server management",
+                "VPS deployments",
+                "systemd",
+                "Nginx",
+                "SSL (Let's Encrypt)"
+            ]
+        },
+        {
+            "name": "Methodologies & Practices",
+            "keywords": [
+                "Agile (Scrum, Kanban)",
+                "SOLID principles",
+                "Clean code practices",
+                "Backend design patterns"
             ]
         }
     ],
@@ -107,7 +126,7 @@
         {
             "institution": "University of Las Palmas de Gran Canaria",
             "area": "Computer Engineering",
-            "studyType": "Bachelor’s Degree (Expected 2026)",
+            "studyType": "Bachelor’s Degree",
             "startDate": "2022-06",
             "endDate": "2026-05",
             "location": "Las Palmas, Spain"
@@ -128,7 +147,7 @@
         },
         {
             "language": "English",
-            "fluency": "Professional working proficiency (B2)"
+            "fluency": "Professional fluency (B2 CEFR)"
         }
     ]
 }
