@@ -1,0 +1,117 @@
+{
+  "basics": {
+    "name": "Sergio Acosta Quintana",
+    "label": "Ingeniero Backend",
+    "email": "sergioacostaquintana@gmail.com",
+    "phone": "+34 600 24 39 94",
+    "location": {
+      "city": "Las Palmas",
+      "countryCode": "ES",
+      "region": "Islas Canarias"
+    },
+    "profiles": [
+      {
+        "network": "LinkedIn",
+        "username": "sergioacostaquintana",
+        "url": "https://linkedin.com/in/sergioacostaquintana"
+      },
+      {
+        "network": "GitHub",
+        "username": "sergioacostater",
+        "url": "https://github.com/sergioacostater"
+      },
+      {
+        "network": "Website",
+        "username": "sergioaco",
+        "url": "https://sergioaco.com"
+      }
+    ],
+    "summary": "Ingeniero Backend desarrollando sistemas escalables orientados a eventos en entornos empresariales. Experiencia en el diseño y migración de microservicios en producción con Spring Boot, Kafka y PostgreSQL, dando soporte a operaciones multinacionales y más de 400.000 usuarios activos. Enfocado en la automatización, fiabilidad del sistema y arquitecturas cloud-native."
+  },
+  "work": [
+    {
+      "name": "BITBOX S.L (IKEA)",
+      "position": "Ingeniero Backend",
+      "location": "Islas Canarias, España",
+      "startDate": "2025-01",
+      "endDate": null,
+      "highlights": [
+        "Diseño y mantenimiento de servicios backend para operaciones de tarjetas de fidelización IKEA, utilizados por más de 100 empleados y gestionando más de 400.000 tarjetas activas en múltiples países.",
+        "Migración de servicios legacy críticos a microservicios Spring Boot, mejorando la velocidad de despliegue, fiabilidad de los tests y resiliencia en producción.",
+        "Sustitución de 7 procesos batch legacy en PL/SQL por un flujo de trabajo automatizado unificado, reduciendo el tiempo de ejecución en un 55% y eliminando más de 40 horas mensuales de soporte manual.",
+        "Implementación de integraciones orientadas a eventos utilizando Kafka y APIs REST para soportar comunicación escalable en sistemas distribuidos.",
+        "Despliegue y mantenimiento de servicios utilizando Docker, pipelines CI/CD e infraestructura basada en AWS."
+      ]
+    }
+  ],
+  "skills": [
+    {
+      "name": "Lenguajes de Programación",
+      "keywords": [
+        "Java",
+        "SQL",
+        "Python",
+        "TypeScript",
+        "JavaScript"
+      ]
+    },
+    {
+      "name": "Backend y Arquitectura",
+      "keywords": [
+        "Spring Boot",
+        "Microservicios",
+        "APIs REST",
+        "Kafka",
+        "Arquitectura Orientada a Eventos",
+        "Node.js"
+      ]
+    },
+    {
+      "name": "Bases de Datos",
+      "keywords": [
+        "PostgreSQL",
+        "MongoDB",
+        "Redis",
+        "MySQL"
+      ]
+    },
+    {
+      "name": "Cloud y DevOps",
+      "keywords": [
+        "Docker",
+        "AWS",
+        "CI/CD",
+        "Git",
+        "Linux"
+      ]
+    }
+  ],
+  "education": [
+    {
+      "institution": "Universidad de Las Palmas de Gran Canaria",
+      "area": "Ingeniería Informática",
+      "studyType": "Grado (Esperado 2026)",
+      "startDate": "2022-06",
+      "endDate": "2026-05",
+      "location": "Las Palmas, España"
+    },
+    {
+      "institution": "Halmstad University",
+      "area": "Ciencias de la Computación",
+      "studyType": "Programa de Intercambio",
+      "startDate": "2024-09",
+      "endDate": "2025-01",
+      "location": "Halmstad, Suecia"
+    }
+  ],
+  "languages": [
+    {
+      "language": "Español",
+      "fluency": "Nativo"
+    },
+    {
+      "language": "Inglés",
+      "fluency": "Competencia profesional completa (B2)"
+    }
+  ]
+}

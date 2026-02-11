@@ -1,0 +1,126 @@
+{
+  "basics": {
+    "name": "Sergio Acosta Quintana",
+    "label": "Ingeniero Full-Stack",
+    "email": "sergioacostaquintana@gmail.com",
+    "phone": "+34 600 24 39 94",
+    "location": {
+      "city": "Las Palmas",
+      "countryCode": "ES",
+      "region": "Islas Canarias"
+    },
+    "profiles": [
+      {
+        "network": "LinkedIn",
+        "username": "sergioacostaquintana",
+        "url": "https://linkedin.com/in/sergioacostaquintana"
+      },
+      {
+        "network": "GitHub",
+        "username": "sergioacostater",
+        "url": "https://github.com/sergioacostater"
+      },
+      {
+        "network": "Website",
+        "username": "sergioaco",
+        "url": "https://sergioaco.com"
+      }
+    ],
+    "summary": "Ingeniero Full-Stack con experiencia en la entrega de aplicaciones web escalables en entornos empresariales. Sólida base backend en Spring Boot y PostgreSQL combinada con experiencia frontend en React y TypeScript. Experimentado en microservicios, despliegues en la nube y arquitecturas orientadas a eventos soportando sistemas de producción de alto volumen."
+  },
+  "work": [
+    {
+      "name": "BITBOX S.L (IKEA)",
+      "position": "Ingeniero Full-Stack",
+      "location": "Islas Canarias, España",
+      "startDate": "2025-01",
+      "endDate": null,
+      "highlights": [
+        "Desarrollo y mantenimiento de aplicaciones full-stack internas para operaciones de tarjetas de fidelización IKEA, usadas por más de 100 empleados gestionando más de 400.000 tarjetas activas.",
+        "Construcción de microservicios backend usando Spring Boot y PostgreSQL, contribuyendo interfaces frontend en React.",
+        "Re-arquitectura de procesos legacy PL/SQL hacia flujos de trabajo backend automatizados, reduciendo el tiempo de procesamiento en un 55% y eliminando más de 40 horas de soporte manual mensual.",
+        "Integración de servicios usando Kafka y APIs REST para habilitar comunicación escalable y orientada a eventos entre sistemas.",
+        "Containerización de servicios con Docker y contribución a pipelines CI/CD y despliegues en AWS."
+      ]
+    }
+  ],
+  "skills": [
+    {
+      "name": "Lenguajes de Programación",
+      "keywords": [
+        "Java",
+        "JavaScript",
+        "TypeScript",
+        "SQL",
+        "Python"
+      ]
+    },
+    {
+      "name": "Backend",
+      "keywords": [
+        "Spring Boot",
+        "Node.js",
+        "Microservicios",
+        "APIs REST",
+        "Kafka"
+      ]
+    },
+    {
+      "name": "Frontend",
+      "keywords": [
+        "React.js",
+        "Next.js",
+        "HTML5",
+        "CSS3",
+        "Tailwind"
+      ]
+    },
+    {
+      "name": "Bases de Datos",
+      "keywords": [
+        "PostgreSQL",
+        "MongoDB",
+        "Redis",
+        "MySQL"
+      ]
+    },
+    {
+      "name": "Cloud y DevOps",
+      "keywords": [
+        "Docker",
+        "AWS",
+        "CI/CD",
+        "Git",
+        "Linux"
+      ]
+    }
+  ],
+  "education": [
+    {
+      "institution": "Universidad de Las Palmas de Gran Canaria",
+      "area": "Ingeniería Informática",
+      "studyType": "Grado (Esperado 2026)",
+      "startDate": "2022-06",
+      "endDate": "2026-05",
+      "location": "Las Palmas, España"
+    },
+    {
+      "institution": "Halmstad University",
+      "area": "Ciencias de la Computación",
+      "studyType": "Programa de Intercambio",
+      "startDate": "2024-09",
+      "endDate": "2025-01",
+      "location": "Halmstad, Suecia"
+    }
+  ],
+  "languages": [
+    {
+      "language": "Español",
+      "fluency": "Nativo"
+    },
+    {
+      "language": "Inglés",
+      "fluency": "Competencia profesional completa (B2)"
+    }
+  ]
+}

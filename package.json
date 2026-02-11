@@ -1,0 +1,14 @@
+{
+    "name": "resume-generator",
+    "version": "1.0.0",
+    "description": "Generate HTML resumes from JSON data",
+    "main": "generate.js",
+    "scripts": {
+        "build": "node generate.js",
+        "build:minimal": "node generate.js minimal",
+        "build:modern": "node generate.js modern"
+    },
+    "dependencies": {
+        "handlebars": "^4.7.7"
+    }
+}
