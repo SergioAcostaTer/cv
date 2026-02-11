@@ -3,7 +3,6 @@ const path = require('path');
 const Handlebars = require('handlebars');
 const puppeteer = require('puppeteer');
 
-// Configuration
 const CONFIG = {
     srcDir: './src',
     distDir: './dist',
@@ -11,7 +10,7 @@ const CONFIG = {
     defaultTheme: 'harvard' 
 };
 
-// Helper: Ensure directory exists
+
 const ensureDirectoryExistence = (filePath) => {
     const dirname = path.dirname(filePath);
     if (fs.existsSync(dirname)) {
@@ -21,7 +20,7 @@ const ensureDirectoryExistence = (filePath) => {
     fs.mkdirSync(dirname);
 };
 
-// Helper: Get theme CSS
+
 const getThemeCss = (themeName) => {
     const themePath = `./themes/${themeName}.css`;
     try {
@@ -32,7 +31,7 @@ const getThemeCss = (themeName) => {
     }
 };
 
-// Helper: Recursively find JSON files
+
 const findJsonFiles = (dir, fileList = []) => {
     const files = fs.readdirSync(dir);
     
@@ -50,37 +49,28 @@ const findJsonFiles = (dir, fileList = []) => {
     return fileList;
 };
 
-// Helper: Determine output filename
 const getOutputFilename = (filePath) => {
-    // Example path: src/es/backend/resume.json
-    const parts = filePath.split(path.sep);
-    // Returning relative path to analyze structure
     const relativePath = path.relative(CONFIG.srcDir, filePath);
     const pathParts = relativePath.split(path.sep);
 
     // Expected structure: [lang]/[role]/resume.json
     if (pathParts.length >= 2) {
         const lang = pathParts[0].toLowerCase();
-        const role = pathParts[pathParts.length - 2].toLowerCase(); // role is the parent folder of resume.json
-        return `sergio-${role}-${lang}.pdf`; // Lowercase as requested
+        const role = pathParts[pathParts.length - 2].toLowerCase();
+        return `sergio-${role}-${lang}.pdf`;
     }
     
-    // Fallback
     return `resume-${Date.now()}.pdf`;
 };
 
-// Main Build Function
 const build = async () => {
-    // 1. Get selected theme from CLI args or default
     const selectedTheme = process.argv[2] || CONFIG.defaultTheme;
     console.log(`🎨 Using theme: ${selectedTheme}`);
 
-    // 2. Load Template and CSS
     const templateSource = fs.readFileSync(CONFIG.templatePath, 'utf8');
     const template = Handlebars.compile(templateSource);
     const css = getThemeCss(selectedTheme);
 
-    // 3. Find all resume.json files
     const jsonFiles = findJsonFiles(CONFIG.srcDir);
 
     if (jsonFiles.length === 0) {
@@ -88,16 +78,12 @@ const build = async () => {
         return;
     }
 
-    // Launch Puppeteer
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
 
-    // 4. Process each file
     for (const filePath of jsonFiles) {
-        // Read JSON data
         const resumeData = JSON.parse(fs.readFileSync(filePath, 'utf8'));
         
-        // Generate HTML content
         const htmlContent = template({
             resume: resumeData,
             css: css,
@@ -107,7 +93,6 @@ const build = async () => {
             }
         });
 
-        // Set content and generate PDF
         await page.setContent(htmlContent, { waitUntil: 'domcontentloaded' });
         
         const outputFilename = getOutputFilename(filePath);
@@ -134,7 +119,7 @@ const build = async () => {
     console.log(`\n🎉 Build complete! Check the '${CONFIG.distDir}' folder.`);
 };
 
-// Register Handlebars Helpers
+
 Handlebars.registerHelper('formatDate', function(dateString) {
     if (!dateString) return 'Present';
     const date = new Date(dateString);
@@ -147,5 +132,5 @@ Handlebars.registerHelper('removeProtocol', function(url) {
     return url.replace(/(^\w+:|^)\/\//, '');
 });
 
-// Run
+
 build();

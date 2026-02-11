@@ -1,8 +1,5 @@
-/* Harvard-style Resume CSS 
- * Optimized for compact, readable layout
- */
+/* Harvard-style Resume CSS - Optimized for compact, readable layout */
 
-/* Import STIX Two Text font from Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,400;0,700;1,400;1,700&display=swap');
 
 @page {
@@ -23,13 +20,11 @@ body {
     text-rendering: optimizeLegibility;
 }
 
-/* Hyperlinks - ALL BLUE */
 a {
     color: #1155CC; /* Google Docs link blue for ALL links */
     text-decoration: underline;
 }
 
-/* Header Section */
 .resume-header {
     text-align: center;
     margin-bottom: 2pt; /* Very compact */
@@ -52,7 +47,6 @@ a {
     display: none;
 }
 
-/* Contact Info */
 .contact-info {
     font-family: 'STIX Two Text', serif;
     font-size: 11.5pt;
@@ -87,7 +81,6 @@ a {
     color: #000000;
 }
 
-/* Horizontal Rule after contact */
 hr.header-line,
 hr {
     border: none;
@@ -96,7 +89,6 @@ hr {
     width: 100%;
 }
 
-/* Summary / Bio Paragraph */
 .section.summary {
     margin-bottom: 10pt; /* Tighter */
 }
@@ -113,10 +105,9 @@ hr {
 }
 
 .section.summary h3 {
-    display: none; /* No heading for summary section */
+    display: none;
 }
 
-/* Section Headings */
 h3 {
     font-family: 'STIX Two Text', serif;
     font-size: 12.5pt;
@@ -131,7 +122,6 @@ h3 {
     letter-spacing: 0.05em;
 }
 
-/* Experience / Job Entries */
 .item {
     margin-bottom: 10pt; /* Tighter */
 }
@@ -143,17 +133,16 @@ h3 {
 .row {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start; /* Align to top for two-column layout */
+    align-items: flex-start;
     width: 100%;
-    margin-bottom: 0; /* No gap - columns on same row */
+    margin-bottom: 0;
 }
 
-/* Two-column layout */
 .left-col {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 0pt; /* Very tight - items touching */
+    gap: 0pt;
     line-height: 1.3;
 }
 
@@ -167,22 +156,21 @@ h3 {
     line-height: 1.3;
 }
 
-/* Row 1: Company + Location */
 .company {
     font-family: 'STIX Two Text', serif;
     font-size: 11.5pt;
     font-weight: bold;
     font-style: normal;
-    color: #000000; /* BLACK - not a link */
+    color: #000000;
     text-align: left;
     text-decoration: none;
     margin: 0;
 }
 
 .company a {
-    color: #1155CC; /* Links are blue */
+    color: #1155CC;
     font-weight: bold;
-    text-decoration: underline; /* Show underline for links */
+    text-decoration: underline;
 }
 
 
@@ -196,7 +184,6 @@ h3 {
     margin: 0;
 }
 
-/* Row 2: Position + Date */
 .position {
     font-family: 'STIX Two Text', serif;
     font-size: 12pt; /* Larger */
@@ -217,7 +204,6 @@ h3 {
     margin: 0;
 }
 
-/* Education entries - same as experience, all black */
 .section.education .company,
 .section.education .school {
     color: #000000;
@@ -232,9 +218,9 @@ h3 {
 .school {
     font-family: 'STIX Two Text', serif;
     font-weight: bold;
-    font-size: 12pt; /* Larger for education */
+    font-size: 12pt;
     color: #000000;
-    text-transform: uppercase; /* Education titles in uppercase */
+    text-transform: uppercase;
 }
 
 .degree {
@@ -244,22 +230,20 @@ h3 {
     color: #000000;
 }
 
-/* Bullets */
 ul {
     margin: 0;
     padding-left: 36pt;
     list-style-type: none;
 }
 
-/* Experience/Projects section bullets - right margin */
 .section.experience ul,
 .section.projects ul {
-    margin-right: 30pt; /* Right margin for work/projects bullets */
+    margin-right: 30pt;
 }
 
 ul li {
     position: relative;
-    margin-bottom: 6pt; /* Closer together */
+    margin-bottom: 6pt;
     text-align: left;
     font-family: 'STIX Two Text', serif;
     font-size: 11.5pt;
@@ -272,25 +256,24 @@ ul li::before {
     position: absolute;
     left: -18pt;
     font-family: Arial, sans-serif;
-    font-size: 1.5em; /* Much bigger bullet - 50% larger */
+    font-size: 1.5em;
     font-weight: bold;
     color: #000000;
     line-height: 0.9;
 }
 
-/* Tech Stack / Skills Section */
 .skills-grid {
     display: block;
 }
 
 .skill-category {
-    margin-bottom: 8pt; /* Much closer together */
+    margin-bottom: 8pt;
 }
 
 .category-name {
     font-family: 'STIX Two Text', serif;
     font-weight: bold;
-    font-size: 11.5pt; /* Slightly larger */
+    font-size: 11.5pt;
     color: #000000;
     display: inline;
     margin-right: 5px;
@@ -320,7 +303,6 @@ ul li::before {
     content: "";
 }
 
-/* Additional styles for consistent formatting */
 p {
     margin: 0;
     padding: 0;
@@ -330,7 +312,6 @@ p {
     margin-bottom: 0;
 }
 
-/* Print-specific adjustments */
 @media print {
     body {
         margin: 0;
@@ -342,7 +323,6 @@ p {
         text-decoration: underline;
     }
     
-    /* Ensure page breaks don't split items awkwardly */
     .item {
         page-break-inside: avoid;
     }
