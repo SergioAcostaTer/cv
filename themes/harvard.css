@@ -1,81 +1,212 @@
+@page {
+    margin: 2.5cm;
+    size: A4;
+}
+
 body {
-    font-family: "Times New Roman", Times, serif;
-    font-size: 11pt;
-    line-height: 1.3;
-    color: #000;
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-size: 10.5pt;
+    line-height: 1.45;
+    color: #1A1A1A;
+    background-color: #FFFFFF;
     margin: 0;
-    padding: 20px;
-    background-color: white;
+    padding: 0;
 }
 
 a {
-    color: #000;
-    text-decoration: underline;
-}
-
-h1 {
-    font-size: 24pt;
-    font-weight: bold;
-    text-align: center;
-    margin-bottom: 5px;
-    text-transform: uppercase;
-}
-
-.contact-info {
-    text-align: center;
-    margin-bottom: 20px;
-    font-size: 10pt;
-}
-
-.contact-info a {
+    color: #1A1A1A;
     text-decoration: none;
 }
 
-h2 {
-    font-size: 12pt;
+/* Header Section */
+.resume-header {
+    text-align: center;
+    margin-bottom: 4px;
+}
+
+.name {
+    font-size: 26pt;
+    font-weight: bold;
+    font-style: normal;
+    text-transform: none;
+    margin: 0 0 6px 0;
+    padding: 0;
+    line-height: 1;
+    letter-spacing: normal;
+}
+
+.label {
+    display: none; /* User didn't ask for label in the header example, usually just name + contact */
+}
+
+.contact-info {
+    font-size: 9.5pt;
+    font-weight: normal;
+    text-align: center;
+    color: #1A1A1A;
+    margin-bottom: 4px; /* Close to HR */
+}
+
+.contact-info span.separator {
+    margin: 0 4px;
+}
+
+.contact-info a[href*="linkedin.com"] {
+    color: #0000EE;
+    text-decoration: underline;
+}
+
+/* Horizontal Rule after contact */
+hr.header-line {
+    border: none;
+    border-top: 1px solid #1A1A1A;
+    margin: 0 0 14px 0; /* Gap before summary */
+    width: 100%;
+}
+
+/* Summary */
+.section.summary {
+    margin-bottom: 16px;
+}
+
+.section.summary p {
+    font-style: italic;
+    font-size: 10.5pt;
+    font-weight: normal;
+    text-align: left;
+    margin: 0;
+}
+
+.section.summary h3 {
+    display: none; /* Hide "Summary" title if following the example strictly, or style it if needed. The prompt implies just the paragraph? "SUMMARY / PROFILE PARAGRAPH ... Text style: Italic" but usually has a header. Let's keep header but follow Section Headings rules. */
+}
+
+/* Section Headings */
+h3 {
+    font-size: 10.5pt;
     font-weight: bold;
     text-transform: uppercase;
-    border-bottom: 1px solid #000;
-    margin-top: 15px;
-    margin-bottom: 10px;
+    text-align: left;
+    color: #1A1A1A;
+    border-bottom: 1px solid #1A1A1A;
+    margin-top: 18px; /* 16-20px above */
+    margin-bottom: 6px; /* 4-8px below */
     padding-bottom: 2px;
+    letter-spacing: 0.5px;
+    display: block; /* Reset flex if it was there */
 }
 
-h3 {
-    font-size: 11pt;
-    font-weight: bold;
-    margin-top: 10px;
-    margin-bottom: 2px;
+/* Experience / Job Entries */
+.item {
+    margin-bottom: 12px; /* Gap between jobs */
+}
+
+.item-header {
+    margin-bottom: 6px; /* Gap before bullets */
+}
+
+.row {
     display: flex;
     justify-content: space-between;
+    align-items: baseline;
+    width: 100%;
+    margin-bottom: 2px;
 }
 
-.company-location, .date-range {
+/* Row 1: Company + Location */
+.company {
+    font-size: 11pt;
+    font-weight: bold;
+    font-style: normal;
+    text-align: left;
+    margin: 0;
+}
+
+.location {
+    font-size: 11pt;
+    font-weight: bold;
+    text-align: right;
+    margin: 0;
+}
+
+/* Row 2: Title + Date */
+.position {
+    font-size: 10.5pt;
+    font-weight: normal;
+    font-style: normal;
+    text-align: left;
+    margin: 0;
+}
+
+.date {
+    font-size: 10.5pt;
     font-weight: normal;
     font-style: italic;
+    text-align: right;
+    margin: 0;
 }
 
-.job-title {
-    font-style: italic;
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
+/* Bullets */
 ul {
-    margin-top: 5px;
-    margin-bottom: 10px;
-    padding-left: 20px;
+    margin: 0;
+    padding-left: 1.8cm; /* 1.5-2cm indent */
+    list-style-type: none; /* Custom bullet positioning if needed, or default */
 }
 
-li {
-    margin-bottom: 2px;
-    text-align: justify;
+ul li {
+    position: relative;
+    margin-bottom: 0px; /* Single line spacing effectively, handled by line-height */
+    text-align: left;
 }
 
-.skills-section {
-    margin-bottom: 15px;
+ul li::before {
+    content: "•";
+    position: absolute;
+    left: -1.2em;
+    color: #1A1A1A;
+    font-size: 1.2em; /* visual size adjustment */
+    line-height: 1;
+    top: -1px;
+}
+
+/* Skills */
+.skills-grid {
+    display: block;
 }
 
 .skill-category {
+    margin-bottom: 4px;
+}
+
+.category-name {
     font-weight: bold;
+    display: inline;
+    margin-right: 5px;
+}
+
+.keywords {
+    display: inline;
+}
+
+.keyword {
+    /* comma separated list style usually */
+    display: inline; 
+}
+
+.keyword::after {
+    content: ", ";
+}
+
+.keyword:last-child::after {
+    content: "";
+}
+
+/* Education */
+.school {
+    font-weight: bold;
+    font-size: 11pt;
+}
+
+.degree {
+    font-weight: normal;
 }

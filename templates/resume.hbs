@@ -3,133 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{resume.basics.name}} - {{resume.basics.label}}</title>
+    <title>{{resume.basics.name}}</title>
     <style>
         {{{css}}}
     </style>
 </head>
 <body>
-    <div class="container">
+    
+    <!-- Header -->
+    <header class="resume-header">
+        <h1 class="name">{{resume.basics.name}}</h1>
         
-        <!-- Header -->
-        <header class="resume-header">
-            <h1 class="name">{{resume.basics.name}}</h1>
-            <h2 class="label">{{resume.basics.label}}</h2>
+        <div class="contact-info">
+            {{#if resume.basics.location}}
+                <span>{{resume.basics.location.city}}, {{resume.basics.location.countryCode}}</span>
+                <span class="separator">·</span>
+            {{/if}}
             
-            <div class="contact-info">
-                {{#if resume.basics.email}}
-                <div class="contact-item">
-                    <span>📧</span> <a href="mailto:{{resume.basics.email}}">{{resume.basics.email}}</a>
-                </div>
-                {{/if}}
-                
-                {{#if resume.basics.phone}}
-                <div class="contact-item">
-                    <span>📱</span> {{resume.basics.phone}}
-                </div>
-                {{/if}}
-                
-                {{#if resume.basics.location}}
-                <div class="contact-item">
-                    <span>📍</span> {{resume.basics.location.city}}, {{resume.basics.location.countryCode}}
-                </div>
-                {{/if}}
-                
-                {{#each resume.basics.profiles}}
-                <div class="contact-item">
-                    <span>🔗</span> <a href="{{this.url}}">{{this.network}}</a>
-                </div>
-                {{/each}}
-            </div>
-        </header>
-
-        <!-- Summary -->
-        {{#if resume.basics.summary}}
-        <section class="section summary">
-            <h3>Summary</h3>
-            <p>{{resume.basics.summary}}</p>
-        </section>
-        {{/if}}
-
-        <!-- Experience -->
-        {{#if resume.work.length}}
-        <section class="section experience">
-            <h3>Experience</h3>
-            {{#each resume.work}}
-            <div class="item">
-                <div class="item-header">
-                    <div class="left">
-                        <h4 class="company">{{this.name}}</h4>
-                        <div class="position">{{this.position}}</div>
-                    </div>
-                    <div class="right">
-                        <span class="date">{{formatDate this.startDate}} - {{#if this.endDate}}{{formatDate this.endDate}}{{else}}Present{{/if}}</span>
-                        <div class="location">{{this.location}}</div>
-                    </div>
-                </div>
-                {{#if this.highlights.length}}
-                <ul class="highlights">
-                    {{#each this.highlights}}
-                    <li>{{this}}</li>
-                    {{/each}}
-                </ul>
-                {{/if}}
-            </div>
+            {{#each resume.basics.profiles}}
+                <a href="{{this.url}}">{{#if this.username}}{{this.username}}{{else}}linkedin.com/in/midudev{{/if}}</a> <!-- Fallback for demo if needed, but using data -->
+                <span class="separator">·</span>
             {{/each}}
-        </section>
-        {{/if}}
 
-        <!-- Skills -->
-        {{#if resume.skills.length}}
-        <section class="section skills">
-            <h3>Skills</h3>
-            <div class="skills-grid">
-                {{#each resume.skills}}
-                <div class="skill-category">
-                    <h4 class="category-name">{{this.name}}</h4>
-                    <div class="keywords">
-                        {{#each this.keywords}}
-                        <span class="keyword">{{this}}</span>
-                        {{/each}}
-                    </div>
+            {{#if resume.basics.phone}}
+                <span>{{resume.basics.phone}}</span>
+                <span class="separator">·</span>
+            {{/if}}
+
+            {{#if resume.basics.email}}
+                <a href="mailto:{{resume.basics.email}}">{{resume.basics.email}}</a>
+            {{/if}}
+        </div>
+        
+        <hr class="header-line">
+    </header>
+
+    <!-- Summary -->
+    {{#if resume.basics.summary}}
+    <section class="section summary">
+        <!-- <h3>Summary</h3> --> <!-- Hidden per specific style example, or we can keep it if section headers are mandatory for all. Example says "SUMMARY / PROFILE PARAGRAPH" but description focuses on paragraph styling. Let's keep it clean. -->
+        <p>{{resume.basics.summary}}</p>
+    </section>
+    {{/if}}
+
+    <!-- Experience -->
+    {{#if resume.work.length}}
+    <section class="section experience">
+        <h3>EXPERIENCIA PROFESIONAL</h3> <!-- Hardcoded as requested or via helper if multilingual needed later -->
+        {{#each resume.work}}
+        <div class="item">
+            <div class="item-header">
+                <!-- Row 1: Company & Location -->
+                <div class="row">
+                    <div class="company">{{this.name}}</div>
+                    <div class="location">{{this.location}}</div>
                 </div>
-                {{/each}}
-            </div>
-        </section>
-        {{/if}}
-
-        <!-- Education -->
-        {{#if resume.education.length}}
-        <section class="section education">
-            <h3>Education</h3>
-            {{#each resume.education}}
-            <div class="item">
-                <div class="item-header">
-                    <div class="left">
-                        <h4 class="school">{{this.institution}}</h4>
-                        <div class="degree">{{this.area}} - {{this.studyType}}</div>
-                    </div>
-                    <div class="right">
-                        <span class="date">{{formatDate this.startDate}} - {{formatDate this.endDate}}</span>
-                    </div>
+                <!-- Row 2: Title & Date -->
+                <div class="row">
+                    <div class="position">{{this.position}}</div>
+                    <div class="date">{{formatDate this.startDate}}–{{#if this.endDate}}{{formatDate this.endDate}}{{else}}Present{{/if}}</div>
                 </div>
             </div>
-            {{/each}}
-        </section>
-        {{/if}}
-
-        <!-- Languages -->
-         {{#if resume.languages.length}}
-        <section class="section languages">
-            <h3>Languages</h3>
-            <ul class="language-list">
-                {{#each resume.languages}}
-                <li><strong>{{this.language}}:</strong> {{this.fluency}}</li>
+            
+            {{#if this.highlights.length}}
+            <ul class="highlights">
+                {{#each this.highlights}}
+                <li>{{this}}</li>
                 {{/each}}
             </ul>
-        </section>
-        {{/if}}
+            {{/if}}
+        </div>
+        {{/each}}
+    </section>
+    {{/if}}
 
-    </div>
+    <!-- Education -->
+    {{#if resume.education.length}}
+    <section class="section education">
+        <h3>EDUCATION</h3>
+        {{#each resume.education}}
+        <div class="item">
+            <div class="item-header">
+                <div class="row">
+                    <div class="school">{{this.institution}}</div>
+                    <div class="date">{{formatDate this.startDate}}–{{formatDate this.endDate}}</div>
+                </div>
+                <div class="row">
+                    <div class="degree">{{this.area}} - {{this.studyType}}</div>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+    </section>
+    {{/if}}
+
+    <!-- Skills -->
+    {{#if resume.skills.length}}
+    <section class="section skills">
+        <h3>SKILLS</h3>
+        <div class="skills-grid">
+            {{#each resume.skills}}
+            <div class="skill-category">
+                <span class="category-name">{{this.name}}:</span>
+                <div class="keywords">
+                    {{#each this.keywords}}
+                    <span class="keyword">{{this}}</span>
+                    {{/each}}
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </section>
+    {{/if}}
+
+    <!-- Languages -->
+    {{#if resume.languages.length}}
+    <section class="section languages">
+        <h3>LANGUAGES</h3>
+        <div class="skills-grid">
+            <div class="skill-category">
+                <div class="keywords">
+                    {{#each resume.languages}}
+                    <span class="keyword">{{this.language}} ({{this.fluency}})</span>
+                    {{/each}}
+                </div>
+            </div>
+        </div>
+    </section>
+    {{/if}}
+
 </body>
 </html>
