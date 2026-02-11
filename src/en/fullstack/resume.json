@@ -98,11 +98,10 @@
         {
             "name": "Architecture & Testing",
             "keywords": [
-                "Event-Driven Architecture",
                 "Clean Architecture",
-                "Integration Testing",
-                "OAuth2/JWT",
-                "Contract Testing"
+                "Event-Driven",
+                "Integration/Contract Testing",
+                "OAuth2"
             ]
         }
     ],

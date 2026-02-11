@@ -1,0 +1,10 @@
+{
+  "_comment": "This is an example override file. Rename to {personaId}.json to activate.",
+  "_note": "Any fields specified here will override the base resume.json data",
+  "basics": {
+    "name": "Override Name Here",
+    "email": "custom@example.com",
+    "phone": "+1-555-0123",
+    "url": "https://example.com"
+  }
+}

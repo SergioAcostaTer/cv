@@ -1,0 +1,7 @@
+{
+  "personaId": "sergio",
+  "displayName": "Sergio Acosta Quintana",
+  "defaultLanguage": "en",
+  "defaultRole": "backend",
+  "outputNaming": "{persona}-{role}-{lang}.pdf"
+}

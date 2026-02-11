@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const Handlebars = require('handlebars');
 const puppeteer = require('puppeteer');
+const configLoader = require('./lib/config-loader');
 
 const CONFIG = {
     srcDir: './src',
@@ -57,7 +58,7 @@ const getOutputFilename = (filePath) => {
     if (pathParts.length >= 2) {
         const lang = pathParts[0].toLowerCase();
         const role = pathParts[pathParts.length - 2].toLowerCase();
-        return `sergio-${role}-${lang}.pdf`;
+        return configLoader.resolveOutputFilename(lang, role);
     }
     
     return `resume-${Date.now()}.pdf`;
@@ -82,7 +83,10 @@ const build = async () => {
     const page = await browser.newPage();
 
     for (const filePath of jsonFiles) {
-        const resumeData = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+        let resumeData = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+        
+        // Apply persona-specific overrides if they exist
+        resumeData = configLoader.applyOverrides(resumeData);
         
         const htmlContent = template({
             resume: resumeData,

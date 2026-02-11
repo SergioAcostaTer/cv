@@ -99,9 +99,9 @@
     {
       "name": "Arquitectura y Testing",
       "keywords": [
-        "Arquitectura Orientada a Eventos",
         "Clean Architecture",
-        "Domain-Driven Design",
+        "DDD",
+        "Event-Driven",
         "Integration Testing",
         "OAuth2/JWT"
       ]
