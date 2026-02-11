@@ -1,13 +1,13 @@
 const fs = require('fs');
 const path = require('path');
 const Handlebars = require('handlebars');
+const puppeteer = require('puppeteer');
 
 // Configuration
 const CONFIG = {
     srcDir: './src',
     distDir: './dist',
     templatePath: './templates/resume.hbs',
-    // Default theme, can be overridden via command line arg: node generate.js minimal
     defaultTheme: 'modern' 
 };
 
@@ -50,8 +50,27 @@ const findJsonFiles = (dir, fileList = []) => {
     return fileList;
 };
 
+// Helper: Determine output filename
+const getOutputFilename = (filePath) => {
+    // Example path: src/es/backend/resume.json
+    const parts = filePath.split(path.sep);
+    // Returning relative path to analyze structure
+    const relativePath = path.relative(CONFIG.srcDir, filePath);
+    const pathParts = relativePath.split(path.sep);
+
+    // Expected structure: [lang]/[role]/resume.json
+    if (pathParts.length >= 2) {
+        const lang = pathParts[0].toLowerCase();
+        const role = pathParts[pathParts.length - 2].toLowerCase(); // role is the parent folder of resume.json
+        return `sergio-${role}-${lang}.pdf`; // Lowercase as requested
+    }
+    
+    // Fallback
+    return `resume-${Date.now()}.pdf`;
+};
+
 // Main Build Function
-const build = () => {
+const build = async () => {
     // 1. Get selected theme from CLI args or default
     const selectedTheme = process.argv[2] || CONFIG.defaultTheme;
     console.log(`🎨 Using theme: ${selectedTheme}`);
@@ -69,19 +88,17 @@ const build = () => {
         return;
     }
 
+    // Launch Puppeteer
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+
     // 4. Process each file
-    jsonFiles.forEach(filePath => {
+    for (const filePath of jsonFiles) {
         // Read JSON data
         const resumeData = JSON.parse(fs.readFileSync(filePath, 'utf8'));
         
-        // Determine output path (mirroring src structure)
-        // e.g., src/en/backend/resume.json -> dist/en/backend/index.html
-        const relativePath = path.relative(CONFIG.srcDir, filePath);
-        const outputDir = path.dirname(path.join(CONFIG.distDir, relativePath));
-        const outputPath = path.join(outputDir, 'index.html');
-
-        // Render HTML
-        const html = template({
+        // Generate HTML content
+        const htmlContent = template({
             resume: resumeData,
             css: css,
             meta: {
@@ -90,13 +107,30 @@ const build = () => {
             }
         });
 
-        // Write file
-        ensureDirectoryExistence(outputPath);
-        fs.writeFileSync(outputPath, html);
+        // Set content and generate PDF
+        await page.setContent(htmlContent, { waitUntil: 'domcontentloaded' });
         
-        console.log(`✅ Generated: ${outputPath}`);
-    });
+        const outputFilename = getOutputFilename(filePath);
+        const outputPath = path.join(CONFIG.distDir, outputFilename);
 
+        ensureDirectoryExistence(outputPath);
+        
+        await page.pdf({
+            path: outputPath,
+            format: 'A4',
+            printBackground: true,
+            margin: {
+                top: '0px',
+                bottom: '0px',
+                left: '0px',
+                right: '0px'
+            }
+        });
+        
+        console.log(`✅ Generated PDF: ${outputPath}`);
+    }
+
+    await browser.close();
     console.log(`\n🎉 Build complete! Check the '${CONFIG.distDir}' folder.`);
 };
 

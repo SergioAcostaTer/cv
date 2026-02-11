@@ -9,6 +9,7 @@
         "build:modern": "node generate.js modern"
     },
     "dependencies": {
-        "handlebars": "^4.7.7"
+        "handlebars": "^4.7.7",
+        "puppeteer": "^24.37.2"
     }
 }
