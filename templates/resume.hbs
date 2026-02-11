@@ -15,24 +15,26 @@
         <h1 class="name">{{resume.basics.name}}</h1>
         
         <div class="contact-info">
-            {{#if resume.basics.location}}
-                <span>{{resume.basics.location.city}}, {{resume.basics.location.countryCode}}</span>
-                <span class="separator">·</span>
-            {{/if}}
+            <div class="contact-line">
+                {{#if resume.basics.location}}
+                    <span>{{resume.basics.location.city}}, {{resume.basics.location.region}}</span>
+                    <span class="separator">·</span>
+                {{/if}}
+                {{#if resume.basics.phone}}
+                    <a href="tel:{{resume.basics.phone}}">{{resume.basics.phone}}</a>
+                    <span class="separator">·</span>
+                {{/if}}
+                {{#if resume.basics.email}}
+                    <a href="mailto:{{resume.basics.email}}">{{resume.basics.email}}</a>
+                {{/if}}
+            </div>
             
-            {{#each resume.basics.profiles}}
-                <a href="{{this.url}}">{{#if this.username}}{{this.username}}{{else}}linkedin.com/in/midudev{{/if}}</a> <!-- Fallback for demo if needed, but using data -->
-                <span class="separator">·</span>
-            {{/each}}
-
-            {{#if resume.basics.phone}}
-                <span>{{resume.basics.phone}}</span>
-                <span class="separator">·</span>
-            {{/if}}
-
-            {{#if resume.basics.email}}
-                <a href="mailto:{{resume.basics.email}}">{{resume.basics.email}}</a>
-            {{/if}}
+            <div class="contact-line">
+                {{#each resume.basics.profiles}}
+                    <a href="{{this.url}}">{{removeProtocol this.url}}</a>
+                    {{#unless @last}}<span class="separator">·</span>{{/unless}}
+                {{/each}}
+            </div>
         </div>
         
         <hr class="header-line">
@@ -49,19 +51,25 @@
     <!-- Experience -->
     {{#if resume.work.length}}
     <section class="section experience">
-        <h3>EXPERIENCIA PROFESIONAL</h3> <!-- Hardcoded as requested or via helper if multilingual needed later -->
+        <h3>{{resume.sectionLabels.experience}}</h3>
         {{#each resume.work}}
         <div class="item">
             <div class="item-header">
-                <!-- Row 1: Company & Location -->
                 <div class="row">
-                    <div class="company">{{this.name}}</div>
-                    <div class="location">{{this.location}}</div>
-                </div>
-                <!-- Row 2: Title & Date -->
-                <div class="row">
-                    <div class="position">{{this.position}}</div>
-                    <div class="date">{{formatDate this.startDate}}–{{#if this.endDate}}{{formatDate this.endDate}}{{else}}Present{{/if}}</div>
+                    <div class="left-col">
+                        <div class="company">
+                            {{#if this.url}}
+                            <a href="{{this.url}}">{{this.name}}</a>
+                            {{else}}
+                            {{this.name}}
+                            {{/if}}
+                        </div>
+                        <div class="position">{{this.position}}</div>
+                    </div>
+                    <div class="right-col">
+                        <div class="location">{{this.location}}</div>
+                        <div class="date">{{formatDate this.startDate}} – {{#if this.endDate}}{{formatDate this.endDate}}{{else}}Present{{/if}}</div>
+                    </div>
                 </div>
             </div>
             
@@ -80,16 +88,19 @@
     <!-- Education -->
     {{#if resume.education.length}}
     <section class="section education">
-        <h3>EDUCATION</h3>
+        <h3>{{resume.sectionLabels.education}}</h3>
         {{#each resume.education}}
         <div class="item">
             <div class="item-header">
                 <div class="row">
-                    <div class="school">{{this.institution}}</div>
-                    <div class="date">{{formatDate this.startDate}}–{{formatDate this.endDate}}</div>
-                </div>
-                <div class="row">
-                    <div class="degree">{{this.area}} - {{this.studyType}}</div>
+                    <div class="left-col">
+                        <div class="school">{{this.institution}}</div>
+                        <div class="degree">{{this.area}} - {{this.studyType}}</div>
+                    </div>
+                    <div class="right-col">
+                        <div class="location">{{this.location}}</div>
+                        <div class="date">{{formatDate this.startDate}} – {{formatDate this.endDate}}</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -100,7 +111,7 @@
     <!-- Skills -->
     {{#if resume.skills.length}}
     <section class="section skills">
-        <h3>SKILLS</h3>
+        <h3>{{resume.sectionLabels.skills}}</h3>
         <div class="skills-grid">
             {{#each resume.skills}}
             <div class="skill-category">
@@ -119,7 +130,7 @@
     <!-- Languages -->
     {{#if resume.languages.length}}
     <section class="section languages">
-        <h3>LANGUAGES</h3>
+        <h3>{{resume.sectionLabels.languages}}</h3>
         <div class="skills-grid">
             <div class="skill-category">
                 <div class="keywords">

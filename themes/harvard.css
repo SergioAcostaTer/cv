@@ -1,196 +1,313 @@
+/* Harvard-style Resume CSS 
+ * Optimized for compact, readable layout
+ */
+
+/* Import STIX Two Text font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=STIX+Two+Text:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
 @page {
-    margin: 2.5cm;
-    size: A4;
+    margin: 15pt 42pt; /* Top/Bottom 15pt, Sides 45pt (~1.5cm) */
+    size: letter;
 }
 
 body {
-    font-family: Georgia, "Times New Roman", Times, serif;
-    font-size: 10.5pt;
-    line-height: 1.45;
-    color: #1A1A1A;
+    font-family: 'STIX Two Text', 'Times New Roman', serif;
+    font-size: 11.5pt;
+    line-height: 1.3; /* Tighter */
+    color: #000000;
     background-color: #FFFFFF;
     margin: 0;
     padding: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
 }
 
+/* Hyperlinks - ALL BLUE */
 a {
-    color: #1A1A1A;
-    text-decoration: none;
+    color: #1155CC; /* Google Docs link blue for ALL links */
+    text-decoration: underline;
 }
 
 /* Header Section */
 .resume-header {
     text-align: center;
-    margin-bottom: 4px;
+    margin-bottom: 3pt; /* More compact */
 }
 
 .name {
+    font-family: 'STIX Two Text', serif;
     font-size: 26pt;
     font-weight: bold;
     font-style: normal;
     text-transform: none;
-    margin: 0 0 6px 0;
+    color: #000000;
+    margin: 0 0 2pt 0; /* Very compact */
     padding: 0;
-    line-height: 1;
+    line-height: 1.1;
     letter-spacing: normal;
 }
 
 .label {
-    display: none; /* User didn't ask for label in the header example, usually just name + contact */
+    display: none;
 }
 
+/* Contact Info */
 .contact-info {
-    font-size: 9.5pt;
+    font-family: 'STIX Two Text', serif;
+    font-size: 11.5pt;
     font-weight: normal;
     text-align: center;
-    color: #1A1A1A;
-    margin-bottom: 4px; /* Close to HR */
+    margin-bottom: 0;
+    line-height: 1.2;
+}
+
+.contact-line {
+    margin-bottom: 2pt; /* Very compact */
 }
 
 .contact-info span.separator {
-    margin: 0 4px;
+    color: #000000;
+    margin: 0 6px;
+    font-weight: 900; /* Much thicker separator */
+    font-size: 1.4em; /* Even bigger dots */
 }
 
-.contact-info a[href*="linkedin.com"] {
-    color: #0000EE;
+.contact-info a {
+    color: #1155CC;
     text-decoration: underline;
 }
 
+.contact-info .phone,
+.contact-info .email {
+    color: #1155CC;
+}
+
+.contact-info .location {
+    color: #000000;
+}
+
 /* Horizontal Rule after contact */
-hr.header-line {
+hr.header-line,
+hr {
     border: none;
-    border-top: 1px solid #1A1A1A;
-    margin: 0 0 14px 0; /* Gap before summary */
+    border-top: 2pt solid #000000; /* Much thicker separator - doubled */
+    margin: 6pt 0;
     width: 100%;
 }
 
-/* Summary */
+/* Summary / Bio Paragraph */
 .section.summary {
-    margin-bottom: 16px;
+    margin-bottom: 10pt; /* Tighter */
 }
 
 .section.summary p {
+    font-family: 'STIX Two Text', serif;
     font-style: italic;
-    font-size: 10.5pt;
+    font-size: 11pt;
     font-weight: normal;
-    text-align: left;
+    color: #0E0E0E;
+    text-align: justify; /* Justified text */
     margin: 0;
+    line-height: 1.3;
 }
 
 .section.summary h3 {
-    display: none; /* Hide "Summary" title if following the example strictly, or style it if needed. The prompt implies just the paragraph? "SUMMARY / PROFILE PARAGRAPH ... Text style: Italic" but usually has a header. Let's keep header but follow Section Headings rules. */
+    display: none; /* No heading for summary section */
 }
 
 /* Section Headings */
 h3 {
-    font-size: 10.5pt;
+    font-family: 'STIX Two Text', serif;
+    font-size: 12.5pt;
     font-weight: bold;
     text-transform: uppercase;
     text-align: left;
-    color: #1A1A1A;
-    border-bottom: 1px solid #1A1A1A;
-    margin-top: 18px; /* 16-20px above */
-    margin-bottom: 6px; /* 4-8px below */
-    padding-bottom: 2px;
-    letter-spacing: 0.5px;
-    display: block; /* Reset flex if it was there */
+    color: #000000;
+    border-bottom: 2pt solid #000000;
+    margin-top: 2pt; /* Very tight between sections */
+    margin-bottom: 8pt;
+    padding-bottom: 0pt;
+    letter-spacing: 0.05em;
 }
 
 /* Experience / Job Entries */
 .item {
-    margin-bottom: 12px; /* Gap between jobs */
+    margin-bottom: 10pt; /* Tighter */
 }
 
 .item-header {
-    margin-bottom: 6px; /* Gap before bullets */
+    margin-bottom: 4pt; /* Tighter */
 }
 
 .row {
     display: flex;
     justify-content: space-between;
-    align-items: baseline;
+    align-items: flex-start; /* Align to top for two-column layout */
     width: 100%;
-    margin-bottom: 2px;
+    margin-bottom: 0; /* No gap - columns on same row */
+}
+
+/* Two-column layout */
+.left-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 3pt;
+}
+
+.right-col {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 3pt;
+    text-align: right;
+    align-items: flex-end;
 }
 
 /* Row 1: Company + Location */
 .company {
-    font-size: 11pt;
+    font-family: 'STIX Two Text', serif;
+    font-size: 11.5pt;
     font-weight: bold;
     font-style: normal;
+    color: #000000; /* BLACK - not a link */
     text-align: left;
+    text-decoration: none;
     margin: 0;
 }
 
-.location {
-    font-size: 11pt;
+.company a {
+    color: #1155CC; /* Links are blue */
     font-weight: bold;
+    text-decoration: underline; /* Show underline for links */
+}
+
+
+.location {
+    font-family: 'STIX Two Text', serif;
+    font-size: 11.5pt;
+    font-weight: bold;
+    color: #000000; /* BLACK - not a link */
+    text-decoration: none;
     text-align: right;
     margin: 0;
 }
 
-/* Row 2: Title + Date */
+/* Row 2: Position + Date */
 .position {
-    font-size: 10.5pt;
+    font-family: 'STIX Two Text', serif;
+    font-size: 12pt; /* Larger */
     font-weight: normal;
     font-style: normal;
+    color: #000000;
     text-align: left;
     margin: 0;
 }
 
 .date {
-    font-size: 10.5pt;
+    font-family: 'STIX Two Text', serif;
+    font-size: 12pt; /* Larger */
     font-weight: normal;
-    font-style: italic;
+    font-style: normal;
+    color: #000000;
     text-align: right;
     margin: 0;
+}
+
+/* Education entries - same as experience, all black */
+.section.education .company,
+.section.education .school {
+    color: #000000;
+    text-decoration: none;
+}
+
+.section.education .location {
+    color: #000000;
+    text-decoration: none;
+}
+
+.school {
+    font-family: 'STIX Two Text', serif;
+    font-weight: bold;
+    font-size: 12pt; /* Larger for education */
+    color: #000000;
+    text-transform: uppercase; /* Education titles in uppercase */
+}
+
+.degree {
+    font-family: 'STIX Two Text', serif;
+    font-weight: normal;
+    font-size: 12pt; /* Larger for education */
+    color: #000000;
 }
 
 /* Bullets */
 ul {
     margin: 0;
-    padding-left: 1.8cm; /* 1.5-2cm indent */
-    list-style-type: none; /* Custom bullet positioning if needed, or default */
+    padding-left: 36pt;
+    list-style-type: none;
+}
+
+/* Experience/Projects section bullets - right margin */
+.section.experience ul,
+.section.projects ul {
+    margin-right: 30pt; /* Right margin for work/projects bullets */
 }
 
 ul li {
     position: relative;
-    margin-bottom: 0px; /* Single line spacing effectively, handled by line-height */
+    margin-bottom: 6pt; /* Closer together */
     text-align: left;
+    font-family: 'STIX Two Text', serif;
+    font-size: 11.5pt;
+    color: #000000;
+    line-height: 1.3;
 }
 
 ul li::before {
     content: "•";
     position: absolute;
-    left: -1.2em;
-    color: #1A1A1A;
-    font-size: 1.2em; /* visual size adjustment */
-    line-height: 1;
-    top: -1px;
+    left: -18pt;
+    font-family: Arial, sans-serif;
+    font-size: 1.5em; /* Much bigger bullet - 50% larger */
+    font-weight: bold;
+    color: #000000;
+    line-height: 0.9;
 }
 
-/* Skills */
+/* Tech Stack / Skills Section */
 .skills-grid {
     display: block;
 }
 
 .skill-category {
-    margin-bottom: 4px;
+    margin-bottom: 8pt; /* Much closer together */
 }
 
 .category-name {
+    font-family: 'STIX Two Text', serif;
     font-weight: bold;
+    font-size: 11.5pt; /* Slightly larger */
+    color: #000000;
     display: inline;
     margin-right: 5px;
 }
 
+.category-name::after {
+    content: " ";
+}
+
 .keywords {
+    font-family: 'STIX Two Text', serif;
+    font-weight: normal;
+    font-size: 11.5pt; /* Slightly larger */
+    color: #000000;
     display: inline;
 }
 
 .keyword {
-    /* comma separated list style usually */
-    display: inline; 
+    display: inline;
 }
 
 .keyword::after {
@@ -201,12 +318,34 @@ ul li::before {
     content: "";
 }
 
-/* Education */
-.school {
-    font-weight: bold;
-    font-size: 11pt;
+/* Additional styles for consistent formatting */
+p {
+    margin: 0;
+    padding: 0;
 }
 
-.degree {
-    font-weight: normal;
+.section {
+    margin-bottom: 0;
+}
+
+/* Print-specific adjustments */
+@media print {
+    body {
+        margin: 0;
+        padding: 0;
+    }
+    
+    a {
+        color: #1155CC;
+        text-decoration: underline;
+    }
+    
+    /* Ensure page breaks don't split items awkwardly */
+    .item {
+        page-break-inside: avoid;
+    }
+    
+    h3 {
+        page-break-after: avoid;
+    }
 }

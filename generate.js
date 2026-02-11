@@ -8,7 +8,7 @@ const CONFIG = {
     srcDir: './src',
     distDir: './dist',
     templatePath: './templates/resume.hbs',
-    defaultTheme: 'modern' 
+    defaultTheme: 'harvard' 
 };
 
 // Helper: Ensure directory exists
@@ -138,7 +138,9 @@ const build = async () => {
 Handlebars.registerHelper('formatDate', function(dateString) {
     if (!dateString) return 'Present';
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
+    const formatted = date.toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
+    // Add space between month and year: "Jan2025" -> "Jan 2025"
+    return formatted.replace(/([A-Za-z]+)(\d)/, '$1 $2');
 });
 
 Handlebars.registerHelper('removeProtocol', function(url) {

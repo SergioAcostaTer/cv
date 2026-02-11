@@ -1,4 +1,11 @@
 {
+  "sectionLabels": {
+    "experience": "EXPERIENCIA PROFESIONAL",
+    "projects": "PROYECTOS",
+    "education": "FORMACIÓN ACADÉMICA",
+    "skills": "HABILIDADES TÉCNICAS",
+    "languages": "IDIOMAS"
+  },
   "basics": {
     "name": "Sergio Acosta Quintana",
     "label": "Ingeniero Full-Stack",
@@ -7,7 +14,7 @@
     "location": {
       "city": "Las Palmas",
       "countryCode": "ES",
-      "region": "Islas Canarias"
+      "region": "España"
     },
     "profiles": [
       {
@@ -31,6 +38,7 @@
   "work": [
     {
       "name": "BITBOX S.L (IKEA)",
+      "url": "https://bitboxonline.com/",
       "position": "Ingeniero Full-Stack",
       "location": "Islas Canarias, España",
       "startDate": "2025-01",

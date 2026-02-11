@@ -1,4 +1,11 @@
 {
+    "sectionLabels": {
+        "experience": "PROFESSIONAL EXPERIENCE",
+        "projects": "PROJECTS",
+        "education": "EDUCATION",
+        "skills": "SKILLS",
+        "languages": "LANGUAGES"
+    },
     "basics": {
         "name": "Sergio Acosta Quintana",
         "label": "Backend Engineer",
@@ -7,7 +14,7 @@
         "location": {
             "city": "Las Palmas",
             "countryCode": "ES",
-            "region": "Canary Islands"
+            "region": "Spain"
         },
         "profiles": [
             {
@@ -31,6 +38,7 @@
     "work": [
         {
             "name": "BITBOX S.L (IKEA)",
+            "url": "https://bitboxonline.com/",
             "position": "Backend Engineer",
             "location": "Canary Islands, Spain",
             "startDate": "2025-01",
