@@ -6,6 +6,9 @@
     "skills": "COMPETENCIAS TÉCNICAS",
     "languages": "IDIOMAS"
   },
+  "labels": {
+    "present": "Actualidad"
+  },
   "basics": {
     "name": "Sergio Acosta Quintana",
     "label": "Ingeniero de Software Backend | Java y Sistemas Distribuidos",
@@ -43,9 +46,9 @@
       "location": "Las Palmas, España",
       "startDate": "2025-01",
       "highlights": [
-        "Desarrollo de microservicios Spring Boot para plataforma de fidelización IKEA procesando 2M+ transacciones mensuales para 400k+ usuarios con 99.9% uptime.",
-        "Migración desde monolitos PL/SQL a Arquitectura Orientada a Eventos con Kafka (15+ topics, 50k+ eventos diarios), reemplazando 7 trabajos manuales vía automatización GitHub Actions, reduciendo procesamiento 55%.",
-        "Implementación de plataforma de venta de seguros retail integrando múltiples proveedores (Maffrey, Adeslas) en gestor unificado de microservicios con comunicación Kafka, autenticación JWT y RBAC."
+        "Desarrollo de sistemas críticos para fidelización IKEA (400k+ tarjetas), migrando backends legacy a Spring Boot 3. Mejora de resiliencia y despliegue (+40%) vía CI/CD.",
+        "Reemplazo de 7 jobs PL/SQL por flujo Spring Batch, reduciendo tiempo de proceso un 55% (ahorro 40h/mes soporte) y eliminando puntos de fallo.",
+        "Arquitectura de plataforma desacoplada de seguros (Mapfre, Adeslas) vía Kafka y microservicios. Aislamiento estricto para asegurar escalabilidad y evitar bloqueo de proveedor."
       ]
     }
   ],

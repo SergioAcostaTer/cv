@@ -68,7 +68,7 @@
                     </div>
                     <div class="right-col">
                         <div class="location">{{this.location}}</div>
-                        <div class="date">{{formatDate this.startDate}} – {{#if this.endDate}}{{formatDate this.endDate}}{{else}}Present{{/if}}</div>
+                        <div class="date">{{formatDate this.startDate}} – {{#if this.endDate}}{{formatDate this.endDate}}{{else}}{{@root.resume.labels.present}}{{/if}}</div>
                     </div>
                 </div>
             </div>
@@ -105,7 +105,7 @@
                         <div class="position">{{this.description}}</div>
                     </div>
                     <div class="right-col">
-                        <div class="date">{{formatDate this.startDate}} – {{#if this.endDate}}{{formatDate this.endDate}}{{else}}Present{{/if}}</div>
+                        <div class="date">{{formatDate this.startDate}} – {{#if this.endDate}}{{formatDate this.endDate}}{{else}}{{@root.resume.labels.present}}{{/if}}</div>
                     </div>
                 </div>
             </div>

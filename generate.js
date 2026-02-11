@@ -87,7 +87,7 @@ const build = async () => {
         
         // Apply persona-specific overrides if they exist
         resumeData = configLoader.applyOverrides(resumeData);
-        
+
         const htmlContent = template({
             resume: resumeData,
             css: css,
@@ -129,8 +129,11 @@ const build = async () => {
 };
 
 
-Handlebars.registerHelper('formatDate', function(dateString) {
-    if (!dateString) return 'Present';
+Handlebars.registerHelper('formatDate', function(dateString, options) {
+    if (!dateString) {
+        const labels = options.data.root.resume && options.data.root.resume.labels;
+        return (labels && labels.present) ? labels.present : 'Present';
+    }
     const date = new Date(dateString);
     const formatted = date.toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
     // Add space between month and year: "Jan2025" -> "Jan 2025"

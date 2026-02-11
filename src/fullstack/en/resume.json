@@ -6,6 +6,9 @@
         "skills": "TECHNICAL SKILLS",
         "languages": "LANGUAGES"
     },
+    "labels": {
+        "present": "Present"
+    },
     "basics": {
         "name": "Sergio Acosta Quintana",
         "label": "Full-Stack Engineer (Backend Focused) | Java & Cloud",
@@ -43,9 +46,9 @@
             "location": "Las Palmas, Spain",
             "startDate": "2025-01",
             "highlights": [
-                "Architected Spring Boot microservices for IKEA's loyalty platform processing 2M+ monthly transactions for 400k+ users with 99.9% uptime SLA.",
-                "Led PL/SQL to Kafka migration (15+ topics, 50k+ daily events) implementing circuit breakers, retry logic, and replacing 7 manual jobs via GitHub Actions automation, reducing processing 55%.",
-                "Built retail insurance sales platform integrating multiple providers (Maffrey, Adeslas) into unified microservices manager with Kafka-based communication, JWT auth, and RBAC."
+                "Developed mission-critical systems for IKEA’s loyalty program (400k+ active cards), migrating legacy backends to Spring Boot 3. Boosted resilience and delivery speed by 40% via CI/CD automation.",
+                "Replaced 7 legacy PL/SQL jobs with an automated Spring Batch workflow, cutting processing time by 55% (saving 40h/month of support) and eliminating critical failure points.",
+                "Architected a decoupled insurance platform integrating providers (Mapfre, Adeslas) via Kafka & microservices. Enforced strict isolation to ensure scalability and prevent vendor lock-in."
             ]
         }
     ],
