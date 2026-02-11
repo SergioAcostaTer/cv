@@ -33,7 +33,7 @@
                 "url": "https://sergioaco.com"
             }
         ],
-        "summary": "Backend Engineer specializing in high-availability Java microservices and event-driven architectures. Modernized enterprise systems at IKEA, improving latency, reliability, and operational efficiency. Focused on distributed systems, cloud infrastructure (AWS), and production automation. Experienced in Clean Architecture, observability (Prometheus/Grafana), and GitHub Actions CI/CD."
+        "summary": "Backend Engineer specializing in high-availability Java microservices and event-driven architectures. Modernized enterprise systems at IKEA, improving latency, reliability, and operational efficiency. Focused on distributed systems, cloud infrastructure (AWS), and CI/CD automation. Experienced in Clean Architecture, Domain-Driven Design, and production-grade system design."
     },
     "work": [
         {
@@ -44,9 +44,8 @@
             "startDate": "2025-01",
             "highlights": [
                 "Architected high-throughput Spring Boot microservices for IKEA's loyalty platform processing 2M+ monthly transactions for 400k+ users with 99.9% uptime.",
-                "Led migration from PL/SQL monoliths to Event-Driven Architecture with Apache Kafka (15+ topics, 50k+ daily events), implementing circuit breakers and retry strategies.",
-                "Automated data pipelines via GitHub Actions, replacing 7 manual batch jobs, reducing processing time 55% and enabling blue-green deployments.",
-                "Designed multi-provider insurance aggregation using async microservices with JWT auth, RBAC, and Prometheus/Grafana monitoring dashboards."
+                "Led migration from PL/SQL monoliths to Event-Driven Architecture with Apache Kafka (15+ topics, 50k+ daily events), replacing 7 manual batch jobs via GitHub Actions automation, reducing processing time 55%.",
+                "Built retail insurance sales platform integrating multiple providers (Maffrey, Adeslas) into unified microservices manager with Kafka-based communication, JWT auth, and RBAC."
             ]
         }
     ],
@@ -57,8 +56,8 @@
             "url": "https://nexocloudpro.com",
             "startDate": "2025-09",
             "highlights": [
-                "Designed S3 + RDS + Redis architecture for async document ingestion workflows. Processes 30k+ docs monthly across multi-tenant production environments.",
-                "Implemented end-to-end event-driven pipeline (1k+ docs/hour, p99 <200ms) with dead letter queues, idempotent consumers, and automated PostgreSQL backups.",
+                "Designed production RAG system on Hetzner VPS with Cloudflare R2, PostgreSQL (PG Vector), and Redis. Processes 30k+ docs monthly across multi-tenant environments.",
+                "Implemented event-driven pipeline (1k+ docs/hour, p99 <200ms) with dead letter queues, idempotent consumers, and automated backups on own-managed infrastructure.",
                 "Integrated OpenAI API with query optimization, index tuning, and batch processing, cutting costs 30%. Built React monitoring dashboard with Tailwind."
             ]
         }
@@ -69,7 +68,7 @@
             "keywords": [
                 "Java 21",
                 "Spring Boot 3",
-                "Microservices Architecture",
+                "Microservices",
                 "Apache Kafka",
                 "Node.js",
                 "REST APIs"
@@ -110,15 +109,14 @@
     "education": [
         {
             "institution": "University of Las Palmas de Gran Canaria",
-            "area": "BSc Computer Engineering — Expected May 2026",
+            "area": "BSc Computer Engineering",
             "studyType": "Final Year Student",
             "startDate": "2022-06",
-            "endDate": "2026-05",
             "location": "Las Palmas, Spain"
         },
         {
             "institution": "Halmstad University",
-            "area": "Distributed Systems & Intelligent Agents",
+            "area": "Computer Science",
             "studyType": "Exchange Program",
             "startDate": "2024-09",
             "endDate": "2025-01",

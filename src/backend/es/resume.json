@@ -33,7 +33,7 @@
         "url": "https://sergioaco.com"
       }
     ],
-    "summary": "Ingeniero Backend especializado en microservicios Java de alta disponibilidad y arquitecturas orientadas a eventos. Modernización de sistemas empresariales en IKEA mejorando latencia, confiabilidad y eficiencia operacional. Enfocado en sistemas distribuidos, infraestructura cloud (AWS) y automatización en producción. Experiencia en Clean Architecture, observabilidad (Prometheus/Grafana) y CI/CD con GitHub Actions."
+    "summary": "Ingeniero Backend especializado en microservicios Java de alta disponibilidad y arquitecturas orientadas a eventos. Modernización de sistemas empresariales en IKEA mejorando latencia, confiabilidad y eficiencia operacional. Enfocado en sistemas distribuidos, infraestructura cloud (AWS) y automatización CI/CD. Experiencia en Clean Architecture, Domain-Driven Design y diseño de sistemas de producción."
   },
   "work": [
     {
@@ -43,10 +43,9 @@
       "location": "Las Palmas, España",
       "startDate": "2025-01",
       "highlights": [
-        "Arquitecté microservicios Spring Boot para plataforma de fidelización IKEA procesando 2M+ transacciones mensuales para 400k+ usuarios con 99.9% uptime.",
-        "Lideré migración desde monolitos PL/SQL a Arquitectura Orientada a Eventos con Kafka (15+ topics, 50k+ eventos diarios), implementando circuit breakers y estrategias de reintentos.",
-        "Automaticé pipelines vía GitHub Actions reemplazando 7 trabajos manuales, reduciendo procesamiento 55% y habilitando despliegues blue-green.",
-        "Diseñé agregación multi-proveedor de seguros usando microservicios async con autenticación JWT, RBAC y dashboards de monitoreo Prometheus/Grafana."
+        "Desarrollo de microservicios Spring Boot para plataforma de fidelización IKEA procesando 2M+ transacciones mensuales para 400k+ usuarios con 99.9% uptime.",
+        "Migración desde monolitos PL/SQL a Arquitectura Orientada a Eventos con Kafka (15+ topics, 50k+ eventos diarios), reemplazando 7 trabajos manuales vía automatización GitHub Actions, reduciendo procesamiento 55%.",
+        "Implementación de plataforma de venta de seguros retail integrando múltiples proveedores (Maffrey, Adeslas) en gestor unificado de microservicios con comunicación Kafka, autenticación JWT y RBAC."
       ]
     }
   ],
@@ -57,9 +56,9 @@
       "url": "https://nexocloudpro.com",
       "startDate": "2025-09",
       "highlights": [
-        "Diseñé arquitectura S3 + RDS + Redis para flujos de ingesta asíncrona de documentos. Procesa 30k+ docs mensuales en entornos multi-tenant de producción.",
-        "Implementé pipeline end-to-end orientado a eventos (1k+ docs/hora, p99 <200ms) con dead letter queues, consumidores idempotentes y backups PostgreSQL automatizados.",
-        "Integré OpenAI API con optimización de queries, index tuning y batch processing, reduciendo costes 30%. Construí dashboard React de monitoreo con Tailwind."
+        "Sistema RAG de producción en Hetzner VPS con Cloudflare R2, PostgreSQL (PG Vector) y Redis. Procesa 30k+ docs mensuales en entornos multi-tenant.",
+        "Pipeline orientado a eventos (1k+ docs/hora, p99 <200ms) con dead letter queues, consumidores idempotentes y backups automatizados en infraestructura auto-gestionada.",
+        "Integración OpenAI API con optimización de queries, index tuning y batch processing, reduciendo costes 30%. Dashboard React de monitoreo con Tailwind."
       ]
     }
   ],
@@ -69,7 +68,7 @@
       "keywords": [
         "Java 21",
         "Spring Boot 3",
-        "Arquitectura de Microservicios",
+        "Microservicios",
         "Apache Kafka",
         "Node.js",
         "REST APIs"
@@ -91,7 +90,7 @@
       "keywords": [
         "PostgreSQL",
         "Redis",
-        "Bases de Datos Vectoriales",
+        "Vector DBs",
         "Hibernate/JPA",
         "Optimización de Queries"
       ]
@@ -110,15 +109,14 @@
   "education": [
     {
       "institution": "Universidad de Las Palmas de Gran Canaria",
-      "area": "Grado en Ingeniería Informática — Finaliza Mayo 2026",
+      "area": "Grado en Ingeniería Informática",
       "studyType": "Último Año",
       "startDate": "2022-06",
-      "endDate": "2026-05",
       "location": "Las Palmas, España"
     },
     {
       "institution": "Universidad de Halmstad",
-      "area": "Sistemas Distribuidos y Agentes Inteligentes",
+      "area": "Ciencias de la Computación",
       "studyType": "Programa de Intercambio",
       "startDate": "2024-09",
       "endDate": "2025-01",

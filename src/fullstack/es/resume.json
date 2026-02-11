@@ -33,7 +33,7 @@
         "url": "https://sergioaco.com"
       }
     ],
-    "summary": "Ingeniero Full-Stack (enfocado en Backend) especializado en microservicios de alta disponibilidad y arquitecturas orientadas a eventos. Modernización de sistemas empresariales en IKEA mejorando latencia, confiabilidad y eficiencia. Enfocado en sistemas distribuidos, infraestructura cloud y automatización. Competente en React/TypeScript para autonomía full-stack. Experiencia en equipos internacionales distribuidos."
+    "summary": "Ingeniero Full-Stack (enfocado en Backend) especializado en microservicios de alta disponibilidad y arquitecturas orientadas a eventos. Modernización de sistemas empresariales en IKEA mejorando latencia, confiabilidad y eficiencia. Enfocado en sistemas distribuidos, infraestructura cloud y automatización CI/CD. Competente en React/TypeScript para autonomía full-stack. Experiencia en equipos internacionales distribuidos."
   },
   "work": [
     {
@@ -43,10 +43,9 @@
       "location": "Las Palmas, España",
       "startDate": "2025-01",
       "highlights": [
-        "Arquitecté microservicios Spring Boot para plataforma fidelización IKEA procesando 2M+ transacciones mensuales para 400k+ usuarios con SLA 99.9% uptime.",
-        "Lideré migración PL/SQL a Kafka (15+ topics, 50k+ eventos diarios) implementando circuit breakers, retry logic y monitoreo Prometheus/Grafana.",
-        "Automaticé pipelines vía GitHub Actions reemplazando 7 trabajos manuales, reduciendo procesamiento 55%. Configuré builds Docker y backups programados.",
-        "Diseñé sistema multi-proveedor de seguros con autenticación JWT, RBAC, rate limiting de API y procesamiento async de eventos con mecanismos de failover."
+        "Desarrollo de microservicios Spring Boot para plataforma fidelización IKEA procesando 2M+ transacciones mensuales para 400k+ usuarios con SLA 99.9% uptime.",
+        "Migración PL/SQL a Kafka (15+ topics, 50k+ eventos diarios) implementando circuit breakers, retry logic, y reemplazando 7 trabajos manuales vía automatización GitHub Actions, reduciendo procesamiento 55%.",
+        "Implementación de plataforma de venta de seguros retail integrando múltiples proveedores (Maffrey, Adeslas) en gestor unificado de microservicios con comunicación Kafka, autenticación JWT y RBAC."
       ]
     }
   ],
@@ -57,9 +56,9 @@
       "url": "https://nexocloudpro.com",
       "startDate": "2025-09",
       "highlights": [
-        "Arquitecté sistema RAG de producción (Spring Boot + Redis + R2) procesando 30k+ docs mensuales. Implementé Testcontainers para integration testing.",
-        "Diseñé pipeline async (1k+ docs/hora, p99 <200ms) con event sourcing, worker pools y dead letter queues. Automaticé backups PostgreSQL.",
-        "Construí React dashboard para monitoreo de documentos con JWT auth UI. Optimicé costes 30% vía caching, batch processing y query tuning."
+        "Sistema RAG de producción (Spring Boot + Redis + Cloudflare R2) en Hetzner VPS procesando 30k+ docs mensuales. Testcontainers para integration testing.",
+        "Pipeline async (1k+ docs/hora, p99 <200ms) con event sourcing, worker pools y dead letter queues. Backups PostgreSQL (PG Vector) automatizados en infraestructura auto-gestionada.",
+        "Dashboard React para monitoreo de documentos con JWT auth UI. Optimización de costes 30% vía caching, batch processing y query tuning."
       ]
     }
   ],
@@ -69,7 +68,7 @@
       "keywords": [
         "Java 21",
         "Spring Boot 3",
-        "Arquitectura de Microservicios",
+        "Microservicios",
         "Apache Kafka",
         "PostgreSQL",
         "REST APIs"
@@ -108,15 +107,14 @@
   "education": [
     {
       "institution": "Universidad de Las Palmas de Gran Canaria",
-      "area": "Grado en Ingeniería Informática — Finaliza Mayo 2026",
+      "area": "Grado en Ingeniería Informática",
       "studyType": "Último Año",
       "startDate": "2022-06",
-      "endDate": "2026-05",
       "location": "Las Palmas, España"
     },
     {
       "institution": "Universidad de Halmstad",
-      "area": "Ciencias de la Computación (Sistemas Inteligentes)",
+      "area": "Ciencias de la Computación",
       "studyType": "Programa de Intercambio",
       "startDate": "2024-09",
       "endDate": "2025-01",

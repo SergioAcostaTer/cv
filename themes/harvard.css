@@ -27,7 +27,7 @@ a {
 
 .resume-header {
     text-align: center;
-    margin-bottom: 2pt; /* Very compact */
+    margin-bottom: 1pt;
 }
 
 .name {
@@ -37,7 +37,7 @@ a {
     font-style: normal;
     text-transform: none;
     color: #000000;
-    margin: 0 0 0.5pt 0; /* Extremely tight */
+    margin: 0;
     padding: 0;
     line-height: 1.1;
     letter-spacing: normal;
@@ -57,14 +57,14 @@ a {
 }
 
 .contact-line {
-    margin-bottom: 0.5pt; /* Extremely tight */
+    margin-bottom: 0; /* Removed 0.5pt margin */
 }
 
 .contact-info span.separator {
     color: #000000;
     margin: 0 6px;
-    font-weight: 900; /* Much thicker separator */
-    font-size: 1.4em; /* Even bigger dots */
+    font-weight: 900;
+    font-size: 1.4em;
 }
 
 .contact-info a {

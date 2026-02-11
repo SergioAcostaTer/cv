@@ -33,7 +33,7 @@
                 "url": "https://sergioaco.com"
             }
         ],
-        "summary": "Full-Stack Engineer (Backend-focused) specializing in high-availability microservices and event-driven architectures. Modernized enterprise systems at IKEA, improving latency, reliability, and efficiency. Focused on distributed systems, cloud infrastructure, and automation. Proficient in React/TypeScript for full-stack autonomy. Experienced in distributed international teams."
+        "summary": "Full-Stack Engineer (Backend-focused) specializing in high-availability microservices and event-driven architectures. Modernized enterprise systems at IKEA, improving latency, reliability, and efficiency. Focused on distributed systems, cloud infrastructure, and CI/CD automation. Proficient in React/TypeScript for full-stack autonomy. Experienced in distributed international teams."
     },
     "work": [
         {
@@ -44,9 +44,8 @@
             "startDate": "2025-01",
             "highlights": [
                 "Architected Spring Boot microservices for IKEA's loyalty platform processing 2M+ monthly transactions for 400k+ users with 99.9% uptime SLA.",
-                "Led PL/SQL to Kafka migration (15+ topics, 50k+ daily events) implementing circuit breakers, retry logic, and Prometheus/Grafana monitoring.",
-                "Automated pipelines via GitHub Actions replacing 7 manual jobs, reducing processing 55%. Configured Docker builds and scheduled backups.",
-                "Designed multi-provider insurance system with JWT auth, RBAC, API rate limiting, and async event processing with failover mechanisms."
+                "Led PL/SQL to Kafka migration (15+ topics, 50k+ daily events) implementing circuit breakers, retry logic, and replacing 7 manual jobs via GitHub Actions automation, reducing processing 55%.",
+                "Built retail insurance sales platform integrating multiple providers (Maffrey, Adeslas) into unified microservices manager with Kafka-based communication, JWT auth, and RBAC."
             ]
         }
     ],
@@ -57,8 +56,8 @@
             "url": "https://nexocloudpro.com",
             "startDate": "2025-09",
             "highlights": [
-                "Architected production-grade RAG system (Spring Boot + Redis + R2) processing 30k+ docs monthly. Implemented Testcontainers for integration testing.",
-                "Designed async pipeline (1k+ docs/hour, p99 <200ms) with event sourcing, worker pools, and dead letter queues. Automated PostgreSQL backups.",
+                "Architected production-grade RAG system (Spring Boot + Redis + Cloudflare R2) on Hetzner VPS processing 30k+ docs monthly. Implemented Testcontainers for integration testing.",
+                "Designed async pipeline (1k+ docs/hour, p99 <200ms) with event sourcing, worker pools, and dead letter queues. Automated PostgreSQL (PG Vector) backups on own-managed infrastructure.",
                 "Built React dashboard for document monitoring with JWT auth UI. Optimized costs 30% via caching, batch processing, and query tuning."
             ]
         }
@@ -69,7 +68,7 @@
             "keywords": [
                 "Java 21",
                 "Spring Boot 3",
-                "Microservices Architecture",
+                "Microservices",
                 "Apache Kafka",
                 "PostgreSQL",
                 "REST APIs"
@@ -108,15 +107,14 @@
     "education": [
         {
             "institution": "University of Las Palmas de Gran Canaria",
-            "area": "BSc Computer Engineering — Expected May 2026",
+            "area": "BSc Computer Engineering",
             "studyType": "Final Year Student",
             "startDate": "2022-06",
-            "endDate": "2026-05",
             "location": "Las Palmas, Spain"
         },
         {
             "institution": "Halmstad University",
-            "area": "Computer Science (Intelligent Systems)",
+            "area": "Computer Science",
             "studyType": "Exchange Program",
             "startDate": "2024-09",
             "endDate": "2025-01",
