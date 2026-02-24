@@ -162,6 +162,29 @@ Handlebars.registerHelper('formatDate', function(dateString, options) {
     return formatted.replace(/([A-Za-z]+)(\d)/, '$1 $2');
 });
 
+Handlebars.registerHelper('formatLongDate', function(dateString, options) {
+    if (!dateString) {
+        const labels = options.data.root.resume && options.data.root.resume.labels;
+        return (labels && labels.present) ? labels.present : 'Present';
+    }
+
+    const lang = options.data.root.lang || 'en';
+    const localeMap = {
+        'en': 'en-US',
+        'es': 'es-ES'
+    };
+    const locale = localeMap[lang] || 'en-US';
+
+    const date = new Date(dateString);
+    let formatted = date.toLocaleDateString(locale, { year: 'numeric', month: 'long' });
+
+    if (lang === 'es') {
+        formatted = formatted.charAt(0).toUpperCase() + formatted.slice(1);
+    }
+
+    return formatted.replace(/([A-Za-z]+)(\d)/, '$1 $2');
+});
+
 Handlebars.registerHelper('removeProtocol', function(url) {
     return url.replace(/(^\w+:|^)\/\//, '');
 });

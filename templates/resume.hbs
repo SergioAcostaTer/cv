@@ -139,7 +139,9 @@
                     </div>
                     <div class="right-col">
                         <div class="location">{{this.location}}</div>
-                        <div class="date">{{formatDate this.startDate}} – {{formatDate this.endDate}}{{#if this.expectedEndDate}} ({{@root.resume.labels.expectedGraduation}} {{formatDate this.expectedEndDate}}){{/if}}</div>
+                        <div class="date">
+                            {{formatDate this.startDate}} – {{#if this.expectedEndDate}}{{formatDate this.expectedEndDate}} ({{@root.resume.labels.expectedGraduation}}){{else}}{{formatDate this.endDate}}{{/if}}
+                        </div>
                     </div>
                 </div>
             </div>
