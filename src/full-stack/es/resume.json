@@ -1,0 +1,135 @@
+{
+    "sectionLabels": {
+        "experience": "EXPERIENCIA PROFESIONAL",
+        "projects": "PROYECTOS",
+        "education": "EDUCACIÓN",
+        "skills": "COMPETENCIAS TÉCNICAS",
+        "languages": "IDIOMAS"
+    },
+    "labels": {
+        "present": "Actualidad"
+    },
+    "basics": {
+        "name": "Sergio Acosta Quintana",
+        "label": "Full-Stack Engineer",
+        "email": "sergioacostaquintana@gmail.com",
+        "phone": "+34 600 24 39 94",
+        "location": {
+            "city": "Las Palmas",
+            "countryCode": "ES",
+            "region": "España"
+        },
+        "profiles": [
+            {
+                "network": "LinkedIn",
+                "username": "sergioacostaquintana",
+                "url": "https://linkedin.com/in/sergioacostaquintana"
+            },
+            {
+                "network": "GitHub",
+                "username": "sergioacostater",
+                "url": "https://github.com/sergioacostater"
+            },
+            {
+                "network": "Portfolio",
+                "username": "sergioaco.com",
+                "url": "https://sergioaco.com"
+            }
+        ],
+        "summary": "Full-Stack Engineer especializado en construir productos digitales escalables con foco en impacto real de negocio. Experiencia modernizando sistemas críticos y diseñando arquitecturas resilientes en entornos cloud, trabajando end-to-end desde el diseño hasta producción. Apasionado por la innovación tecnológica y la mejora continua."
+    },
+    "work": [
+        {
+            "name": "IKEA / BITBOX S.L.",
+            "url": "https://bitboxonline.com/",
+            "position": "Ingeniero de Software Full-Stack",
+            "location": "Las Palmas, España",
+            "startDate": "2025-01",
+            "highlights": [
+                "Lideré la migración de sistemas críticos de fidelización (400k+ usuarios) hacia una arquitectura orientada a eventos, mejorando la estabilidad y reduciendo dependencias técnicas.",
+                "Sustituí procesos de datos legacy por flujos modernos. Reduje tiempos de procesamiento un 55%, eliminé puntos de fallo y ahorré 40h/mes en soporte operativo.",
+                "Diseñé una plataforma de seguros desacoplada para integrar proveedores externos. Apliqué aislamiento de dominios asegurando escalabilidad, alta disponibilidad y evitando la dependencia de terceros."
+            ]
+        }
+    ],
+    "projects": [
+        {
+            "name": "NEXO CLOUD (SaaS)",
+            "description": "Plataforma Inteligente de Documentos impulsada por IA",
+            "url": "https://nexocloudpro.com",
+            "startDate": "2025-09",
+            "highlights": [
+                "Desarrollé la arquitectura de un SaaS de IA que procesa 30k+ documentos mensuales, desplegado sobre infraestructura de alta disponibilidad con pruebas de integración automatizadas.",
+                "Diseñé un pipeline asíncrono (1k+ docs/hora) implementando event sourcing y recuperación de errores para maximizar la tolerancia a fallos y la resiliencia de datos.",
+                "Construí el dashboard integral de gestión optimizando costes de infraestructura mediante un diseño híbrido basado en la utilidad, integrando S3, PostgreSQL y Redis."
+            ]
+        }
+    ],
+    "skills": [
+        {
+            "name": "Frontend",
+            "keywords": [
+                "JavaScript, TypeScript",
+                "React, React Native",
+                "Vue, Angular",
+                "Tailwind CSS"
+            ]
+        },
+        {
+            "name": "Backend Engineering",
+            "keywords": [
+                "Node.js, Express",
+                "Java, Spring Boot",
+                "Testing (Jest, JUnit)",
+                "Testcontainers (tests de integración)",
+                "SQL (PostgreSQL, MySQL)",
+                "NoSQL (MongoDB, Redis)",
+                "Kafka"
+            ]
+        },
+        {
+            "name": "Cloud, Infra & DevOps",
+            "keywords": [
+                "AWS (EKS, S3, DynamoDB)",
+                "Docker, Kubernetes",
+                "Terraform",
+                "Git, CI/CD"
+            ]
+        },
+        {
+            "name": "Arquitectura y Metodología",
+            "keywords": [
+                "DDD, Clean Code",
+                "Arquitectura Hexagonal",
+                "Agile, Scrum"
+            ]
+        }
+    ],
+    "education": [
+        {
+            "institution": "Universidad de Las Palmas de Gran Canaria",
+            "area": "Grado en Ingeniería Informática",
+            "studyType": "Último Año",
+            "startDate": "2022-09",
+            "location": "Las Palmas, España"
+        },
+        {
+            "institution": "Universidad de Halmstad",
+            "area": "BSc Computer Science",
+            "studyType": "Programa de Intercambio",
+            "startDate": "2024-09",
+            "endDate": "2025-01",
+            "location": "Halmstad, Suecia"
+        }
+    ],
+    "languages": [
+        {
+            "language": "Inglés",
+            "fluency": "Competencia Profesional Completa (B2/C1)"
+        },
+        {
+            "language": "Español",
+            "fluency": "Nativo"
+        }
+    ]
+}
