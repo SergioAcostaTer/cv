@@ -7,7 +7,8 @@
         "languages": "LANGUAGES"
     },
     "labels": {
-        "present": "Present"
+        "present": "Present",
+        "expectedGraduation": "expected"
     },
     "basics": {
         "name": "Sergio Acosta Quintana",
@@ -36,7 +37,7 @@
                 "url": "https://sergioaco.com"
             }
         ],
-        "summary": "Full-Stack Engineer specializing in building scalable digital products with a focus on real business impact. Experienced in modernizing critical systems and designing resilient architectures in cloud environments, working end-to-end from design to production. Passionate about technological innovation and continuous improvement."
+        "summary": "Full-Stack Engineer specialized in building scalable digital products with a focus on real business impact. Experienced in modernizing critical systems and designing resilient architectures in cloud environments, working end-to-end from design to production. Passionate about technological innovation and continuous improvement."
     },
     "work": [
         {
@@ -47,8 +48,8 @@
             "startDate": "2025-01",
             "highlights": [
                 "Led the migration of critical loyalty systems (400k+ users) toward an event-driven architecture, improving stability and reducing technical dependencies.",
-                "Replaced legacy data processes with modern workflows, reducing processing times by 55%, eliminating points of failure, and saving 40 hours/month in operational support.",
-                "Designed a decoupled insurance platform to integrate external providers, applying domain isolation to ensure scalability and high availability while avoiding third-party lock-in."
+                "Replaced legacy data processes with modern workflows. Reduced processing times by 55%, eliminated failure points, and saved 40h/month in operational support.",
+                "Designed a decoupled insurance platform to integrate external providers. Applied domain isolation ensuring scalability, high availability, and avoiding third-party lock-in."
             ]
         }
     ],
@@ -59,9 +60,9 @@
             "url": "https://nexocloudpro.com",
             "startDate": "2025-09",
             "highlights": [
-                "Developed the architecture for an AI SaaS processing 30k+ documents monthly, deployed on high-availability infrastructure with automated integration testing.",
+                "Developed the architecture for an AI SaaS processing 30k+ documents monthly, deployed on high-availability infrastructure with automated integration tests.",
                 "Designed an asynchronous pipeline (1k+ docs/hour) implementing event sourcing and error recovery to maximize fault tolerance and data resilience.",
-                "Built a comprehensive management dashboard optimizing infrastructure costs through a utility-based hybrid design, integrating S3, PostgreSQL, and Redis."
+                "Built the comprehensive management dashboard optimizing infrastructure costs through a utility-based hybrid design, integrating S3, PostgreSQL, and Redis."
             ]
         }
     ],
@@ -97,7 +98,7 @@
             ]
         },
         {
-            "name": "Architecture & Methodology",
+            "name": "Architecture and Methodology",
             "keywords": [
                 "DDD, Clean Code",
                 "Hexagonal Architecture",
@@ -111,6 +112,7 @@
             "area": "BSc in Computer Engineering",
             "studyType": "Final Year",
             "startDate": "2022-09",
+            "expectedEndDate": "2026-06",
             "location": "Las Palmas, Spain"
         },
         {

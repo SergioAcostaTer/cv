@@ -7,7 +7,8 @@
         "languages": "LANGUAGES"
     },
     "labels": {
-        "present": "Present"
+        "present": "Present",
+        "expectedGraduation": "expected"
     },
     "basics": {
         "name": "Sergio Acosta Quintana",
@@ -114,7 +115,8 @@
             "institution": "University of Las Palmas de Gran Canaria",
             "area": "BSc Computer Engineering",
             "studyType": "Final Year Student",
-            "startDate": "2022-06",
+            "startDate": "2022-09",
+            "expectedEndDate": "2026-06",
             "location": "Las Palmas, Spain"
         },
         {
