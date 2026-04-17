@@ -5,18 +5,17 @@
         "moduleResolution": "Node",
         "esModuleInterop": true,
         "resolveJsonModule": true,
-        "strict": false,
+        "strict": true,
         "skipLibCheck": true,
         "allowSyntheticDefaultImports": true,
         "types": [
             "node"
         ],
-        "outDir": "dist-ts"
+        "outDir": "dist-ts",
+        "rootDir": "."
     },
     "include": [
-        "generate.ts",
-        "generate-linkedin.ts",
-        "lib/**/*.ts",
+        "src/**/*.ts",
         "types/**/*.d.ts"
     ],
     "exclude": [
