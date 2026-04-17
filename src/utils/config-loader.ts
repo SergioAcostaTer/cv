@@ -4,15 +4,29 @@ import { getPersonaConfig, getProjectRoot, type PersonaConfig } from '../core/ru
 
 export const loadPersonaConfig = (): PersonaConfig => getPersonaConfig();
 
+const formatTimestamp = (value: Date): string => {
+  const year = value.getFullYear();
+  const month = String(value.getMonth() + 1).padStart(2, '0');
+  const day = String(value.getDate()).padStart(2, '0');
+  const hours = String(value.getHours()).padStart(2, '0');
+  const minutes = String(value.getMinutes()).padStart(2, '0');
+  const seconds = String(value.getSeconds()).padStart(2, '0');
+
+  return `${year}${month}${day}_${hours}${minutes}${seconds}`;
+};
+
 export const resolveOutputFilename = (lang: string, role: string): string => {
   const config = getPersonaConfig();
-  const dateString = new Date().toISOString().split('T')[0] ?? '';
+  const now = new Date();
+  const dateString = now.toISOString().split('T')[0] ?? '';
+  const timestamp = formatTimestamp(now);
 
   return config.outputNaming
     .replaceAll('{persona}', config.personaId)
     .replaceAll('{role}', role)
     .replaceAll('{lang}', lang)
-    .replaceAll('{date}', dateString);
+    .replaceAll('{date}', dateString)
+    .replaceAll('{timestamp}', timestamp);
 };
 
 const isPlainObject = (value: unknown): value is Record<string, unknown> =>

@@ -17,9 +17,11 @@
     },
     "dependencies": {
         "@clack/prompts": "^1.2.0",
+        "clipboardy": "^5.3.1",
         "handlebars": "^4.7.7",
         "marked": "^15.0.12",
         "marked-terminal": "^7.3.0",
+        "open": "^11.0.0",
         "openai": "^6.34.0",
         "picocolors": "^1.1.1",
         "puppeteer": "^24.37.2",
@@ -28,6 +30,7 @@
     "devDependencies": {
         "@types/marked-terminal": "^6.1.1",
         "@types/node": "^22.15.3",
+        "@types/open": "^6.2.1",
         "@vitest/coverage-v8": "^4.1.4",
         "tsx": "^4.19.2",
         "typescript": "^5.8.3",

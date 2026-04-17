@@ -1,7 +1,9 @@
-import * as clack from '@clack/prompts';
+﻿import * as clack from '@clack/prompts';
+import clipboardy from 'clipboardy';
 import fs from 'fs';
 import { marked } from 'marked';
 import TerminalRenderer from 'marked-terminal';
+import open from 'open';
 import path from 'path';
 import pc from 'picocolors';
 import { getAppPaths } from '../core/runtime';
@@ -16,7 +18,8 @@ import {
     runCliEntry,
     secondary,
     success,
-    unwrapCancel
+    unwrapCancel,
+    warning
 } from '../utils/ui';
 
 type CareerDriverId = 'salary' | 'leadership' | 'pivot' | 'balance';
@@ -24,6 +27,11 @@ type CareerDriverId = 'salary' | 'leadership' | 'pivot' | 'balance';
 type CareerDriverOption = {
   value: CareerDriverId;
   label: string;
+};
+
+type RoadmapSection = {
+  title: string;
+  markdown: string;
 };
 
 const CAREER_DRIVERS: CareerDriverOption[] = [
@@ -155,14 +163,14 @@ The markdown must include exactly these sections and order:
 # AI Career Roadmap
 
 ## Current Market Evaluation
-- Evaluate where this profile stands today in the current market.
+- Evaluate where this profile stands today based on current market conditions.
 - Highlight strengths, risks, and competitiveness.
 
 ## Target Roles & Salary Projections
 - Provide 2-3 concrete target roles for the next move.
 - For each role include:
   - Why it fits this profile.
-  - Realistic salary range (yearly, currency + region assumptions).
+  - Realistic salary range (yearly, include currency and region assumptions).
   - Seniority expectation.
 
 ## The Gap Analysis
@@ -266,25 +274,129 @@ const streamRoadmap = async (input: {
   return response;
 };
 
-const maybeSaveRoadmap = async (roadmapMarkdown: string): Promise<void> => {
-  if (!roadmapMarkdown.trim()) {
-    return;
+const formatTimestamp = (value: Date): string => {
+  const year = value.getFullYear();
+  const month = String(value.getMonth() + 1).padStart(2, '0');
+  const day = String(value.getDate()).padStart(2, '0');
+  const hours = String(value.getHours()).padStart(2, '0');
+  const minutes = String(value.getMinutes()).padStart(2, '0');
+  const seconds = String(value.getSeconds()).padStart(2, '0');
+
+  return `${year}${month}${day}_${hours}${minutes}${seconds}`;
+};
+
+const parseRoadmapSections = (roadmapMarkdown: string): RoadmapSection[] => {
+  const headingRegex = /^##\s+(.+)$/gmu;
+  const matches = Array.from(roadmapMarkdown.matchAll(headingRegex));
+
+  if (matches.length === 0) {
+    return [
+      {
+        title: 'Full Roadmap',
+        markdown: roadmapMarkdown
+      }
+    ];
   }
 
-  const confirm = await clack.confirm({
-    message: 'Would you like to save this roadmap as a markdown file?'
+  return matches.map((match, index) => {
+    const sectionTitle = match[1]?.trim() || `Section ${index + 1}`;
+    const start = match.index ?? 0;
+    const end = index + 1 < matches.length ? (matches[index + 1]?.index ?? roadmapMarkdown.length) : roadmapMarkdown.length;
+
+    return {
+      title: sectionTitle,
+      markdown: roadmapMarkdown.slice(start, end).trim()
+    };
+  });
+};
+
+const renderMarkdownToTerminal = async (markdown: string): Promise<void> => {
+  const rendered = marked.parse(markdown);
+  const output = typeof rendered === 'string' ? rendered : await rendered;
+  process.stdout.write(`${output}${output.endsWith('\n') ? '' : '\n'}\n`);
+};
+
+const copyToClipboardSafely = (text: string): void => {
+  try {
+    clipboardy.writeSync(text);
+    clack.log.success('Copied to clipboard!');
+  } catch (clipboardError: unknown) {
+    clack.log.error(
+      `Clipboard unavailable in this environment: ${clipboardError instanceof Error ? clipboardError.message : String(clipboardError)}`
+    );
+  }
+};
+
+const waitForEnter = async (): Promise<void> => {
+  const result = await clack.text({
+    message: 'Press Enter to return to dashboard',
+    defaultValue: ''
   });
 
-  const shouldSave = unwrapCancel(confirm, 'Roadmap save cancelled.');
-  if (!shouldSave) {
-    return;
-  }
+  unwrapCancel(result, 'Dashboard closed.');
+};
 
-  const date = new Date().toISOString().split('T')[0] ?? 'today';
-  const outputPath = path.join(getAppPaths().profilesDir, `career-roadmap-${date}.md`);
-  fs.mkdirSync(path.dirname(outputPath), { recursive: true });
-  fs.writeFileSync(outputPath, roadmapMarkdown, 'utf8');
-  success(`Roadmap saved: ${path.relative(process.cwd(), outputPath)}`);
+const runRoadmapDashboard = async (input: {
+  roadmapMarkdown: string;
+  roadmapPath: string;
+}): Promise<void> => {
+  const sections = parseRoadmapSections(input.roadmapMarkdown);
+
+  while (true) {
+    clearScreen();
+    clack.intro(`${pc.bold(colors.primary('Roadmap Dashboard'))} ${secondary('section navigator')}`);
+    note(`Archive: ${path.relative(process.cwd(), input.roadmapPath)}`, 'Saved');
+
+    const sectionOptions = sections.map((section, index) => ({
+      value: `section:${index}`,
+      label: `View ${section.title}`
+    }));
+
+    const selection = await clack.select({
+      message: 'Choose an action',
+      options: [
+        ...sectionOptions,
+        { value: 'copy-full', label: 'Copy Full Roadmap to Clipboard' },
+        { value: 'open-roadmap', label: 'Open Roadmap in Editor' },
+        { value: 'exit', label: 'Exit' }
+      ]
+    });
+
+    const action = unwrapCancel(selection, 'Roadmap dashboard closed.');
+
+    if (action === 'exit') {
+      return;
+    }
+
+    if (action === 'copy-full') {
+      copyToClipboardSafely(input.roadmapMarkdown);
+      await waitForEnter();
+      continue;
+    }
+
+    if (action === 'open-roadmap') {
+      try {
+        await open(input.roadmapPath);
+        clack.log.success('Opened roadmap in your default editor.');
+      } catch (openError: unknown) {
+        warning(`Could not open roadmap: ${openError instanceof Error ? openError.message : String(openError)}`);
+      }
+      await waitForEnter();
+      continue;
+    }
+
+    if (action.startsWith('section:')) {
+      const index = Number(action.split(':')[1]);
+      const section = sections[index];
+      if (!section) {
+        continue;
+      }
+
+      clearScreen();
+      await renderMarkdownToTerminal(`## ${section.title}\n\n${section.markdown.replace(/^##\s+.+$/u, '').trim()}`);
+      await waitForEnter();
+    }
+  }
 };
 
 export const run = async (): Promise<void> => {
@@ -292,7 +404,7 @@ export const run = async (): Promise<void> => {
   clearScreen();
   clack.intro(`${pc.bold(colors.primary('Career Strategist'))} ${secondary('AI roadmap coach')}`);
 
-  const { defaultResumePath } = getAppPaths();
+  const { defaultResumePath, historyDir } = getAppPaths();
   const sourcePath = await chooseSourceJson(path.relative(process.cwd(), defaultResumePath));
   if (!sourcePath) {
     return;
@@ -317,7 +429,21 @@ export const run = async (): Promise<void> => {
     })
   });
 
-  await maybeSaveRoadmap(roadmapMarkdown);
+  if (!roadmapMarkdown.trim()) {
+    return;
+  }
+
+  const timestamp = formatTimestamp(new Date());
+  const roadmapsDir = path.join(historyDir, 'roadmaps');
+  const roadmapPath = path.join(roadmapsDir, `career-roadmap-${timestamp}.md`);
+  fs.mkdirSync(roadmapsDir, { recursive: true });
+  fs.writeFileSync(roadmapPath, roadmapMarkdown, 'utf8');
+  success(`Roadmap archived: ${path.relative(process.cwd(), roadmapPath)}`);
+
+  await runRoadmapDashboard({
+    roadmapMarkdown,
+    roadmapPath
+  });
 };
 
 if (require.main === module) {

@@ -1,16 +1,21 @@
-import * as clack from '@clack/prompts';
+﻿import * as clack from '@clack/prompts';
+import clipboardy from 'clipboardy';
 import fs from 'fs';
+import { marked } from 'marked';
+import TerminalRenderer from 'marked-terminal';
+import open from 'open';
 import path from 'path';
+import pc from 'picocolors';
 import { getAppPaths } from '../core/runtime';
 import { getModelsForProvider, type ClientConfig, type ModelCatalogItem, type ProviderId } from '../utils/api';
-import { writeLinkedinHtmlReport } from '../utils/html-export';
 import {
     generateLinkedinProfiles,
     generateStrategyOptions,
     getProviderModelCatalog,
-    type GeneratorAnswers
+    type GeneratorAnswers,
+    type LinkedinResult
 } from '../utils/linkedin-generator';
-import { note, runCliEntry, secondary, success, unwrapCancel } from '../utils/ui';
+import { clearScreen, colors, note, runCliEntry, secondary, success, unwrapCancel, warning } from '../utils/ui';
 
 type OptionItem = {
   label: string;
@@ -30,6 +35,23 @@ type GroupedSelections = {
 };
 
 type CliArgs = Record<string, string | boolean>;
+
+let markdownConfigured = false;
+
+const configureMarkdownRenderer = (): void => {
+  if (markdownConfigured) {
+    return;
+  }
+
+  marked.setOptions({
+    renderer: new TerminalRenderer({
+      reflowText: true,
+      tab: 2
+    }) as unknown as import('marked').Renderer
+  });
+
+  markdownConfigured = true;
+};
 
 const parseArgs = (argv: string[]): CliArgs => {
   const args: CliArgs = {};
@@ -253,19 +275,193 @@ const chooseLanguages = async (defaultLanguages: string): Promise<string> => {
   return selected;
 };
 
-export const run = async (providedArgs?: string[]): Promise<void> => {
-  const args = parseArgs(providedArgs ?? process.argv.slice(2));
-  const { defaultResumePath, linkedinOutputPath } = getAppPaths();
+const formatTimestamp = (value: Date): string => {
+  const year = value.getFullYear();
+  const month = String(value.getMonth() + 1).padStart(2, '0');
+  const day = String(value.getDate()).padStart(2, '0');
+  const hours = String(value.getHours()).padStart(2, '0');
+  const minutes = String(value.getMinutes()).padStart(2, '0');
+  const seconds = String(value.getSeconds()).padStart(2, '0');
 
-  if (args['from-json']) {
-    const inputJsonPath =
-      typeof args['from-json'] === 'string' ? path.resolve(args['from-json']) : path.resolve(linkedinOutputPath);
-    const raw = fs.readFileSync(inputJsonPath, 'utf8');
-    const parsed = JSON.parse(raw) as Awaited<ReturnType<typeof generateLinkedinProfiles>>['result'];
-    const htmlPath = writeLinkedinHtmlReport({ result: parsed, jsonPath: inputJsonPath });
-    success(`LinkedIn HTML generated from JSON: ${path.relative(process.cwd(), htmlPath)}`);
-    return;
+  return `${year}${month}${day}_${hours}${minutes}${seconds}`;
+};
+
+const buildLinkedinDraftMarkdown = (result: LinkedinResult): string => {
+  const sections = Object.entries(result.profile)
+    .map(([language, profile]) => {
+      const experience = profile.experience
+        .map(
+          (item) =>
+            `### ${item.title} @ ${item.company}\n${item.startDate} - ${item.endDate} (${item.location})\n\n${item.description}`
+        )
+        .join('\n\n');
+
+      return [
+        `## ${language.toUpperCase()}`,
+        `### Headline`,
+        profile.profile.headline || profile.about.valueProposition || 'No headline generated.',
+        `### About`,
+        profile.about.descriptionToPaste,
+        `### Experience`,
+        experience || 'No experience blocks generated.'
+      ].join('\n\n');
+    })
+    .join('\n\n---\n\n');
+
+  return [
+    '# LinkedIn Draft',
+    '',
+    `- Provider: ${result.meta.provider}`,
+    `- Model: ${result.meta.model}`,
+    `- Generated: ${result.meta.generatedAt}`,
+    '',
+    sections
+  ].join('\n');
+};
+
+const buildHeadlineAboutMarkdown = (result: LinkedinResult): string => {
+  const body = Object.entries(result.profile)
+    .map(([language, profile]) => {
+      return [
+        `## ${language.toUpperCase()}`,
+        `### Headline`,
+        profile.profile.headline || profile.about.valueProposition || 'No headline generated.',
+        `### About`,
+        profile.about.descriptionToPaste
+      ].join('\n\n');
+    })
+    .join('\n\n---\n\n');
+
+  return `# Headline & About\n\n${body}`;
+};
+
+const buildExperienceMarkdown = (result: LinkedinResult): string => {
+  const body = Object.entries(result.profile)
+    .map(([language, profile]) => {
+      const blocks = profile.experience
+        .map(
+          (item) =>
+            `### ${item.title} @ ${item.company}\n${item.startDate} - ${item.endDate} (${item.location})\n\n${item.description}`
+        )
+        .join('\n\n');
+
+      return `## ${language.toUpperCase()}\n\n${blocks || 'No experience blocks generated.'}`;
+    })
+    .join('\n\n---\n\n');
+
+  return `# Experience Blocks\n\n${body}`;
+};
+
+const renderMarkdownToTerminal = async (markdown: string): Promise<void> => {
+  const rendered = marked.parse(markdown);
+  const output = typeof rendered === 'string' ? rendered : await rendered;
+  process.stdout.write(`${output}${output.endsWith('\n') ? '' : '\n'}\n`);
+};
+
+const copyToClipboardSafely = (text: string): void => {
+  try {
+    clipboardy.writeSync(text);
+    clack.log.success('Copied to clipboard!');
+  } catch (clipboardError: unknown) {
+    clack.log.error(
+      `Clipboard unavailable in this environment: ${clipboardError instanceof Error ? clipboardError.message : String(clipboardError)}`
+    );
   }
+};
+
+const waitForEnter = async (): Promise<void> => {
+  const result = await clack.text({
+    message: 'Press Enter to return to dashboard',
+    defaultValue: ''
+  });
+
+  unwrapCancel(result, 'Dashboard closed.');
+};
+
+const runLinkedinDashboard = async (input: {
+  result: LinkedinResult;
+  draftPath: string;
+  jsonPath: string;
+}): Promise<void> => {
+  while (true) {
+    clearScreen();
+    clack.intro(`${pc.bold(colors.primary('LinkedIn Dashboard'))} ${secondary('archive + clipboard tools')}`);
+    note(
+      `JSON: ${path.relative(process.cwd(), input.jsonPath)}\nDraft: ${path.relative(process.cwd(), input.draftPath)}`,
+      'Generation Archive'
+    );
+
+    const action = await clack.select({
+      message: 'Choose an action',
+      options: [
+        { value: 'view-headline-about', label: 'View Headline & About' },
+        { value: 'copy-about', label: 'Copy About Section to Clipboard' },
+        { value: 'view-experience', label: 'View Experience Blocks' },
+        { value: 'copy-experience', label: 'Copy Experience Blocks to Clipboard' },
+        { value: 'open-draft', label: 'Open Markdown Draft in Editor' },
+        { value: 'exit', label: 'Exit' }
+      ]
+    });
+
+    const selected = unwrapCancel(action, 'Dashboard closed.');
+
+    if (selected === 'exit') {
+      return;
+    }
+
+    if (selected === 'view-headline-about') {
+      clearScreen();
+      await renderMarkdownToTerminal(buildHeadlineAboutMarkdown(input.result));
+      await waitForEnter();
+      continue;
+    }
+
+    if (selected === 'copy-about') {
+      const aboutText = Object.entries(input.result.profile)
+        .map(([language, profile]) => `### ${language.toUpperCase()}\n\n${profile.about.descriptionToPaste}`)
+        .join('\n\n---\n\n');
+      copyToClipboardSafely(aboutText);
+      await waitForEnter();
+      continue;
+    }
+
+    if (selected === 'view-experience') {
+      clearScreen();
+      await renderMarkdownToTerminal(buildExperienceMarkdown(input.result));
+      await waitForEnter();
+      continue;
+    }
+
+    if (selected === 'copy-experience') {
+      const experienceText = Object.entries(input.result.profile)
+        .map(([language, profile]) => {
+          const blocks = profile.experience
+            .map((item) => `${item.title} @ ${item.company}\n${item.startDate} - ${item.endDate}\n${item.description}`)
+            .join('\n\n');
+          return `### ${language.toUpperCase()}\n\n${blocks || 'No experience blocks generated.'}`;
+        })
+        .join('\n\n---\n\n');
+      copyToClipboardSafely(experienceText);
+      await waitForEnter();
+      continue;
+    }
+
+    if (selected === 'open-draft') {
+      try {
+        await open(input.draftPath);
+        clack.log.success('Opened markdown draft in your default editor.');
+      } catch (openError: unknown) {
+        warning(`Could not open markdown draft: ${openError instanceof Error ? openError.message : String(openError)}`);
+      }
+      await waitForEnter();
+    }
+  }
+};
+
+export const run = async (providedArgs?: string[]): Promise<void> => {
+  configureMarkdownRenderer();
+  const args = parseArgs(providedArgs ?? process.argv.slice(2));
+  const { defaultResumePath, historyDir } = getAppPaths();
 
   const sourcePath = await chooseSourceJson(path.relative(process.cwd(), defaultResumePath));
   if (!sourcePath) {
@@ -335,7 +531,6 @@ export const run = async (providedArgs?: string[]): Promise<void> => {
   const selectedKeywordCluster = options.keywordClusters.find((cluster) => cluster.label === selectedKeywordClusterName);
   const languagesInput = await chooseLanguages(preselectedLanguages.join(',') || 'en,es');
   const roleFocus = await askText('Role focus for the prompt', preferredPath);
-  const outputPath = await askText('Output file path', path.relative(process.cwd(), linkedinOutputPath));
 
   const languages = languagesInput
     .split(',')
@@ -366,6 +561,12 @@ export const run = async (providedArgs?: string[]): Promise<void> => {
     catalog: getProviderModelCatalog(provider)
   });
 
+  const timestamp = formatTimestamp(new Date());
+  const linkedinHistoryDir = path.join(historyDir, 'linkedin', timestamp);
+  const archivedJsonPath = path.join(linkedinHistoryDir, 'linkedin.json');
+  const archivedDraftPath = path.join(linkedinHistoryDir, 'linkedin-draft.md');
+  fs.mkdirSync(linkedinHistoryDir, { recursive: true });
+
   const generationSpinner = clack.spinner();
   generationSpinner.start(`Generating LinkedIn JSON with ${provider} (${providerOptions.model})`);
 
@@ -375,21 +576,28 @@ export const run = async (providedArgs?: string[]): Promise<void> => {
     providerOptions,
     languages,
     answers,
-    outputPath
+    outputPath: archivedJsonPath
   });
 
-  generationSpinner.stop('LinkedIn JSON generated');
-  const htmlPath = writeLinkedinHtmlReport({ result, jsonPath: generatedPath });
+  const markdownDraft = buildLinkedinDraftMarkdown(result);
+  fs.writeFileSync(archivedDraftPath, markdownDraft, 'utf8');
+
+  generationSpinner.stop('LinkedIn profile archive generated');
   success(`Provider: ${providerConfig.label}`);
   success(`Model: ${providerConfig.model}`);
-  success(`Output: ${path.relative(process.cwd(), generatedPath)}`);
-  success(`HTML: ${path.relative(process.cwd(), htmlPath)}`);
+  success(`Archive: ${path.relative(process.cwd(), linkedinHistoryDir)}`);
 
   const estimatedTotal = estimate.available ? fmtUsd(estimate.totalCost) : '$0.00';
   clack.note(
     `Generated ${languages.length || preselectedLanguages.length || 1} languages using ${providerConfig.model}.\nEstimated Cost: ${estimatedTotal}`,
     'Operation Receipt'
   );
+
+  await runLinkedinDashboard({
+    result,
+    draftPath: archivedDraftPath,
+    jsonPath: generatedPath
+  });
 };
 
 if (require.main === module) {

@@ -1,12 +1,12 @@
 import * as clack from '@clack/prompts';
 import fs from 'fs';
 import Handlebars from 'handlebars';
+import open from 'open';
 import path from 'path';
 import puppeteer, { type Browser } from 'puppeteer';
 import { clearRuntimeCache, getAppPaths } from '../core/runtime';
 import { applyOverrides, resolveOutputFilename } from '../utils/config-loader';
-import { writeResumeIndexHtml } from '../utils/html-export';
-import { createSpinner, info, note, runCliEntry, secondary, success, unwrapCancel } from '../utils/ui';
+import { createSpinner, info, note, runCliEntry, secondary, success, unwrapCancel, warning } from '../utils/ui';
 
 const DEFAULT_THEME = 'harvard';
 type BuildOptions = { theme?: string; watch?: boolean };
@@ -69,6 +69,29 @@ const listThemes = (): string[] => {
     .filter((entry) => entry.endsWith('.css'))
     .map((entry) => entry.replace(/\.css$/u, ''))
     .sort((a, b) => a.localeCompare(b));
+};
+
+const maybeOpenGeneratedPdfs = async (generatedPdfPaths: string[]): Promise<void> => {
+  if (!generatedPdfPaths.length) {
+    return;
+  }
+
+  const confirmOpen = await clack.confirm({
+    message: 'Would you like to open the generated PDFs now?'
+  });
+
+  const shouldOpen = unwrapCancel(confirmOpen, 'PDF open action cancelled.');
+  if (!shouldOpen) {
+    return;
+  }
+
+  for (const pdfPath of generatedPdfPaths) {
+    try {
+      await open(pdfPath);
+    } catch (openError: unknown) {
+      warning(`Could not open ${path.basename(pdfPath)}: ${openError instanceof Error ? openError.message : String(openError)}`);
+    }
+  }
 };
 
 const buildResumes = async (selectedTheme: string, existingBrowser?: Browser): Promise<void> => {
@@ -142,14 +165,9 @@ const buildResumes = async (selectedTheme: string, existingBrowser?: Browser): P
       info(`Generated ${outputFilename}`);
     }
 
-    const htmlIndexPath = writeResumeIndexHtml({
-      distDir,
-      pdfPaths: generatedPdfPaths
-    });
-
     spinner.stop('PDF build complete');
     success(`Resumes available in ${distDir}`);
-    success(`Index page: ${path.relative(process.cwd(), htmlIndexPath)}`);
+    await maybeOpenGeneratedPdfs(generatedPdfPaths);
   } finally {
     if (ownsBrowser) {
       await browser.close();

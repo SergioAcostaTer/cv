@@ -17,6 +17,7 @@ export type AppPaths = {
   srcDir: string;
   distDir: string;
   profilesDir: string;
+  historyDir: string;
   templatesDir: string;
   themesDir: string;
   configDir: string;
@@ -63,16 +64,18 @@ const buildPaths = (persona: PersonaConfig): AppPaths => {
   const srcDir = path.join(projectRoot, 'src');
   const distDir = path.join(projectRoot, 'dist');
   const profilesDir = path.join(projectRoot, 'data', 'local');
+  const historyDir = path.join(projectRoot, 'data', 'history');
   const configDir = path.join(projectRoot, 'config');
   const themesDir = path.join(projectRoot, 'themes');
 
-  ensureDirectories([profilesDir, configDir, path.join(configDir, 'overrides'), themesDir]);
+  ensureDirectories([profilesDir, historyDir, configDir, path.join(configDir, 'overrides'), themesDir]);
 
   return {
     rootDir: projectRoot,
     srcDir,
     distDir,
     profilesDir,
+    historyDir,
     templatesDir: path.join(projectRoot, 'templates'),
     themesDir,
     configDir,
