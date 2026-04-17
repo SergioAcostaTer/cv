@@ -34,7 +34,13 @@ type GroupedSelections = {
   selectedKeywordClusterName: string;
 };
 
-type CliArgs = Record<string, string | boolean>;
+export type LinkedinRunOptions = {
+  provider?: string;
+  model?: string;
+  languages?: string;
+  apiKey?: string;
+  baseUrl?: string;
+};
 
 let markdownConfigured = false;
 
@@ -51,28 +57,6 @@ const configureMarkdownRenderer = (): void => {
   });
 
   markdownConfigured = true;
-};
-
-const parseArgs = (argv: string[]): CliArgs => {
-  const args: CliArgs = {};
-
-  for (let index = 0; index < argv.length; index += 1) {
-    const token = argv[index];
-    if (!token?.startsWith('--')) {
-      continue;
-    }
-
-    const key = token.slice(2);
-    const nextValue = argv[index + 1];
-    const value = nextValue && !nextValue.startsWith('--') ? nextValue : true;
-    args[key] = value;
-
-    if (value !== true) {
-      index += 1;
-    }
-  }
-
-  return args;
 };
 
 const findJsonFiles = (baseDir: string): string[] => {
@@ -458,9 +442,8 @@ const runLinkedinDashboard = async (input: {
   }
 };
 
-export const run = async (providedArgs?: string[]): Promise<void> => {
+export const run = async (options?: LinkedinRunOptions): Promise<void> => {
   configureMarkdownRenderer();
-  const args = parseArgs(providedArgs ?? process.argv.slice(2));
   const { defaultResumePath, historyDir } = getAppPaths();
 
   const sourcePath = await chooseSourceJson(path.relative(process.cwd(), defaultResumePath));
@@ -468,10 +451,10 @@ export const run = async (providedArgs?: string[]): Promise<void> => {
     return;
   }
 
-  const initialProvider = String(args.provider || 'openai').toLowerCase() === 'deepseek' ? 'deepseek' : 'openai';
+  const initialProvider = String(options?.provider || 'openai').toLowerCase() === 'deepseek' ? 'deepseek' : 'openai';
   const provider = await chooseProvider(initialProvider);
-  const bootstrapModel = await chooseModel(provider, typeof args.model === 'string' ? args.model : undefined);
-  const preselectedLanguages = String(args.languages || 'en,es')
+  const bootstrapModel = await chooseModel(provider, options?.model);
+  const preselectedLanguages = String(options?.languages || 'en,es')
     .split(',')
     .map((lang) => lang.trim().toLowerCase())
     .filter(Boolean);
@@ -479,8 +462,8 @@ export const run = async (providedArgs?: string[]): Promise<void> => {
   const providerOptions: ClientConfig = {
     provider,
     model: bootstrapModel,
-    apiKey: typeof args['api-key'] === 'string' ? args['api-key'] : undefined,
-    baseUrl: typeof args['base-url'] === 'string' ? args['base-url'] : undefined
+    apiKey: options?.apiKey,
+    baseUrl: options?.baseUrl
   };
 
   const strategySpinner = clack.spinner();
@@ -496,15 +479,15 @@ export const run = async (providedArgs?: string[]): Promise<void> => {
   strategySpinner.stop('Strategy options ready');
   note(strategy.options.analysisSummary, 'Strategy');
 
-  const options = strategy.options.options;
+  const strategyOptions = strategy.options.options;
   const recommended = strategy.options.recommended;
-  const goals = normalizeOptions(options.goals);
-  const positionings = normalizeOptions(options.positioningAngles);
-  const markets = normalizeOptions(options.targetMarkets);
-  const seniorities = normalizeOptions(options.seniorityTracks);
-  const modelOptions = normalizeOptions(options.modelOptions);
-  const constraintsProfiles = normalizeOptions(options.constraintsProfiles);
-  const keywordClusters = options.keywordClusters.map((cluster) => ({
+  const goals = normalizeOptions(strategyOptions.goals);
+  const positionings = normalizeOptions(strategyOptions.positioningAngles);
+  const markets = normalizeOptions(strategyOptions.targetMarkets);
+  const seniorities = normalizeOptions(strategyOptions.seniorityTracks);
+  const modelOptions = normalizeOptions(strategyOptions.modelOptions);
+  const constraintsProfiles = normalizeOptions(strategyOptions.constraintsProfiles);
+  const keywordClusters = strategyOptions.keywordClusters.map((cluster) => ({
     label: cluster.label,
     value: cluster.label,
     reason: cluster.reason,
@@ -528,7 +511,7 @@ export const run = async (providedArgs?: string[]): Promise<void> => {
   const targetSeniority = groupedSelections.targetSeniority;
   const constraints = groupedSelections.constraints;
   const selectedKeywordClusterName = groupedSelections.selectedKeywordClusterName;
-  const selectedKeywordCluster = options.keywordClusters.find((cluster) => cluster.label === selectedKeywordClusterName);
+  const selectedKeywordCluster = strategyOptions.keywordClusters.find((cluster) => cluster.label === selectedKeywordClusterName);
   const languagesInput = await chooseLanguages(preselectedLanguages.join(',') || 'en,es');
   const roleFocus = await askText('Role focus for the prompt', preferredPath);
 

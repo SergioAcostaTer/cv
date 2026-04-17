@@ -9,7 +9,7 @@ import { applyOverrides, resolveOutputFilename } from '../utils/config-loader';
 import { createSpinner, info, note, runCliEntry, secondary, success, unwrapCancel, warning } from '../utils/ui';
 
 const DEFAULT_THEME = 'harvard';
-type BuildOptions = { theme?: string; watch?: boolean };
+export type BuildOptions = { theme?: string; watch?: boolean };
 
 const ensureDirectoryExistence = (filePath: string): void => {
   fs.mkdirSync(path.dirname(filePath), { recursive: true });
@@ -173,35 +173,6 @@ const buildResumes = async (selectedTheme: string, existingBrowser?: Browser): P
       await browser.close();
     }
   }
-};
-
-const parseRunOptions = (argv: string[]): BuildOptions => {
-  let theme: string | undefined;
-  let watch = false;
-
-  for (let index = 0; index < argv.length; index += 1) {
-    const token = argv[index];
-
-    if (token === '--watch') {
-      watch = true;
-      continue;
-    }
-
-    if (token === '--theme') {
-      const themeValue = argv[index + 1];
-      if (themeValue && !themeValue.startsWith('--')) {
-        theme = themeValue;
-        index += 1;
-      }
-      continue;
-    }
-
-    if (!token?.startsWith('--') && !theme) {
-      theme = token;
-    }
-  }
-
-  return { theme, watch };
 };
 
 const watchResumes = async (selectedTheme: string): Promise<void> => {
@@ -372,5 +343,5 @@ Handlebars.registerHelper('removeProtocol', function (url: string) {
 });
 
 if (require.main === module) {
-  runCliEntry(() => run(parseRunOptions(process.argv.slice(2))));
+  runCliEntry(run);
 }

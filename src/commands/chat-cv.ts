@@ -1,4 +1,5 @@
 import * as clack from '@clack/prompts';
+import { highlight as highlightCode } from 'cli-highlight';
 import fs from 'fs';
 import { marked } from 'marked';
 import TerminalRenderer from 'marked-terminal';
@@ -35,8 +36,13 @@ const configureMarkdownRenderer = (): void => {
     renderer: new TerminalRenderer({
       reflowText: true,
       tab: 2
-    }) as unknown as import('marked').Renderer
-  });
+    }) as unknown as import('marked').Renderer,
+    highlight: (code: string, lang?: string) =>
+      highlightCode(code, {
+        language: lang || 'json',
+        ignoreIllegals: true
+      })
+  } as unknown as import('marked').MarkedOptions);
 
   markdownConfigured = true;
 };
@@ -143,6 +149,17 @@ Use this information to provide contextual, personalized advice and discussion.`
     let previewText = '';
     let outputStarted = false;
     let isThinkingMode = false;
+    const cursor = '█';
+    let cursorVisible = false;
+
+    const hideCursor = (): void => {
+      if (!cursorVisible) {
+        return;
+      }
+
+      process.stdout.write('\x1b[1D \x1b[1D');
+      cursorVisible = false;
+    };
 
     const writePreview = (text: string): void => {
       if (!text) {
@@ -150,7 +167,10 @@ Use this information to provide contextual, personalized advice and discussion.`
       }
 
       previewText += text;
+      hideCursor();
       process.stdout.write(colors.muted(text));
+      process.stdout.write(colors.muted(cursor));
+      cursorVisible = true;
     };
 
     const startOutput = (status: string): void => {
@@ -223,6 +243,7 @@ Use this information to provide contextual, personalized advice and discussion.`
     }
 
     if (outputStarted) {
+      hideCursor();
       const previewLines = previewText.split(/\r?\n/u).length + 1;
       process.stdout.write('\n');
       clearPrintedLines(previewLines);

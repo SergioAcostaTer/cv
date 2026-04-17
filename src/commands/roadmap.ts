@@ -1,4 +1,5 @@
 import * as clack from '@clack/prompts';
+import { highlight as highlightCode } from 'cli-highlight';
 import clipboardy from 'clipboardy';
 import fs from 'fs';
 import { marked } from 'marked';
@@ -52,8 +53,13 @@ const configureMarkdownRenderer = (): void => {
     renderer: new TerminalRenderer({
       reflowText: true,
       tab: 2
-    }) as unknown as import('marked').Renderer
-  });
+    }) as unknown as import('marked').Renderer,
+    highlight: (code: string, lang?: string) =>
+      highlightCode(code, {
+        language: lang || 'json',
+        ignoreIllegals: true
+      })
+  } as unknown as import('marked').MarkedOptions);
 
   markdownConfigured = true;
 };
@@ -219,6 +225,17 @@ const streamRoadmap = async (input: {
   let response = '';
   let previewText = '';
   let outputStarted = false;
+  const cursor = '█';
+  let cursorVisible = false;
+
+  const hideCursor = (): void => {
+    if (!cursorVisible) {
+      return;
+    }
+
+    process.stdout.write('\x1b[1D \x1b[1D');
+    cursorVisible = false;
+  };
 
   const startOutput = (): void => {
     if (outputStarted) {
@@ -236,7 +253,10 @@ const streamRoadmap = async (input: {
     }
 
     previewText += value;
+    hideCursor();
     process.stdout.write(colors.muted(value));
+    process.stdout.write(colors.muted(cursor));
+    cursorVisible = true;
   };
 
   for await (const chunk of stream) {
@@ -262,6 +282,7 @@ const streamRoadmap = async (input: {
     return '';
   }
 
+  hideCursor();
   const previewLines = previewText.split(/\r?\n/u).length + 1;
   process.stdout.write('\n');
   clearPrintedLines(previewLines);

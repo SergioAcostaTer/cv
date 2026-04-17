@@ -186,6 +186,27 @@ export const getDashboardHtml = (): string => `<!doctype html>
         line-height: 1.55;
       }
 
+      .toast {
+        position: fixed;
+        right: 20px;
+        bottom: 20px;
+        background: #0f172a;
+        color: #f8fafc;
+        border-radius: 999px;
+        padding: 9px 14px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        opacity: 0;
+        transform: translateY(8px);
+        pointer-events: none;
+        transition: opacity 180ms ease, transform 180ms ease;
+      }
+
+      .toast.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
       .empty-state {
         margin: auto;
         text-align: center;
@@ -253,13 +274,20 @@ export const getDashboardHtml = (): string => `<!doctype html>
     <script>
       const state = {
         selectedKey: null,
-        rawText: ''
+        selectedItem: null,
+        rawText: '',
+        lastLibrarySignature: '',
+        toastTimer: null
       };
 
       const contentEl = document.getElementById('content');
       const titleEl = document.getElementById('mainTitle');
       const libraryEl = document.getElementById('library');
       const copyButton = document.getElementById('copyButton');
+      const toastEl = document.createElement('div');
+      toastEl.className = 'toast';
+      toastEl.textContent = 'Library updated';
+      document.body.appendChild(toastEl);
 
       marked.setOptions({
         highlight(code, lang) {
@@ -287,6 +315,18 @@ export const getDashboardHtml = (): string => `<!doctype html>
       const setCopyButton = (visible, text) => {
         state.rawText = text || '';
         copyButton.classList.toggle('visible', Boolean(visible));
+      };
+
+      const showUpdateToast = () => {
+        toastEl.classList.add('visible');
+        if (state.toastTimer) {
+          clearTimeout(state.toastTimer);
+        }
+
+        state.toastTimer = setTimeout(() => {
+          toastEl.classList.remove('visible');
+          state.toastTimer = null;
+        }, 1300);
       };
 
       const showMarkdown = async (item) => {
@@ -339,6 +379,11 @@ export const getDashboardHtml = (): string => `<!doctype html>
           button.addEventListener('click', async () => {
             try {
               setActive(key);
+              state.selectedItem = {
+                category,
+                path: item.path,
+                key
+              };
               if (category === 'resumes') {
                 showPdf(item);
               } else {
@@ -357,7 +402,34 @@ export const getDashboardHtml = (): string => `<!doctype html>
         return details;
       };
 
-      const loadLibrary = async () => {
+      const buildLibrarySignature = (data) =>
+        JSON.stringify({
+          resumes: (Array.isArray(data.resumes) ? data.resumes : []).map((item) => [item.path, item.modifiedAt]),
+          linkedinDrafts: (Array.isArray(data.linkedinDrafts) ? data.linkedinDrafts : []).map((item) => [
+            item.path,
+            item.modifiedAt
+          ]),
+          roadmaps: (Array.isArray(data.roadmaps) ? data.roadmaps : []).map((item) => [item.path, item.modifiedAt])
+        });
+
+      const rerenderLibrary = (data) => {
+        const previousSelection = state.selectedItem;
+        libraryEl.innerHTML = '';
+
+        ['resumes', 'linkedinDrafts', 'roadmaps'].forEach((key) => {
+          const items = Array.isArray(data[key]) ? data[key] : [];
+          libraryEl.appendChild(renderGroup(key, items));
+        });
+
+        if (previousSelection) {
+          const selectedButton = libraryEl.querySelector('[data-key="' + previousSelection.key + '"]');
+          if (selectedButton) {
+            setActive(previousSelection.key);
+          }
+        }
+      };
+
+      const loadLibrary = async (mode = 'initial') => {
         try {
           const response = await fetch('/api/library');
           if (!response.ok) {
@@ -365,14 +437,23 @@ export const getDashboardHtml = (): string => `<!doctype html>
           }
 
           const data = await response.json();
-          libraryEl.innerHTML = '';
+          const nextSignature = buildLibrarySignature(data);
+          const hasChanged = nextSignature !== state.lastLibrarySignature;
 
-          ['resumes', 'linkedinDrafts', 'roadmaps'].forEach((key) => {
-            const items = Array.isArray(data[key]) ? data[key] : [];
-            libraryEl.appendChild(renderGroup(key, items));
-          });
+          if (mode !== 'initial' && !hasChanged) {
+            return;
+          }
+
+          state.lastLibrarySignature = nextSignature;
+          rerenderLibrary(data);
+
+          if (mode === 'poll' && hasChanged) {
+            showUpdateToast();
+          }
         } catch (error) {
-          libraryEl.innerHTML = '<pre>' + String(error) + '</pre>';
+          if (mode === 'initial') {
+            libraryEl.innerHTML = '<pre>' + String(error) + '</pre>';
+          }
         }
       };
 
@@ -393,7 +474,10 @@ export const getDashboardHtml = (): string => `<!doctype html>
         }
       });
 
-      void loadLibrary();
+      void loadLibrary('initial');
+      setInterval(() => {
+        void loadLibrary('poll');
+      }, 3000);
     </script>
   </body>
 </html>`;
