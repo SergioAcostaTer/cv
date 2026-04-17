@@ -8,7 +8,7 @@ vi.mock('../src/core/runtime', () => ({
 }));
 
 import { getPersonaConfig, getProjectRoot } from '../src/core/runtime';
-import { applyOverrides, resolveOutputFilename } from '../src/utils/config-loader';
+import { applyOverrides, loadPersonaConfig, resolveOutputFilename } from '../src/utils/config-loader';
 
 describe('config-loader', () => {
   const mockedGetPersonaConfig = vi.mocked(getPersonaConfig);
@@ -36,6 +36,13 @@ describe('config-loader', () => {
     const filename = resolveOutputFilename('es', 'fullstack');
 
     expect(filename).toBe('sergio-fullstack-es-2026-04-17.pdf');
+  });
+
+  it('returns runtime persona via loadPersonaConfig', () => {
+    const persona = loadPersonaConfig();
+
+    expect(persona.personaId).toBe('sergio');
+    expect(mockedGetPersonaConfig).toHaveBeenCalled();
   });
 
   it('returns original data when no override file exists', () => {
@@ -84,5 +91,34 @@ describe('config-loader', () => {
     const result = applyOverrides(input);
 
     expect(result).toBe(input);
+  });
+
+  it('replaces primitive base values with nested object overrides', () => {
+    vi.spyOn(fs, 'existsSync').mockReturnValue(true);
+    vi.spyOn(fs, 'readFileSync').mockReturnValue(
+      JSON.stringify({
+        profile: {
+          preferences: {
+            theme: 'dark'
+          }
+        }
+      }) as never
+    );
+
+    const input = {
+      profile: {
+        preferences: 'legacy'
+      }
+    };
+
+    const result = applyOverrides(input);
+
+    expect(result).toEqual({
+      profile: {
+        preferences: {
+          theme: 'dark'
+        }
+      }
+    });
   });
 });

@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { clearRuntimeCache, getAppPaths, getPersonaConfig, getRuntime } from '../src/core/runtime';
+import { clearRuntimeCache, getAppPaths, getPersonaConfig, getProjectRoot, getRuntime } from '../src/core/runtime';
 
 describe('runtime', () => {
   beforeEach(() => {
@@ -38,5 +38,36 @@ describe('runtime', () => {
     const expectedSuffix = path.join(persona.defaultRole, persona.defaultLanguage, 'resume.json');
 
     expect(paths.defaultResumePath.endsWith(expectedSuffix)).toBe(true);
+  });
+
+  it('falls back to hardcoded persona config when config file cannot be read', () => {
+    vi.spyOn(fs, 'readFileSync').mockImplementation(() => {
+      throw new Error('missing config');
+    });
+
+    clearRuntimeCache();
+    const persona = getPersonaConfig();
+
+    expect(persona.personaId).toBe('default');
+    expect(persona.defaultLanguage).toBe('en');
+    expect(persona.defaultRole).toBe('developer');
+  });
+
+  it('applies schema defaults when persona config is partial', () => {
+    vi.spyOn(fs, 'readFileSync').mockReturnValue('{}' as never);
+
+    clearRuntimeCache();
+    const persona = getPersonaConfig();
+
+    expect(persona.displayName).toBe('Resume');
+    expect(persona.outputNaming).toBe('{persona}-{role}-{lang}.pdf');
+  });
+
+  it('returns project root through runtime accessor', () => {
+    const root = getProjectRoot();
+
+    expect(typeof root).toBe('string');
+    expect(root.length).toBeGreaterThan(0);
+    expect(path.isAbsolute(root)).toBe(true);
   });
 });

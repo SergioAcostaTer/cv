@@ -43,4 +43,20 @@ describe('env-loader', () => {
 
     expect(readSpy).toHaveBeenCalledTimes(1);
   });
+
+  it('marks env as loaded when file is missing and skips subsequent checks', async () => {
+    vi.doMock('../src/core/runtime', () => ({
+      getProjectRoot: () => 'C:/workspace/cv'
+    }));
+
+    const existsSpy = vi.spyOn(fs, 'existsSync').mockReturnValue(false);
+    const readSpy = vi.spyOn(fs, 'readFileSync').mockReturnValue('SHOULD_NOT_READ=1' as never);
+
+    const { loadEnv } = await import('../src/utils/env-loader');
+    loadEnv();
+    loadEnv();
+
+    expect(existsSpy).toHaveBeenCalledTimes(1);
+    expect(readSpy).not.toHaveBeenCalled();
+  });
 });
