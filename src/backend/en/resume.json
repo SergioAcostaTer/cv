@@ -12,7 +12,7 @@
     },
     "basics": {
         "name": "Sergio Acosta Quintana",
-        "label": "Backend Software Engineer | Java & Distributed Systems",
+        "label": "Backend Software Engineer | Payments, Java & Distributed Systems",
         "email": "sergioacostaquintana@gmail.com",
         "phone": "+34 600 24 39 94",
         "location": {
@@ -37,15 +37,28 @@
                 "url": "https://sergioaco.com"
             }
         ],
-        "summary": "Backend Engineer specializing in high-availability Java microservices and event-driven architectures. Modernized enterprise systems at IKEA, improving latency, reliability, and operational efficiency. Focused on distributed systems, cloud infrastructure (AWS), and CI/CD automation. Experienced in Clean Architecture, Domain-Driven Design, and production-grade system design."
+        "summary": "Backend Engineer specializing in enterprise payments, high-availability Java services, and event-driven architectures. Modernized critical systems at IKEA and now works on Inditex payment gateway integrations with Spring Boot, DB2, MongoDB, Couchbase, OpenAPI, and React. Focused on distributed systems, API design, cloud infrastructure, and CI/CD automation. Experienced in Clean Architecture, Domain-Driven Design, and production-grade system design."
     },
     "work": [
         {
-            "name": "IKEA / BITBOX S.L.",
+            "name": "SNGULAR / Inditex",
+            "url": "https://www.sngular.com/",
+            "position": "Backend Software Engineer",
+            "location": "Remote",
+            "startDate": "2026-04",
+            "highlights": [
+                "Working on Inditex's global payment gateway for all group brands and markets, in an enterprise environment using Spring Boot, DB2, MongoDB, Couchbase, OpenAPI, and React.",
+                "Contributing to backend services, API contracts, and integration flows across legacy and modern systems.",
+                "Collaborating on reliable, scalable, and maintainable payment-oriented features in a cross-functional team."
+            ]
+        },
+        {
+            "name": "BITBOX S.L. / IKEA",
             "url": "https://bitboxonline.com/",
             "position": "Backend Software Engineer",
             "location": "Las Palmas, Spain",
             "startDate": "2025-01",
+            "endDate": "2026-04",
             "highlights": [
                 "Developed mission-critical systems for IKEA’s loyalty program (400k+ active cards), migrating legacy backends to Spring Boot 3. Boosted resilience and delivery speed by 40% via CI/CD automation.",
                 "Replaced 7 legacy PL/SQL jobs with an automated Spring Batch workflow, cutting processing time by 55% (saving 40h/month of support) and eliminating critical failure points.",
@@ -53,28 +66,19 @@
             ]
         }
     ],
-    "projects": [
-        {
-            "name": "NEXO CLOUD (SaaS)",
-            "description": "Enterprise Intelligent Document Processing System",
-            "url": "https://nexocloudpro.com",
-            "startDate": "2025-09",
-            "highlights": [
-                "Designed production RAG system on Hetzner VPS with Cloudflare R2, PostgreSQL (PG Vector), and Redis. Processes 30k+ docs monthly across multi-tenant environments.",
-                "Implemented event-driven pipeline (1k+ docs/hour, p99 <200ms) with dead letter queues, idempotent consumers, and automated backups on own-managed infrastructure.",
-                "Integrated OpenAI API with query optimization, index tuning, and batch processing, cutting costs 30%. Built React monitoring dashboard with Tailwind."
-            ]
-        }
-    ],
+    "projects": [],
     "skills": [
         {
-            "name": "Backend Engineering",
+            "name": "Backend",
             "keywords": [
                 "Java 21",
                 "Spring Boot 3",
+                "Spring Batch",
+                "Spring Security",
                 "Microservices",
                 "Apache Kafka",
-                "Node.js",
+                "IBM DB2",
+                "OpenAPI",
                 "REST APIs"
             ]
         },
@@ -93,10 +97,11 @@
             "name": "Data and Storage",
             "keywords": [
                 "PostgreSQL",
+                "MongoDB",
+                "Couchbase",
                 "Redis",
                 "Vector DBs",
-                "Hibernate/JPA",
-                "Query Optimization"
+                "Hibernate/JPA"
             ]
         },
         {
@@ -107,6 +112,15 @@
                 "DDD",
                 "Integration Testing",
                 "OAuth2/JWT"
+            ]
+        },
+        {
+            "name": "Frontend and Integration",
+            "keywords": [
+                "React",
+                "TypeScript",
+                "REST APIs",
+                "API Contract Design"
             ]
         }
     ],
