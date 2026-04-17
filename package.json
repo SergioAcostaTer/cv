@@ -5,7 +5,10 @@
     "packageManager": "pnpm@10.8.0",
     "main": "src/cli.ts",
     "scripts": {
+        "start": "pnpm dev:dashboard",
+        "start:all": "pnpm dev:dashboard",
         "dev": "tsx src/cli.ts",
+        "dev:dashboard": "concurrently -k -n api,web \"pnpm dashboard\" \"pnpm dev:client\"",
         "build": "pnpm build:client && tsc --noEmit",
         "build:client": "vite build --config client/vite.config.ts --outDir ../dist-client",
         "build:resumes": "tsx src/commands/generate.ts",
@@ -54,6 +57,7 @@
         "@vitejs/plugin-react": "^6.0.1",
         "@vitest/coverage-v8": "^4.1.4",
         "autoprefixer": "^10.5.0",
+        "concurrently": "^9.2.1",
         "postcss": "^8.5.10",
         "tailwindcss": "^4.2.2",
         "tsx": "^4.19.2",

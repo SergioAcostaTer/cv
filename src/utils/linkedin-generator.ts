@@ -419,6 +419,9 @@ const buildUserPrompt = (input: { sourceData: unknown; answers: GeneratorAnswers
       sourceProfileData: input.sourceData,
       hardRules: [
         'Do not fabricate company names, timelines, metrics, or technologies.',
+        'If sourceProfileData work/education/projects include a skills array, treat it as factual context for that specific entry.',
+        'Do not add technologies or skills to an entry that are not present in that entry skills list and/or clearly supported by other sourceProfileData fields.',
+        'When entry-level skills are provided, prioritize those exact terms in the corresponding experience.description and experience.techContext.',
         'about.descriptionToPaste must be a polished About text ready to paste into LinkedIn without edits.',
         'about.descriptionToPaste must clearly explain technical strengths, architecture decisions, and business impact.',
         'Each experience.description must explain scope, architecture, responsibilities, and concrete technologies used.',

@@ -29,6 +29,7 @@ pnpm install
 
 ```bash
 pnpm dev
+pnpm dev:dashboard
 pnpm build
 pnpm chat
 pnpm linkedin
@@ -64,6 +65,14 @@ Resume outputs:
 2. `dist/index.html` with minimal clean styling and one-click Open PDF links.
 
 ## LinkedIn Generation
+
+For the web dashboard + Vite frontend, use:
+
+```bash
+pnpm dev:dashboard
+```
+
+This starts both the API/dashboard server on port 3000 and the Vite client together, avoiding `/api/*` proxy `ECONNREFUSED` errors.
 
 Interactive generation:
 

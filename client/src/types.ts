@@ -53,6 +53,7 @@ export type ResumeJson = {
     endDate?: string;
     summary?: string;
     highlights?: string[];
+    skills?: string[];
   }>;
   education?: Array<{
     institution?: string;
@@ -60,6 +61,7 @@ export type ResumeJson = {
     studyType?: string;
     startDate?: string;
     endDate?: string;
+    skills?: string[];
   }>;
   skills?: Array<{
     name?: string;
@@ -74,6 +76,7 @@ export type ResumeJson = {
     description?: string;
     highlights?: string[];
     url?: string;
+    skills?: string[];
   }>;
 };
 

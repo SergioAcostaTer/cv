@@ -127,31 +127,17 @@ const parseApiPath = (value: string): { category: "linkedin" | "roadmaps"; relat
   return { category, relativePath };
 };
 
-const listenOnAvailablePort = async (app: express.Express, startPort: number): Promise<{ server: Server; port: number }> => {
-  let port = startPort;
-
-  while (true) {
-    const attempt = await new Promise<{ server?: Server; conflict: boolean }>((resolve, reject) => {
-      const server = createServer(app);
-      server.once("error", (error) => {
-        if ((error as NodeJS.ErrnoException).code === "EADDRINUSE") {
-          resolve({ conflict: true });
-          return;
-        }
-        reject(error);
-      });
-
-      server.listen(port, () => {
-        resolve({ server, conflict: false });
-      });
+const listenOnPort = async (app: express.Express, port: number): Promise<Server> => {
+  return new Promise<Server>((resolve, reject) => {
+    const server = createServer(app);
+    server.once("error", (error) => {
+      reject(error);
     });
 
-    if (attempt.server) {
-      return { server: attempt.server, port };
-    }
-
-    port += 1;
-  }
+    server.listen(port, () => {
+      resolve(server);
+    });
+  });
 };
 
 export const runDashboard = async (): Promise<void> => {
@@ -334,7 +320,21 @@ export const runDashboard = async (): Promise<void> => {
   const serverSpinner = spinner();
   serverSpinner.start("Starting local dashboard server...");
 
-  const { server, port } = await listenOnAvailablePort(app, 3000);
+  const port = 3000;
+  let server: Server;
+
+  try {
+    server = await listenOnPort(app, port);
+  } catch (error) {
+    const err = error as NodeJS.ErrnoException;
+    if (err.code === "EADDRINUSE") {
+      serverSpinner.stop(`Could not start dashboard on ${pc.cyan(`http://localhost:${port}`)} (port in use).`);
+      throw new Error(`Port ${port} is already in use. Stop the existing process or free the port before running the dashboard.`);
+    }
+
+    throw error;
+  }
+
   const url = `http://localhost:${port}`;
   serverSpinner.stop(`Dashboard running at ${pc.cyan(url)}`);
 

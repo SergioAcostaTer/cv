@@ -1,79 +1,106 @@
 {
-  "sectionLabels": {
-    "experience": "PROFESSIONAL EXPERIENCE",
-    "projects": "PROJECTS",
-    "education": "EDUCATION",
-    "skills": "TECHNICAL SKILLS",
-    "languages": "LANGUAGES"
-  },
-  "labels": {
-    "present": "Present",
-    "expectedGraduation": "Expected graduation"
-  },
-  "basics": {
-    "name": "Your Name",
-    "label": "Backend Software Engineer | APIs, Java, Distributed Systems",
-    "email": "you@example.com",
-    "phone": "+00 000 000 000",
-    "location": {
-      "city": "Your City",
-      "countryCode": "US",
-      "region": "Your Region"
+    "sectionLabels": {
+        "experience": "PROFESSIONAL EXPERIENCE",
+        "projects": "PROJECTS",
+        "education": "EDUCATION",
+        "skills": "TECHNICAL SKILLS",
+        "languages": "LANGUAGES"
     },
-    "profiles": [
-      {
-        "network": "LinkedIn",
-        "username": "your-linkedin",
-        "url": "https://linkedin.com/in/your-linkedin"
-      },
-      {
-        "network": "GitHub",
-        "username": "your-github",
-        "url": "https://github.com/your-github"
-      }
+    "labels": {
+        "present": "Present",
+        "expectedGraduation": "Expected graduation"
+    },
+    "basics": {
+        "name": "Your Name",
+        "label": "Backend Software Engineer | APIs, Java, Distributed Systems",
+        "email": "you@example.com",
+        "phone": "+00 000 000 000",
+        "location": {
+            "city": "Your City",
+            "countryCode": "US",
+            "region": "Your Region"
+        },
+        "profiles": [
+            {
+                "network": "LinkedIn",
+                "username": "your-linkedin",
+                "url": "https://linkedin.com/in/your-linkedin"
+            },
+            {
+                "network": "GitHub",
+                "username": "your-github",
+                "url": "https://github.com/your-github"
+            }
+        ],
+        "summary": "Write a short summary of your experience, specialties, and the type of work you want to pursue."
+    },
+    "work": [
+        {
+            "name": "Example Company",
+            "position": "Senior Backend Engineer",
+            "startDate": "2023-01",
+            "endDate": "",
+            "summary": "Describe the system scope, architecture, and business domain.",
+            "skills": [
+                "Java 25",
+                "Spring Boot",
+                "PostgreSQL",
+                "Kafka"
+            ],
+            "highlights": [
+                "Built resilient APIs with strong observability and automated delivery pipelines.",
+                "Improved performance, reliability, or developer velocity with measurable impact."
+            ]
+        }
     ],
-    "summary": "Write a short summary of your experience, specialties, and the type of work you want to pursue."
-  },
-  "work": [
-    {
-      "name": "Example Company",
-      "position": "Senior Backend Engineer",
-      "startDate": "2023-01",
-      "endDate": "",
-      "summary": "Describe the system scope, architecture, and business domain.",
-      "highlights": [
-        "Built resilient APIs with strong observability and automated delivery pipelines.",
-        "Improved performance, reliability, or developer velocity with measurable impact."
-      ]
-    }
-  ],
-  "education": [
-    {
-      "institution": "Example University",
-      "area": "Computer Science",
-      "studyType": "Bachelor",
-      "startDate": "2018-09",
-      "endDate": "2022-06"
-    }
-  ],
-  "skills": [
-    {
-      "name": "Backend",
-      "keywords": ["Java", "Spring Boot", "REST APIs", "SQL", "Docker"]
-    }
-  ],
-  "languages": [
-    {
-      "language": "English",
-      "fluency": "Professional working proficiency"
-    }
-  ],
-  "projects": [
-    {
-      "name": "Example Platform",
-      "description": "Describe one representative project and the stack you used.",
-      "highlights": ["API design", "CI/CD", "Monitoring"],
-      "url": "https://example.com"
-    }
-  ]
+    "education": [
+        {
+            "institution": "Example University",
+            "area": "Computer Science",
+            "studyType": "Bachelor",
+            "startDate": "2018-09",
+            "endDate": "2022-06",
+            "skills": [
+                "Algorithms",
+                "Data Structures",
+                "Databases"
+            ]
+        }
+    ],
+    "skills": [
+        {
+            "name": "Backend",
+            "keywords": [
+                "Java",
+                "Spring Boot",
+                "REST APIs",
+                "SQL",
+                "Docker"
+            ]
+        }
+    ],
+    "languages": [
+        {
+            "language": "English",
+            "fluency": "Professional working proficiency"
+        }
+    ],
+    "projects": [
+        {
+            "name": "Example Platform",
+            "description": "Describe one representative project and the stack you used.",
+            "highlights": [
+                "API design",
+                "CI/CD",
+                "Monitoring"
+            ],
+            "skills": [
+                "Java 25",
+                "Spring Boot",
+                "Docker",
+                "GitHub Actions"
+            ],
+            "url": "https://example.com"
+        }
+    ]
 }
