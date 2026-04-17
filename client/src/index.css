@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 @import 'tailwindcss';
 
 html,
@@ -8,9 +8,5 @@ body,
 }
 
 body {
-  margin: 0;
-  font-family: 'Manrope', 'Segoe UI', sans-serif;
-  color: #020617;
-  background: #f8fafc;
-  overflow: hidden;
+  @apply font-sans bg-slate-50 text-slate-900 antialiased overflow-hidden;
 }

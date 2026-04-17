@@ -323,7 +323,9 @@ const buildSystemPrompt = (language: string): string => {
   return [
     'You are an expert LinkedIn profile writer and career strategist for software engineers.',
     'Return only valid JSON. No prose, no markdown, no extra keys.',
-    'Use concise, high-impact language with measurable outcomes when available.',
+    'Use natural, credible, conversational-professional language.',
+    'Avoid sounding like marketing copy, inflated achievement claims, or forced bragging.',
+    'Prefer concrete responsibilities, technical context, and collaboration details over hype.',
     'Do not invent facts. If a detail is missing, optimize wording around provided info only.',
     isSpanish
       ? 'Write all content in Spanish (Spain), natural and professional.'
@@ -421,8 +423,12 @@ const buildUserPrompt = (input: { sourceData: unknown; answers: GeneratorAnswers
         'about.descriptionToPaste must clearly explain technical strengths, architecture decisions, and business impact.',
         'Each experience.description must explain scope, architecture, responsibilities, and concrete technologies used.',
         'Each experience.description must include technology names naturally in sentences (not only comma lists).',
+        'Each experience.description must be formatted in LinkedIn-ready blocks: 4 to 7 short paragraphs separated by blank lines, readable when pasted directly.',
+        'Prefer concise paragraph breaks over long walls of text; optional bullets are allowed only for key outcomes.',
+        'Write descriptions in a grounded first-person style when language/context allows (e.g., "I collaborate...", "I worked on...").',
+        'Avoid exaggerated achievement framing; keep impact statements modest, factual, and integrated naturally into the narrative.',
         'Each experience.techContext must include 5 to 12 concrete technologies/tools actually used in that role.',
-        'Experience achievement bullets must be under 180 characters each.',
+        'Experience achievements are optional; if used, keep them short, factual, and under 180 characters each.',
         'Top skills should be a maximum of 25 entries.',
         'When multiple valid technologies exist, place the most market-trending skill first in skills.top and skills.keywords (example: PostgreSQL before DB2) without deleting true enterprise experience.',
         'Keywords should be recruiter/ATS-friendly terms.',

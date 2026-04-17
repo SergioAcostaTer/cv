@@ -17,12 +17,14 @@ export type Selection = {
   item: Artifact;
 };
 
+export type ViewSelection = Selection | 'chat';
+
 export type MarkdownSection = {
   title: string;
   markdown: string;
 };
 
-export type ArtifactKind = 'pdf' | 'markdown' | 'linkedin-json' | 'resume-json' | 'json' | 'unknown';
+export type ArtifactKind = 'pdf' | 'linkedin-json' | 'resume-json' | 'json' | 'unknown';
 
 export type ResumeJson = {
   sectionLabels?: Record<string, string>;

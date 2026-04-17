@@ -30,8 +30,79 @@ const safeText = (value: string | undefined, fallback = ''): string => {
   return value.trim();
 };
 
+const copyReady = (value: string | undefined, fallback = ''): string => {
+  if (value == null || value.length === 0) {
+    return fallback;
+  }
+
+  // Keep user/model spacing intact while using Windows-friendly line endings.
+  return value.replace(/\r?\n/g, '\r\n');
+};
+
+const formatMonthYear = (value: string | undefined, locale: string): string => {
+  if (!value) {
+    return locale === 'es' ? 'Fecha no especificada' : 'Date not specified';
+  }
+
+  const match = value.match(/^(\d{4})-(\d{2})$/);
+  if (!match) {
+    return value;
+  }
+
+  const year = Number(match[1]);
+  const month = Number(match[2]);
+  if (!Number.isFinite(year) || !Number.isFinite(month) || month < 1 || month > 12) {
+    return value;
+  }
+
+  const date = new Date(Date.UTC(year, month - 1, 1));
+  const formatted = new Intl.DateTimeFormat(locale, { month: 'short', year: 'numeric' }).format(date);
+  return locale === 'es' ? formatted.replace(' ', '. ') : formatted;
+};
+
+const formatJobBlock = (
+  entry: LinkedinLanguageProfile['experience'] extends Array<infer T> ? T : never,
+  lang: string
+): string => {
+  const locale = lang.toLowerCase().startsWith('es') ? 'es-ES' : 'en-US';
+  const isSpanish = locale === 'es-ES';
+  const start = formatMonthYear(entry.startDate, locale);
+  const end = safeText(entry.endDate, isSpanish ? 'Actualidad' : 'Present');
+  const period = `${start} - ${end}`;
+  const location = safeText(entry.location, isSpanish ? 'Ubicacion no especificada' : 'Location not specified');
+  const employment = safeText(entry.employmentType, isSpanish ? 'Jornada completa' : 'Full-time');
+  const description = safeText(entry.description, isSpanish ? 'Sin descripcion generada.' : 'No description generated.');
+  const achievements = (entry.achievements ?? []).filter((item) => item.trim().length > 0);
+  const techContext = (entry.techContext ?? []).filter((item) => item.trim().length > 0);
+
+  const lines: string[] = [
+    safeText(entry.title, isSpanish ? 'Puesto' : 'Role'),
+    '',
+    `${safeText(entry.company, isSpanish ? 'Empresa' : 'Company')} · ${employment}`,
+    '',
+    period,
+    '',
+    location,
+    '',
+    description
+  ];
+
+  if (achievements.length) {
+    lines.push('', ...achievements.map((item) => `• ${item}`));
+  }
+
+  if (techContext.length) {
+    const top = techContext.slice(0, 3).join(', ');
+    const rest = Math.max(0, techContext.length - 3);
+    const suffix = rest > 0 ? (isSpanish ? ` y ${rest} aptitudes mas` : ` and ${rest} more skills`) : '';
+    lines.push('', `${top}${suffix}`);
+  }
+
+  return lines.join('\n');
+};
+
 const Snippet = (props: { text: string }) => (
-  <pre className="m-0 overflow-x-auto rounded-md border border-slate-200 bg-slate-50 p-3 font-['IBM_Plex_Mono'] text-xs leading-6 text-slate-800 whitespace-pre-wrap">
+  <pre className="m-0 overflow-x-auto rounded-md border border-slate-200 bg-slate-50 p-3 font-mono text-xs leading-6 text-slate-800 whitespace-pre-wrap">
     {props.text}
   </pre>
 );
@@ -78,7 +149,7 @@ export const LinkedinViewer = ({ data, onCopySection }: LinkedinViewerProps) => 
                 <Snippet text={headline} />
               </CardContent>
               <CardFooter>
-                <Button type="button" size="sm" variant="outline" className="font-['IBM_Plex_Mono']" onClick={() => onCopySection(headline, `LinkedIn headline (${lang})`)}>
+                <Button type="button" size="sm" variant="outline" onClick={() => onCopySection(copyReady(profile.headline, headline), `LinkedIn headline (${lang})`)}>
                   <Copy size={14} /> Copy Headline
                 </Button>
               </CardFooter>
@@ -95,11 +166,11 @@ export const LinkedinViewer = ({ data, onCopySection }: LinkedinViewerProps) => 
                 {valueProp ? <Snippet text={valueProp} /> : null}
               </CardContent>
               <CardFooter>
-                <Button type="button" size="sm" variant="outline" className="font-['IBM_Plex_Mono']" onClick={() => onCopySection(aboutPaste, `LinkedIn about (${lang})`)}>
+                <Button type="button" size="sm" variant="outline" onClick={() => onCopySection(copyReady(about.descriptionToPaste ?? about.long ?? about.short, aboutPaste), `LinkedIn about (${lang})`)}>
                   <Copy size={14} /> Copy About
                 </Button>
                 {valueProp ? (
-                  <Button type="button" size="sm" variant="outline" className="font-['IBM_Plex_Mono']" onClick={() => onCopySection(valueProp, `LinkedIn value proposition (${lang})`)}>
+                  <Button type="button" size="sm" variant="outline" onClick={() => onCopySection(copyReady(about.valueProposition, valueProp), `LinkedIn value proposition (${lang})`)}>
                     <Copy size={14} /> Copy Value Prop
                   </Button>
                 ) : null}
@@ -120,16 +191,23 @@ export const LinkedinViewer = ({ data, onCopySection }: LinkedinViewerProps) => 
                   <div className="grid gap-2 border border-slate-200 p-3" key={`${entry.company ?? 'company'}-${index}`}>
                     <p className="m-0 text-sm font-semibold text-slate-900">{entry.title ?? 'Role'} · {entry.company ?? 'Company'}</p>
                     <p className="m-0 text-xs text-slate-500">{entry.startDate ?? 'Start'} - {entry.endDate ?? 'Present'}</p>
-                    <Snippet text={safeText(entry.description, 'No job description generated yet.')} />
-                    <div>
+                    <Snippet text={formatJobBlock(entry, lang)} />
+                    <div className="flex flex-wrap items-center gap-2">
                       <Button
                         type="button"
                         size="sm"
                         variant="outline"
-                        className="font-['IBM_Plex_Mono']"
-                        onClick={() => onCopySection(safeText(entry.description), `${entry.title ?? 'Job'} description (${lang})`)}
+                        onClick={() => onCopySection(copyReady(formatJobBlock(entry, lang)), `${entry.title ?? 'Job'} LinkedIn block (${lang})`)}
                       >
-                        <Copy size={14} /> Copy Job Description
+                        <Copy size={14} /> Copy Full Entry
+                      </Button>
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => onCopySection(copyReady(entry.description, safeText(entry.description)), `${entry.title ?? 'Job'} description (${lang})`)}
+                      >
+                        <Copy size={14} /> Copy Description Only
                       </Button>
                     </div>
                   </div>
@@ -146,7 +224,7 @@ export const LinkedinViewer = ({ data, onCopySection }: LinkedinViewerProps) => 
                   <Snippet text={aboutData.callToAction} />
                 </CardContent>
                 <CardFooter>
-                  <Button type="button" size="sm" variant="outline" className="font-['IBM_Plex_Mono']" onClick={() => onCopySection(aboutData.callToAction ?? '', `LinkedIn CTA (${lang})`)}>
+                  <Button type="button" size="sm" variant="outline" onClick={() => onCopySection(copyReady(aboutData.callToAction ?? ''), `LinkedIn CTA (${lang})`)}>
                     <Copy size={14} /> Copy CTA
                   </Button>
                 </CardFooter>

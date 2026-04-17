@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { fetchArtifactText } from '../features/library/api';
-import { splitMarkdownSections } from '../features/library/markdown';
 import type { ArtifactKind, LinkedinJson, MarkdownSection, ResumeJson, Selection } from '../types';
 
 const resolveArtifactKind = (selection: Selection | null): ArtifactKind => {
@@ -13,10 +12,6 @@ const resolveArtifactKind = (selection: Selection | null): ArtifactKind => {
   }
 
   const lower = selection.item.filename.toLowerCase();
-  if (lower.endsWith('.md') || lower.endsWith('.markdown')) {
-    return 'markdown';
-  }
-
   if (lower.endsWith('.json')) {
     if (lower.includes('linkedin')) {
       return 'linkedin-json';
@@ -66,12 +61,6 @@ export const useArtifactContent = (selection: Selection | null): {
       }
 
       setRawContent(text);
-
-      if (currentKind === 'markdown') {
-        setParsedJson(null);
-        setSections(splitMarkdownSections(text));
-        return;
-      }
 
       if (currentKind === 'linkedin-json' || currentKind === 'resume-json' || currentKind === 'json') {
         setSections([]);

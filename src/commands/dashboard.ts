@@ -9,6 +9,7 @@ import process from "node:process";
 import open from "open";
 import pc from "picocolors";
 import { getRuntime } from "../core/runtime";
+import { createAIClient } from "../utils/api";
 import { runCliEntry } from "../utils/ui";
 
 type DashboardFile = {
@@ -163,13 +164,14 @@ export const runDashboard = async (): Promise<void> => {
   const watchers: FSWatcher[] = [];
 
   app.use(cors());
+  app.use(express.json({ limit: "1mb" }));
 
   app.get("/api/library", async (_req, res) => {
     try {
       const [resumes, linkedinDrafts, roadmaps] = await Promise.all([
         collectByExt(runtime.paths.distDir, [".pdf"]),
-        collectByExt(path.join(runtime.paths.historyDir, "linkedin"), [".md", ".json"], "linkedin"),
-        collectByExt(path.join(runtime.paths.historyDir, "roadmaps"), [".md"], "roadmaps"),
+        collectByExt(path.join(runtime.paths.historyDir, "linkedin"), [".json"], "linkedin"),
+        collectByExt(path.join(runtime.paths.historyDir, "roadmaps"), [".json"], "roadmaps"),
       ]);
 
       const payload: LibraryResponse = {
@@ -206,7 +208,7 @@ export const runDashboard = async (): Promise<void> => {
     }
 
     const ext = path.extname(absolutePath).toLowerCase();
-    if (ext !== ".md" && ext !== ".json") {
+    if (ext !== ".json") {
       res.status(400).send("Unsupported file type.");
       return;
     }
@@ -240,6 +242,66 @@ export const runDashboard = async (): Promise<void> => {
     req.on("close", () => {
       sseClients.delete(id);
     });
+  });
+
+  app.post("/api/chat", async (req, res) => {
+    const body = req.body as { messages?: Array<{ role: string; content: string }> };
+    const incoming = Array.isArray(body?.messages) ? body.messages : [];
+    const messages = incoming
+      .filter((item) => item && typeof item.role === "string" && typeof item.content === "string")
+      .map((item) => ({ role: item.role, content: item.content.trim() }))
+      .filter((item) => item.content.length > 0);
+
+    if (!messages.length) {
+      res.status(400).json({ error: "messages must contain at least one role/content entry." });
+      return;
+    }
+
+    try {
+      const { client } = createAIClient({
+        provider: "openai",
+        model: "gpt-4o-mini"
+      });
+
+      res.setHeader("Content-Type", "text/plain; charset=utf-8");
+      res.setHeader("Cache-Control", "no-cache");
+      res.setHeader("Connection", "keep-alive");
+
+      const stream = await client.chat.completions.create({
+        model: "gpt-4o-mini",
+        messages: messages.map((message) => {
+          if (message.role === "system" || message.role === "assistant" || message.role === "user") {
+            return {
+              role: message.role,
+              content: message.content
+            };
+          }
+
+          return {
+            role: "user" as const,
+            content: message.content
+          };
+        }),
+        stream: true
+      });
+
+      for await (const chunk of stream) {
+        const text = chunk.choices[0]?.delta?.content;
+        if (text) {
+          res.write(text);
+        }
+      }
+
+      res.end();
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      if (!res.headersSent) {
+        res.status(500).json({ error: message });
+      } else {
+        res.write(`\n\n[chat error] ${message}`);
+        res.end();
+      }
+    }
   });
 
   const emitLibraryUpdated = (): void => {

@@ -1,12 +1,12 @@
 import { FileCode2 } from 'lucide-react';
+import { ChatInterface } from '../features/chat/ChatInterface';
 import { LinkedinViewer } from '../features/viewers/LinkedinViewer';
-import { MarkdownViewer } from '../features/viewers/MarkdownViewer';
 import { ResumeViewer } from '../features/viewers/ResumeViewer';
-import type { ArtifactKind, LinkedinJson, MarkdownSection, ResumeJson, Selection } from '../types';
+import type { ArtifactKind, LinkedinJson, MarkdownSection, ResumeJson, ViewSelection } from '../types';
 import { Card, CardContent, CardHeader, CardTitle } from './ui';
 
 type MainAreaProps = {
-  selectedArtifact: Selection | null;
+  selectedArtifact: ViewSelection | null;
   sections: MarkdownSection[];
   kind: ArtifactKind;
   parsedJson: LinkedinJson | ResumeJson | Record<string, unknown> | null;
@@ -34,9 +34,13 @@ export const MainArea = ({ selectedArtifact, sections, kind, parsedJson, rawCont
     return (
       <div className="mx-auto my-24 max-w-xl text-center text-slate-600">
         <h2 className="m-0 text-xl font-extrabold text-slate-800">Ready</h2>
-        <p>Open a resume, LinkedIn artifact, or roadmap file from the left panel.</p>
+        <p>Open a resume PDF or a LinkedIn/Roadmap JSON file from the left panel.</p>
       </div>
     );
+  }
+
+  if (selectedArtifact === 'chat') {
+    return <ChatInterface />;
   }
 
   if (kind === 'pdf') {
@@ -55,10 +59,6 @@ export const MainArea = ({ selectedArtifact, sections, kind, parsedJson, rawCont
 
   if (kind === 'resume-json' && parsedJson) {
     return <ResumeViewer data={parsedJson as ResumeJson} onCopySection={onCopySection} />;
-  }
-
-  if (kind === 'markdown') {
-    return <MarkdownViewer sections={sections} onCopySection={onCopySection} />;
   }
 
   if (kind === 'json') {

@@ -6,12 +6,15 @@ import { StatusToast } from './components/StatusToast';
 import { useArtifactContent } from './hooks/useArtifactContent';
 import { useLibrary } from './hooks/useLibrary';
 import { useLibraryEvents } from './hooks/useLibraryEvents';
-import type { Category, Selection } from './types';
+import type { Category, Selection, ViewSelection } from './types';
 
 export const App = () => {
   const { library, signature, refreshLibrary } = useLibrary();
-  const [selectedArtifact, setSelectedArtifact] = useState<Selection | null>(null);
+  const [selectedView, setSelectedView] = useState<ViewSelection | null>(null);
   const [status, setStatus] = useState('');
+
+  const selectedArtifact: Selection | null = selectedView && selectedView !== 'chat' ? selectedView : null;
+  const isChatSelected = selectedView === 'chat';
 
   const { rawContent, sections, parsedJson, kind, clearContent } = useArtifactContent(selectedArtifact);
 
@@ -42,7 +45,7 @@ export const App = () => {
     const stillExists = categoryItems.some((item) => item.path === selectedArtifact.item.path);
 
     if (!stillExists) {
-      setSelectedArtifact(null);
+      setSelectedView(null);
       clearContent();
     }
   }, [signature, library, selectedArtifact, clearContent]);
@@ -54,7 +57,7 @@ export const App = () => {
         return;
       }
 
-      setSelectedArtifact({ category, item });
+      setSelectedView({ category, item });
       if (category === 'resumes') {
         clearContent();
       }
@@ -74,12 +77,27 @@ export const App = () => {
     [showStatus]
   );
 
-  const title = useMemo(() => selectedArtifact?.item.filename ?? 'Select an artifact from the sidebar', [selectedArtifact]);
+  const title = useMemo(() => {
+    if (selectedView === 'chat') {
+      return 'Web Chat';
+    }
+
+    return selectedArtifact?.item.filename ?? 'Select an artifact from the sidebar';
+  }, [selectedArtifact, selectedView]);
 
   return (
     <>
       <div className="grid h-full grid-cols-1 grid-rows-[38dvh_1fr] lg:grid-cols-[340px_1fr] lg:grid-rows-1">
-        <LibrarySidebar library={library} selectedKey={selectedKey} onSelect={onSelect} />
+        <LibrarySidebar
+          library={library}
+          selectedKey={selectedKey}
+          onSelect={onSelect}
+          onNewChat={() => {
+            setSelectedView('chat');
+            clearContent();
+          }}
+          isChatSelected={isChatSelected}
+        />
 
         <main className="min-h-0 overflow-hidden border-t border-slate-200 bg-white lg:border-t-0 lg:border-l">
           <MainToolbar
@@ -95,7 +113,7 @@ export const App = () => {
 
           <section className="h-[calc(100%-57px)] overflow-auto p-4 lg:p-5">
             <MainArea
-              selectedArtifact={selectedArtifact}
+              selectedArtifact={selectedView}
               sections={sections}
               parsedJson={parsedJson}
               kind={kind}
