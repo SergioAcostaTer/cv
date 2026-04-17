@@ -5,6 +5,7 @@ import path from 'path';
 import puppeteer, { type Browser } from 'puppeteer';
 import { clearRuntimeCache, getAppPaths } from '../core/runtime';
 import { applyOverrides, resolveOutputFilename } from '../utils/config-loader';
+import { writeResumeIndexHtml } from '../utils/html-export';
 import { createSpinner, info, note, runCliEntry, secondary, success, unwrapCancel } from '../utils/ui';
 
 const DEFAULT_THEME = 'harvard';
@@ -87,6 +88,7 @@ const buildResumes = async (selectedTheme: string, existingBrowser?: Browser): P
   const css = getThemeCss(selectedTheme);
   const spinner = createSpinner();
   spinner.start(`Building PDFs with theme ${selectedTheme}`);
+  const generatedPdfPaths: string[] = [];
 
   const ownsBrowser = !existingBrowser;
   const browser = existingBrowser ?? (await puppeteer.launch());
@@ -136,11 +138,18 @@ const buildResumes = async (selectedTheme: string, existingBrowser?: Browser): P
         scale: 0.98
       });
 
+      generatedPdfPaths.push(outputPath);
       info(`Generated ${outputFilename}`);
     }
 
+    const htmlIndexPath = writeResumeIndexHtml({
+      distDir,
+      pdfPaths: generatedPdfPaths
+    });
+
     spinner.stop('PDF build complete');
     success(`Resumes available in ${distDir}`);
+    success(`Index page: ${path.relative(process.cwd(), htmlIndexPath)}`);
   } finally {
     if (ownsBrowser) {
       await browser.close();

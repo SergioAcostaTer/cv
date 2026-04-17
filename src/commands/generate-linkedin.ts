@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { getAppPaths } from '../core/runtime';
 import { getModelsForProvider, type ClientConfig, type ModelCatalogItem, type ProviderId } from '../utils/api';
+import { writeLinkedinHtmlReport } from '../utils/html-export';
 import {
     generateLinkedinProfiles,
     generateStrategyOptions,
@@ -233,6 +234,16 @@ export const run = async (providedArgs?: string[]): Promise<void> => {
   const args = parseArgs(providedArgs ?? process.argv.slice(2));
   const { defaultResumePath, linkedinOutputPath } = getAppPaths();
 
+  if (args['from-json']) {
+    const inputJsonPath =
+      typeof args['from-json'] === 'string' ? path.resolve(args['from-json']) : path.resolve(linkedinOutputPath);
+    const raw = fs.readFileSync(inputJsonPath, 'utf8');
+    const parsed = JSON.parse(raw) as Awaited<ReturnType<typeof generateLinkedinProfiles>>['result'];
+    const htmlPath = writeLinkedinHtmlReport({ result: parsed, jsonPath: inputJsonPath });
+    success(`LinkedIn HTML generated from JSON: ${path.relative(process.cwd(), htmlPath)}`);
+    return;
+  }
+
   const sourcePath = await chooseSourceJson(path.relative(process.cwd(), defaultResumePath));
   if (!sourcePath) {
     return;
@@ -338,7 +349,7 @@ export const run = async (providedArgs?: string[]): Promise<void> => {
   const generationSpinner = clack.spinner();
   generationSpinner.start(`Generating LinkedIn JSON with ${provider} (${providerOptions.model})`);
 
-  const { outputPath: generatedPath, providerConfig } = await generateLinkedinProfiles({
+  const { outputPath: generatedPath, result, providerConfig } = await generateLinkedinProfiles({
     sourcePath,
     provider,
     providerOptions,
@@ -348,9 +359,11 @@ export const run = async (providedArgs?: string[]): Promise<void> => {
   });
 
   generationSpinner.stop('LinkedIn JSON generated');
+  const htmlPath = writeLinkedinHtmlReport({ result, jsonPath: generatedPath });
   success(`Provider: ${providerConfig.label}`);
   success(`Model: ${providerConfig.model}`);
   success(`Output: ${path.relative(process.cwd(), generatedPath)}`);
+  success(`HTML: ${path.relative(process.cwd(), htmlPath)}`);
 
   const estimatedTotal = estimate.available ? fmtUsd(estimate.totalCost) : '$0.00';
   clack.note(
