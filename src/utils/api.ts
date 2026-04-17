@@ -36,7 +36,7 @@ export const PROVIDERS = {
     id: 'deepseek',
     label: 'DeepSeek',
     baseUrl: 'https://api.deepseek.com',
-    defaultModel: 'deepseek-chat',
+    defaultModel: 'deepseek-reasoner',
     apiKeyEnv: 'DEEPSEEK_API_KEY'
   }
 } as const;
@@ -78,29 +78,29 @@ export const MODEL_CATALOG: ModelCatalogItem[] = [
     outputPer1M: 0.8
   },
   {
-    id: 'gpt-4.1',
+    id: 'gpt-4o',
     provider: 'openai',
-    label: 'GPT-4.1',
-    cost: 'Est. $2.00 input / $8.00 output per 1M tokens',
-    note: 'Strong fallback',
-    inputPer1M: 2,
-    outputPer1M: 8
+    label: 'GPT-4o',
+    cost: 'Est. $5.00 input / $15.00 output per 1M tokens',
+    note: 'Current flagship',
+    inputPer1M: 5,
+    outputPer1M: 15
   },
   {
-    id: 'gpt-4.1-mini',
+    id: 'gpt-4o-mini',
     provider: 'openai',
-    label: 'GPT-4.1 Mini',
-    cost: 'Est. $0.40 input / $1.60 output per 1M tokens',
-    note: 'Fast and affordable',
-    inputPer1M: 0.4,
-    outputPer1M: 1.6
+    label: 'GPT-4o Mini',
+    cost: 'Est. $0.15 input / $0.60 output per 1M tokens',
+    note: 'Current fast default',
+    inputPer1M: 0.15,
+    outputPer1M: 0.6
   },
   {
     id: 'deepseek-chat',
     provider: 'deepseek',
     label: 'DeepSeek Chat',
     cost: 'Pricing varies by DeepSeek account plan',
-    note: 'General-purpose DeepSeek model',
+    note: 'General-purpose V3',
     inputPer1M: null,
     outputPer1M: null
   },
@@ -109,7 +109,7 @@ export const MODEL_CATALOG: ModelCatalogItem[] = [
     provider: 'deepseek',
     label: 'DeepSeek Reasoner',
     cost: 'Pricing varies by DeepSeek account plan',
-    note: 'Reasoning-focused DeepSeek model',
+    note: 'R1 reasoning model',
     inputPer1M: null,
     outputPer1M: null
   }

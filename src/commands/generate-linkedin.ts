@@ -2,20 +2,31 @@ import * as clack from '@clack/prompts';
 import fs from 'fs';
 import path from 'path';
 import { getAppPaths } from '../core/runtime';
-import { type ClientConfig, getModelsForProvider, type ModelCatalogItem, type ProviderId } from '../utils/api';
+import { getModelsForProvider, type ClientConfig, type ModelCatalogItem, type ProviderId } from '../utils/api';
 import {
-  generateLinkedinProfiles,
-  generateStrategyOptions,
-  getProviderModelCatalog,
-  type GeneratorAnswers
+    generateLinkedinProfiles,
+    generateStrategyOptions,
+    getProviderModelCatalog,
+    type GeneratorAnswers
 } from '../utils/linkedin-generator';
-import { error, note, secondary, success, unwrapCancel } from '../utils/ui';
+import { note, runCliEntry, secondary, success, unwrapCancel } from '../utils/ui';
 
 type OptionItem = {
   label: string;
   value: string;
   reason: string;
   score: number;
+};
+
+type GroupedSelections = {
+  model: string;
+  optimizationGoal: string;
+  preferredPath: string;
+  targetMarket: string;
+  targetSeniority: string;
+  constraints: string;
+  selectedKeywordClusterName: string;
+  languageSelection: string;
 };
 
 type CliArgs = Record<string, string | boolean>;
@@ -271,15 +282,26 @@ export const run = async (providedArgs?: string[]): Promise<void> => {
     score: cluster.score
   }));
 
-  providerOptions.model = await chooseAIOption('Select model', modelOptions, bootstrapModel);
-  const optimizationGoal = await chooseAIOption('Select optimization goal', goals, recommended.goal);
-  const preferredPath = await chooseAIOption('Select positioning angle', positionings, recommended.positioning);
-  const targetMarket = await chooseAIOption('Select target market', markets, recommended.market);
-  const targetSeniority = await chooseAIOption('Select seniority track', seniorities, recommended.seniority);
-  const constraints = await chooseAIOption('Select writing constraints', constraintsProfiles, recommended.constraintsProfile);
-  const selectedKeywordClusterName = await chooseAIOption('Select keyword cluster', keywordClusters, recommended.keywordCluster);
+  const groupedSelections = await clack.group<GroupedSelections>({
+    model: () => chooseAIOption('Select model', modelOptions, bootstrapModel),
+    optimizationGoal: () => chooseAIOption('Select optimization goal', goals, recommended.goal),
+    preferredPath: () => chooseAIOption('Select positioning angle', positionings, recommended.positioning),
+    targetMarket: () => chooseAIOption('Select target market', markets, recommended.market),
+    targetSeniority: () => chooseAIOption('Select seniority track', seniorities, recommended.seniority),
+    constraints: () => chooseAIOption('Select writing constraints', constraintsProfiles, recommended.constraintsProfile),
+    selectedKeywordClusterName: () => chooseAIOption('Select keyword cluster', keywordClusters, recommended.keywordCluster),
+    languageSelection: () => chooseAIOption('Select language plan', languagePlans, recommended.languagePlan)
+  });
+
+  providerOptions.model = groupedSelections.model;
+  const optimizationGoal = groupedSelections.optimizationGoal;
+  const preferredPath = groupedSelections.preferredPath;
+  const targetMarket = groupedSelections.targetMarket;
+  const targetSeniority = groupedSelections.targetSeniority;
+  const constraints = groupedSelections.constraints;
+  const selectedKeywordClusterName = groupedSelections.selectedKeywordClusterName;
   const selectedKeywordCluster = options.keywordClusters.find((cluster) => cluster.label === selectedKeywordClusterName);
-  const languageSelection = await chooseAIOption('Select language plan', languagePlans, recommended.languagePlan);
+  const languageSelection = groupedSelections.languageSelection;
   const languagesInput = languageSelection === 'custom' ? await askText('Language codes', 'en,es') : languageSelection;
   const roleFocus = await askText('Role focus for the prompt', preferredPath);
   const outputPath = await askText('Output file path', path.relative(process.cwd(), linkedinOutputPath));
@@ -341,8 +363,5 @@ export const run = async (providedArgs?: string[]): Promise<void> => {
 };
 
 if (require.main === module) {
-  run().catch((runError: unknown) => {
-    error(runError instanceof Error ? runError.message : String(runError));
-    process.exit(1);
-  });
+  runCliEntry(run);
 }

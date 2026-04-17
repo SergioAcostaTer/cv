@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { getAppPaths } from '../core/runtime';
 import { createAIClient, getModelsForProvider, type ProviderId } from '../utils/api';
-import { branded, error, note, streamChunk, success, unwrapCancel, warning } from '../utils/ui';
+import { branded, colors, error, note, runCliEntry, streamChunk, success, unwrapCancel, warning } from '../utils/ui';
 
 type ChatMessage = {
   role: 'user' | 'assistant' | 'system';
@@ -109,25 +109,85 @@ Use this information to provide contextual, personalized advice and discussion.`
     });
 
     let response = '';
-    let started = false;
+    let contentStarted = false;
+    let outputStarted = false;
+    let isThinkingMode = false;
+
+    const startOutput = (status: string): void => {
+      if (outputStarted) {
+        return;
+      }
+
+      outputStarted = true;
+      spinner.stop(status);
+      process.stdout.write(`\n${branded('Assistant: ')} `);
+    };
+
+    const writeTaggedContent = (chunkText: string): string => {
+      const segments = chunkText.split(/(<think>|<\/think>)/iu);
+      let visibleText = '';
+
+      for (const segment of segments) {
+        if (!segment) {
+          continue;
+        }
+
+        const lowerSegment = segment.toLowerCase();
+        if (lowerSegment === '<think>') {
+          isThinkingMode = true;
+          continue;
+        }
+
+        if (lowerSegment === '</think>') {
+          isThinkingMode = false;
+          continue;
+        }
+
+        if (isThinkingMode) {
+          startOutput('Assistant is thinking');
+          process.stdout.write(colors.muted(segment));
+          continue;
+        }
+
+        visibleText += segment;
+      }
+
+      return visibleText;
+    };
 
     for await (const chunk of stream) {
-      const content = chunk.choices[0]?.delta?.content;
+      const delta = chunk.choices[0]?.delta as { content?: string; reasoning_content?: string } | undefined;
+      const reasoningContent = delta?.reasoning_content;
+
+      if (reasoningContent) {
+        startOutput('Assistant is thinking');
+        process.stdout.write(colors.muted(reasoningContent));
+      }
+
+      const content = delta?.content;
       if (!content) {
         continue;
       }
 
-      if (!started) {
-        started = true;
-        spinner.stop('Assistant is responding');
-        process.stdout.write(`\n${branded('Assistant: ')} `);
+      const visibleContent = writeTaggedContent(content);
+      if (!visibleContent) {
+        continue;
       }
 
-      response += content;
-      process.stdout.write(streamChunk(content));
+      if (!contentStarted) {
+        contentStarted = true;
+        startOutput('Assistant is responding');
+
+        if (isThinkingMode) {
+          process.stdout.write('\n');
+        }
+      }
+
+      response += visibleContent;
+      process.stdout.write(streamChunk(visibleContent));
     }
 
-    if (started) {
+    if (outputStarted) {
       process.stdout.write('\n\n');
     } else {
       spinner.stop('Assistant response was empty');
@@ -221,8 +281,5 @@ export const run = async (): Promise<void> => {
 };
 
 if (require.main === module) {
-  run().catch((runError: unknown) => {
-    error(runError instanceof Error ? runError.message : String(runError));
-    process.exit(1);
-  });
+  runCliEntry(run);
 }

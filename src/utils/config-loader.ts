@@ -1,4 +1,6 @@
-import { getPersonaConfig, type PersonaConfig } from '../core/runtime';
+import fs from 'fs';
+import path from 'path';
+import { getPersonaConfig, getProjectRoot, type PersonaConfig } from '../core/runtime';
 
 export const loadPersonaConfig = (): PersonaConfig => getPersonaConfig();
 
@@ -11,4 +13,44 @@ export const resolveOutputFilename = (lang: string, role: string): string => {
     .replaceAll('{role}', role)
     .replaceAll('{lang}', lang)
     .replaceAll('{date}', dateString);
+};
+
+const isPlainObject = (value: unknown): value is Record<string, unknown> =>
+  typeof value === 'object' && value !== null && !Array.isArray(value);
+
+const deepMerge = (baseValue: unknown, overrideValue: unknown): unknown => {
+  if (Array.isArray(overrideValue)) {
+    return overrideValue.slice();
+  }
+
+  if (!isPlainObject(overrideValue)) {
+    return overrideValue;
+  }
+
+  const baseObject = isPlainObject(baseValue) ? baseValue : {};
+  const merged: Record<string, unknown> = { ...baseObject };
+
+  for (const [key, value] of Object.entries(overrideValue)) {
+    merged[key] = key in baseObject ? deepMerge(baseObject[key], value) : deepMerge(undefined, value);
+  }
+
+  return merged;
+};
+
+export const applyOverrides = <T extends object>(resumeData: T): T => {
+  const { personaId } = getPersonaConfig();
+  const overridePath = path.join(getProjectRoot(), 'config', 'overrides', `${personaId}.json`);
+
+  if (!fs.existsSync(overridePath)) {
+    return resumeData;
+  }
+
+  const rawOverride = fs.readFileSync(overridePath, 'utf8');
+  const parsedOverride = JSON.parse(rawOverride) as unknown;
+
+  if (!isPlainObject(parsedOverride)) {
+    return resumeData;
+  }
+
+  return deepMerge(resumeData, parsedOverride) as T;
 };

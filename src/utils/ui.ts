@@ -55,3 +55,15 @@ export const unwrapCancel = <T>(value: T | symbol, message: string): T => {
 
   return value as T;
 };
+
+export const runCliEntry = (runner: () => Promise<void>): void => {
+  runner().catch((runError: unknown) => {
+    if (runError instanceof CliAbort) {
+      // Cancellation already has user-facing output via clack.cancel.
+      process.exit(0);
+    }
+
+    error(runError instanceof Error ? runError.message : String(runError));
+    process.exit(1);
+  });
+};

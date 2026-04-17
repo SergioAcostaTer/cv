@@ -5,7 +5,7 @@ import { run as runChat } from './commands/chat-cv';
 import { run as runBuild } from './commands/generate';
 import { run as runLinkedin } from './commands/generate-linkedin';
 import { loadEnv } from './utils/env-loader';
-import { CliAbort, error, outro, secondary, unwrapCancel } from './utils/ui';
+import { CliAbort, outro, runCliEntry, secondary, unwrapCancel } from './utils/ui';
 
 type CommandId = 'linkedin' | 'chat' | 'build' | 'exit';
 
@@ -56,8 +56,5 @@ export const main = async (): Promise<void> => {
 };
 
 if (require.main === module) {
-  main().catch((runError: unknown) => {
-    error(runError instanceof Error ? runError.message : String(runError));
-    process.exit(1);
-  });
+  runCliEntry(main);
 }

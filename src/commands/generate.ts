@@ -4,10 +4,11 @@ import Handlebars from 'handlebars';
 import path from 'path';
 import puppeteer from 'puppeteer';
 import { getAppPaths } from '../core/runtime';
-import { resolveOutputFilename } from '../utils/config-loader';
-import { error, info, note, secondary, success, unwrapCancel } from '../utils/ui';
+import { applyOverrides, resolveOutputFilename } from '../utils/config-loader';
+import { info, note, runCliEntry, secondary, success, unwrapCancel } from '../utils/ui';
 
 const DEFAULT_THEME = 'harvard';
+type BuildOptions = { theme?: string; watch?: boolean };
 
 const ensureDirectoryExistence = (filePath: string): void => {
   fs.mkdirSync(path.dirname(filePath), { recursive: true });
@@ -69,7 +70,7 @@ const listThemes = (): string[] => {
     .sort((a, b) => a.localeCompare(b));
 };
 
-export const run = async (options?: { theme?: string }): Promise<void> => {
+const buildResumes = async (selectedTheme: string): Promise<void> => {
   const { profilesDir, distDir, templatesDir, exampleResumePath } = getAppPaths();
   const jsonFiles = findJsonFiles(profilesDir);
 
@@ -79,22 +80,6 @@ export const run = async (options?: { theme?: string }): Promise<void> => {
       'Create JSON First'
     );
     return;
-  }
-
-  const themeChoices = listThemes();
-  let selectedTheme = options?.theme;
-
-  if (!selectedTheme) {
-    const theme = await clack.select({
-      message: 'Choose a resume theme',
-      options: themeChoices.map((item) => ({
-        value: item,
-        label: item === DEFAULT_THEME ? `${item} ${secondary('(default)')}` : item
-      })),
-      initialValue: themeChoices.includes(DEFAULT_THEME) ? DEFAULT_THEME : themeChoices[0]
-    });
-
-    selectedTheme = unwrapCancel(theme, 'Resume build cancelled.');
   }
 
   const templateSource = fs.readFileSync(path.join(templatesDir, 'resume.hbs'), 'utf8');
@@ -109,13 +94,14 @@ export const run = async (options?: { theme?: string }): Promise<void> => {
     const page = await browser.newPage();
 
     for (const filePath of jsonFiles) {
-      const resumeData = JSON.parse(fs.readFileSync(filePath, 'utf8')) as object;
+      const resumeData = JSON.parse(fs.readFileSync(filePath, 'utf8')) as Record<string, unknown>;
+      const mergedResumeData = applyOverrides(resumeData);
       const relativePath = path.relative(profilesDir, filePath);
       const pathParts = relativePath.split(path.sep);
       const lang = pathParts[pathParts.length - 2] ?? 'en';
 
       const htmlContent = template({
-        resume: resumeData,
+        resume: mergedResumeData,
         css,
         lang,
         meta: {
@@ -154,6 +140,118 @@ export const run = async (options?: { theme?: string }): Promise<void> => {
     success(`Resumes available in ${distDir}`);
   } finally {
     await browser.close();
+  }
+};
+
+const parseRunOptions = (argv: string[]): BuildOptions => {
+  let theme: string | undefined;
+  let watch = false;
+
+  for (let index = 0; index < argv.length; index += 1) {
+    const token = argv[index];
+
+    if (token === '--watch') {
+      watch = true;
+      continue;
+    }
+
+    if (token === '--theme') {
+      const themeValue = argv[index + 1];
+      if (themeValue && !themeValue.startsWith('--')) {
+        theme = themeValue;
+        index += 1;
+      }
+      continue;
+    }
+
+    if (!token?.startsWith('--') && !theme) {
+      theme = token;
+    }
+  }
+
+  return { theme, watch };
+};
+
+const watchResumes = async (selectedTheme: string): Promise<void> => {
+  const { profilesDir } = getAppPaths();
+
+  info(`Watching ${path.relative(process.cwd(), profilesDir)} for JSON changes...`);
+  await new Promise<void>((resolve) => {
+    let isBuilding = false;
+    let queuedBuild = false;
+    let debounceTimer: NodeJS.Timeout | undefined;
+
+    const triggerBuild = (): void => {
+      if (isBuilding) {
+        queuedBuild = true;
+        return;
+      }
+
+      isBuilding = true;
+      void buildResumes(selectedTheme)
+        .catch((buildError: unknown) => {
+          info(`Build failed: ${buildError instanceof Error ? buildError.message : String(buildError)}`);
+        })
+        .finally(() => {
+          isBuilding = false;
+          if (queuedBuild) {
+            queuedBuild = false;
+            triggerBuild();
+          }
+        });
+    };
+
+    const watcher = fs.watch(profilesDir, { recursive: true }, (_eventType, changedFile) => {
+      if (!changedFile?.toLowerCase().endsWith('.json')) {
+        return;
+      }
+
+      info(`Change detected (${changedFile}), rebuilding...`);
+
+      if (debounceTimer) {
+        clearTimeout(debounceTimer);
+      }
+
+      debounceTimer = setTimeout(() => {
+        triggerBuild();
+      }, 250);
+    });
+
+    const stopWatching = (): void => {
+      watcher.close();
+      if (debounceTimer) {
+        clearTimeout(debounceTimer);
+      }
+      success('Watch mode stopped.');
+      resolve();
+    };
+
+    process.once('SIGINT', stopWatching);
+    process.once('SIGTERM', stopWatching);
+  });
+};
+
+export const run = async (options?: BuildOptions): Promise<void> => {
+  const themeChoices = listThemes();
+  let selectedTheme = options?.theme;
+
+  if (!selectedTheme) {
+    const theme = await clack.select({
+      message: 'Choose a resume theme',
+      options: themeChoices.map((item) => ({
+        value: item,
+        label: item === DEFAULT_THEME ? `${item} ${secondary('(default)')}` : item
+      })),
+      initialValue: themeChoices.includes(DEFAULT_THEME) ? DEFAULT_THEME : themeChoices[0]
+    });
+
+    selectedTheme = unwrapCancel(theme, 'Resume build cancelled.');
+  }
+
+  await buildResumes(selectedTheme);
+
+  if (options?.watch) {
+    await watchResumes(selectedTheme);
   }
 };
 
@@ -209,8 +307,5 @@ Handlebars.registerHelper('removeProtocol', function (url: string) {
 });
 
 if (require.main === module) {
-  run({ theme: process.argv[2] }).catch((runError: unknown) => {
-    error(runError instanceof Error ? runError.message : String(runError));
-    process.exit(1);
-  });
+  runCliEntry(() => run(parseRunOptions(process.argv.slice(2))));
 }
