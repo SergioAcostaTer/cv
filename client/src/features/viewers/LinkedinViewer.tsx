@@ -71,9 +71,38 @@ const formatJobBlock = (
   const period = `${start} - ${end}`;
   const location = safeText(entry.location, isSpanish ? 'Ubicacion no especificada' : 'Location not specified');
   const employment = safeText(entry.employmentType, isSpanish ? 'Jornada completa' : 'Full-time');
-  const description = safeText(entry.description, isSpanish ? 'Sin descripcion generada.' : 'No description generated.');
+  const rawDescription = safeText(entry.description, isSpanish ? 'Sin descripcion generada.' : 'No description generated.');
   const achievements = (entry.achievements ?? []).filter((item) => item.trim().length > 0);
   const techContext = (entry.techContext ?? []).filter((item) => item.trim().length > 0);
+
+  const paragraphs = rawDescription
+    .replace(/\r\n/g, '\n')
+    .split(/\n\s*\n+/)
+    .map((item) => item.trim())
+    .filter((item) => item.length > 0);
+
+  const first = paragraphs[0] ?? rawDescription;
+  const second =
+    paragraphs[1] ??
+    (techContext.length
+      ? isSpanish
+        ? `Trabajo con ${techContext.slice(0, 6).join(', ')} para construir y mantener servicios robustos e integraciones escalables.`
+        : `I work with ${techContext.slice(0, 6).join(', ')} to build and maintain robust services and scalable integrations.`
+      : isSpanish
+        ? 'Participo en el diseno e implementacion de soluciones backend mantenibles, seguras y orientadas al negocio.'
+        : 'I contribute to designing and implementing maintainable, secure backend solutions aligned with business goals.');
+
+  const third =
+    paragraphs[2] ??
+    (achievements[0]
+      ? isSpanish
+        ? `Impacto: ${achievements[0]}`
+        : `Impact: ${achievements[0]}`
+      : isSpanish
+        ? 'He contribuido a mejorar la fiabilidad operativa y la calidad de entrega en entornos de produccion.'
+        : 'I helped improve operational reliability and delivery quality in production environments.');
+
+  const description = [first, second, third].join('\n\n');
 
   const lines: string[] = [
     safeText(entry.title, isSpanish ? 'Puesto' : 'Role'),
@@ -86,17 +115,6 @@ const formatJobBlock = (
     '',
     description
   ];
-
-  if (achievements.length) {
-    lines.push('', ...achievements.map((item) => `• ${item}`));
-  }
-
-  if (techContext.length) {
-    const top = techContext.slice(0, 3).join(', ');
-    const rest = Math.max(0, techContext.length - 3);
-    const suffix = rest > 0 ? (isSpanish ? ` y ${rest} aptitudes mas` : ` and ${rest} more skills`) : '';
-    lines.push('', `${top}${suffix}`);
-  }
 
   return lines.join('\n');
 };
