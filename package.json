@@ -9,7 +9,10 @@
         "build": "tsx src/commands/generate.ts",
         "chat": "tsx src/commands/chat-cv.ts",
         "linkedin": "tsx src/commands/generate-linkedin.ts",
-        "typecheck": "tsc --noEmit"
+        "typecheck": "tsc --noEmit",
+        "test": "vitest run",
+        "test:watch": "vitest",
+        "coverage": "vitest run --coverage"
     },
     "dependencies": {
         "@clack/prompts": "^1.2.0",
@@ -24,7 +27,9 @@
     "devDependencies": {
         "@types/marked-terminal": "^6.1.1",
         "@types/node": "^22.15.3",
+        "@vitest/coverage-v8": "^4.1.4",
         "tsx": "^4.19.2",
-        "typescript": "^5.8.3"
+        "typescript": "^5.8.3",
+        "vitest": "^4.1.4"
     }
 }
