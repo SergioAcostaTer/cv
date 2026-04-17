@@ -1,0 +1,27 @@
+{
+    "compilerOptions": {
+        "target": "ES2022",
+        "module": "CommonJS",
+        "moduleResolution": "Node",
+        "esModuleInterop": true,
+        "resolveJsonModule": true,
+        "strict": false,
+        "skipLibCheck": true,
+        "allowSyntheticDefaultImports": true,
+        "types": [
+            "node"
+        ],
+        "outDir": "dist-ts"
+    },
+    "include": [
+        "generate.ts",
+        "generate-linkedin.ts",
+        "lib/**/*.ts",
+        "types/**/*.d.ts"
+    ],
+    "exclude": [
+        "node_modules",
+        "dist",
+        "dist-ts"
+    ]
+}

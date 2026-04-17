@@ -2,15 +2,23 @@
     "name": "resume-generator",
     "version": "1.0.0",
     "description": "Generate HTML resumes from JSON data",
-    "main": "generate.js",
+    "packageManager": "pnpm@10.8.0",
+    "main": "generate.ts",
     "scripts": {
-        "build": "node generate.js",
-        "build:minimal": "node generate.js minimal",
-        "build:modern": "node generate.js modern",
-        "linkedin": "node generate-linkedin.js"
+        "build": "tsx generate.ts",
+        "build:minimal": "tsx generate.ts minimal",
+        "build:modern": "tsx generate.ts modern",
+        "linkedin": "tsx generate-linkedin.ts",
+        "typecheck": "tsc --noEmit"
     },
     "dependencies": {
+        "enquirer": "^2.4.1",
         "handlebars": "^4.7.7",
         "puppeteer": "^24.37.2"
+    },
+    "devDependencies": {
+        "@types/node": "^22.15.3",
+        "tsx": "^4.19.2",
+        "typescript": "^5.8.3"
     }
 }
