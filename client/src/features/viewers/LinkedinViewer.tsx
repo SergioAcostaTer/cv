@@ -120,7 +120,7 @@ const formatJobBlock = (
 };
 
 const Snippet = (props: { text: string }) => (
-  <pre className="m-0 overflow-x-auto rounded-md border border-slate-200 bg-slate-50 p-3 font-mono text-xs leading-6 text-slate-800 whitespace-pre-wrap">
+  <pre className="m-0 overflow-x-auto rounded-md border border-border bg-muted p-3 font-mono text-xs leading-6 text-foreground whitespace-pre-wrap">
     {props.text}
   </pre>
 );
@@ -162,8 +162,8 @@ export const LinkedinViewer = ({ data, onCopySection }: LinkedinViewerProps) => 
                 </CardTitle>
                 <Badge variant="brand">{lang.toUpperCase()}</Badge>
               </CardHeader>
-              <CardContent className="grid gap-2 text-sm text-slate-700">
-                <p className="m-0 text-xs font-semibold uppercase tracking-wide text-slate-500">Headline (copy-ready)</p>
+              <CardContent className="grid gap-2 text-sm text-muted-foreground">
+                <p className="m-0 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Headline (copy-ready)</p>
                 <Snippet text={headline} />
               </CardContent>
               <CardFooter>
@@ -179,7 +179,7 @@ export const LinkedinViewer = ({ data, onCopySection }: LinkedinViewerProps) => 
                   <Sparkles size={15} /> About (paste-ready)
                 </CardTitle>
               </CardHeader>
-              <CardContent className="grid gap-3 text-sm text-slate-700">
+              <CardContent className="grid gap-3 text-sm text-muted-foreground">
                 <Snippet text={aboutPaste} />
                 {valueProp ? <Snippet text={valueProp} /> : null}
               </CardContent>
@@ -204,11 +204,11 @@ export const LinkedinViewer = ({ data, onCopySection }: LinkedinViewerProps) => 
                 </CardTitle>
                 <Badge variant="muted">{experience.length}</Badge>
               </CardHeader>
-              <CardContent className="grid gap-4 text-sm text-slate-700">
+              <CardContent className="grid gap-4 text-sm text-muted-foreground">
                 {experience.map((entry, index) => (
-                  <div className="grid gap-2 border border-slate-200 p-3" key={`${entry.company ?? 'company'}-${index}`}>
-                    <p className="m-0 text-sm font-semibold text-slate-900">{entry.title ?? 'Role'} · {entry.company ?? 'Company'}</p>
-                    <p className="m-0 text-xs text-slate-500">{entry.startDate ?? 'Start'} - {entry.endDate ?? 'Present'}</p>
+                  <div className="grid gap-2 border border-border p-3" key={`${entry.company ?? 'company'}-${index}`}>
+                    <p className="m-0 text-sm font-semibold text-foreground">{entry.title ?? 'Role'} · {entry.company ?? 'Company'}</p>
+                    <p className="m-0 text-xs text-muted-foreground">{entry.startDate ?? 'Start'} - {entry.endDate ?? 'Present'}</p>
                     <Snippet text={formatJobBlock(entry, lang)} />
                     <div className="flex flex-wrap items-center gap-2">
                       <Button

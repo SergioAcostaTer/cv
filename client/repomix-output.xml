@@ -1,0 +1,1789 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+index.html
+src/App.tsx
+src/components/LibrarySidebar.tsx
+src/components/MainArea.tsx
+src/components/MainToolbar.tsx
+src/components/StatusToast.tsx
+src/components/ui/badge.tsx
+src/components/ui/button.tsx
+src/components/ui/card.tsx
+src/components/ui/index.ts
+src/components/ui/input.tsx
+src/components/ui/separator.tsx
+src/components/ui/tabs.tsx
+src/components/ui/textarea.tsx
+src/features/chat/ChatInterface.tsx
+src/features/chat/useChat.ts
+src/features/library/api.ts
+src/features/library/constants.ts
+src/features/library/format.ts
+src/features/library/markdown.ts
+src/features/viewers/LinkedinViewer.tsx
+src/features/viewers/MarkdownViewer.tsx
+src/features/viewers/ResumeViewer.tsx
+src/hooks/useArtifactContent.ts
+src/hooks/useLibrary.ts
+src/hooks/useLibraryEvents.ts
+src/index.css
+src/lib/utils.ts
+src/main.tsx
+src/types.ts
+tailwind.config.js
+tsconfig.json
+vite.config.ts
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="index.html">
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CV Studio Dashboard</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+</file>
+
+<file path="src/App.tsx">
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { LibrarySidebar } from './components/LibrarySidebar';
+import { MainArea } from './components/MainArea';
+import { MainToolbar } from './components/MainToolbar';
+import { StatusToast } from './components/StatusToast';
+import { useArtifactContent } from './hooks/useArtifactContent';
+import { useLibrary } from './hooks/useLibrary';
+import { useLibraryEvents } from './hooks/useLibraryEvents';
+import type { Category, Selection, ViewSelection } from './types';
+
+export const App = () => {
+  const { library, signature, refreshLibrary } = useLibrary();
+  const [selectedView, setSelectedView] = useState<ViewSelection | null>(null);
+  const [status, setStatus] = useState('');
+
+  const selectedArtifact: Selection | null = selectedView && selectedView !== 'chat' ? selectedView : null;
+  const isChatSelected = selectedView === 'chat';
+
+  const { rawContent, sections, parsedJson, kind, clearContent } = useArtifactContent(selectedArtifact);
+
+  const selectedKey = selectedArtifact ? `${selectedArtifact.category}:${selectedArtifact.item.path}` : null;
+
+  const showStatus = useCallback((value: string): void => {
+    setStatus(value);
+    setTimeout(() => setStatus(''), 1200);
+  }, []);
+
+  const refreshWithStatus = useCallback(async (): Promise<void> => {
+    await refreshLibrary();
+  }, [refreshLibrary]);
+
+  const handleLibraryUpdated = useCallback(() => {
+    void refreshWithStatus();
+    showStatus('Library updated');
+  }, [refreshWithStatus, showStatus]);
+
+  useLibraryEvents(handleLibraryUpdated);
+
+  useEffect(() => {
+    if (!selectedArtifact) {
+      return;
+    }
+
+    const categoryItems = library[selectedArtifact.category] || [];
+    const stillExists = categoryItems.some((item) => item.path === selectedArtifact.item.path);
+
+    if (!stillExists) {
+      setSelectedView(null);
+      clearContent();
+    }
+  }, [signature, library, selectedArtifact, clearContent]);
+
+  const onSelect = useCallback(
+    (category: Category, index: number): void => {
+      const item = library[category][index];
+      if (!item) {
+        return;
+      }
+
+      setSelectedView({ category, item });
+      if (category === 'resumes') {
+        clearContent();
+      }
+    },
+    [library, clearContent]
+  );
+
+  const copyText = useCallback(
+    async (value: string, label: string): Promise<void> => {
+      if (!value) {
+        return;
+      }
+
+      await navigator.clipboard.writeText(value);
+      showStatus(`${label} copied`);
+    },
+    [showStatus]
+  );
+
+  const title = useMemo(() => {
+    if (selectedView === 'chat') {
+      return 'Web Chat';
+    }
+
+    return selectedArtifact?.item.filename ?? 'Select an artifact from the sidebar';
+  }, [selectedArtifact, selectedView]);
+
+  return (
+    <>
+      <div className="grid h-full grid-cols-1 grid-rows-[38dvh_1fr] lg:grid-cols-[340px_1fr] lg:grid-rows-1">
+        <LibrarySidebar
+          library={library}
+          selectedKey={selectedKey}
+          onSelect={onSelect}
+          onNewChat={() => {
+            setSelectedView('chat');
+            clearContent();
+          }}
+          isChatSelected={isChatSelected}
+        />
+
+        <main className="min-h-0 overflow-hidden border-t border-slate-200 bg-white lg:border-t-0 lg:border-l">
+          <MainToolbar
+            title={title}
+            showCopyAll={kind === 'markdown' && Boolean(rawContent)}
+            onCopyAll={() => {
+              void copyText(rawContent, 'Full document');
+            }}
+            onRefresh={() => {
+              void refreshWithStatus();
+            }}
+          />
+
+          <section className="h-[calc(100%-57px)] overflow-auto p-4 lg:p-5">
+            <MainArea
+              selectedArtifact={selectedView}
+              sections={sections}
+              parsedJson={parsedJson}
+              kind={kind}
+              rawContent={rawContent}
+              onCopySection={(text, label) => {
+                void copyText(text, label);
+              }}
+            />
+          </section>
+        </main>
+      </div>
+
+      {status ? <StatusToast message={status} /> : null}
+    </>
+  );
+};
+</file>
+
+<file path="src/components/LibrarySidebar.tsx">
+import { AtSign, FileText, LibraryBig, Map } from 'lucide-react';
+import type { ReactElement } from 'react';
+import { categoryLabels } from '../features/library/constants';
+import { formatDate } from '../features/library/format';
+import type { Category, LibraryPayload } from '../types';
+import { Badge, Button } from './ui';
+
+type LibrarySidebarProps = {
+  library: LibraryPayload;
+  selectedKey: string | null;
+  onSelect: (category: Category, index: number) => void;
+  onNewChat: () => void;
+  isChatSelected: boolean;
+};
+
+export const LibrarySidebar = (props: LibrarySidebarProps) => {
+  const categoryIcon: Record<Category, ReactElement> = {
+    resumes: <FileText size={14} />,
+    linkedinDrafts: <AtSign size={14} />,
+    roadmaps: <Map size={14} />
+  };
+
+  return (
+    <aside className="min-h-0 overflow-hidden border-b border-slate-200 bg-white lg:border-r lg:border-b-0">
+      <header className="border-b border-slate-200 px-4 py-3">
+        <h1 className="m-0 flex items-center gap-2 text-base font-extrabold tracking-tight">
+          <LibraryBig size={18} /> CV Studio Library
+        </h1>
+        <p className="mt-1.5 text-sm text-slate-600">Browse resumes, LinkedIn assets and roadmap outputs.</p>
+      </header>
+
+      <div className="grid h-[calc(100%-84px)] gap-4 overflow-auto p-3">
+        <Button
+          type="button"
+          variant={props.isChatSelected ? 'secondary' : 'outline'}
+          className="w-full justify-start"
+          onClick={props.onNewChat}
+        >
+          New Chat
+        </Button>
+
+        {(['resumes', 'linkedinDrafts', 'roadmaps'] as Category[]).map((category) => (
+          <section className="grid gap-1" key={category}>
+            <div className="mb-1 flex items-center justify-between px-1">
+              <p className="m-0 text-xs font-semibold uppercase tracking-wider text-slate-500">{categoryLabels[category]}</p>
+              <Badge variant="muted">{props.library[category].length}</Badge>
+            </div>
+
+            {props.library[category].map((item, index) => {
+              const key = `${category}:${item.path}`;
+              return (
+                <button
+                  key={key}
+                  type="button"
+                  className={`grid w-full gap-1 px-2 py-2 text-left text-sm transition-colors ${
+                    props.selectedKey === key
+                      ? 'bg-slate-100 text-slate-900 font-medium'
+                      : 'text-slate-600 hover:bg-slate-100/50 hover:text-slate-900'
+                  }`}
+                  onClick={() => props.onSelect(category, index)}
+                >
+                  <span className="flex items-center gap-1.5">
+                    {categoryIcon[category]}
+                    {item.filename}
+                  </span>
+                  <span className="font-mono text-xs text-slate-500">{formatDate(item.modifiedAt)}</span>
+                </button>
+              );
+            })}
+          </section>
+        ))}
+      </div>
+    </aside>
+  );
+};
+</file>
+
+<file path="src/components/MainArea.tsx">
+import { FileCode2 } from 'lucide-react';
+import { ChatInterface } from '../features/chat/ChatInterface';
+import { LinkedinViewer } from '../features/viewers/LinkedinViewer';
+import { ResumeViewer } from '../features/viewers/ResumeViewer';
+import type { ArtifactKind, LinkedinJson, MarkdownSection, ResumeJson, ViewSelection } from '../types';
+import { Card, CardContent, CardHeader, CardTitle } from './ui';
+
+type MainAreaProps = {
+  selectedArtifact: ViewSelection | null;
+  sections: MarkdownSection[];
+  kind: ArtifactKind;
+  parsedJson: LinkedinJson | ResumeJson | Record<string, unknown> | null;
+  rawContent: string;
+  onCopySection: (text: string, label: string) => void;
+};
+
+const JsonFallback = ({ rawContent }: { rawContent: string }) => (
+  <Card>
+    <CardHeader>
+      <CardTitle className="flex items-center gap-2 text-sm">
+        <FileCode2 size={15} /> JSON Artifact
+      </CardTitle>
+    </CardHeader>
+    <CardContent>
+      <pre className="m-0 overflow-x-auto border border-slate-200 bg-slate-50 p-3 text-xs leading-6 text-slate-700">
+        {rawContent}
+      </pre>
+    </CardContent>
+  </Card>
+);
+
+export const MainArea = ({ selectedArtifact, sections, kind, parsedJson, rawContent, onCopySection }: MainAreaProps) => {
+  if (!selectedArtifact) {
+    return (
+      <div className="mx-auto my-24 max-w-xl text-center text-slate-600">
+        <h2 className="m-0 text-xl font-extrabold text-slate-800">Ready</h2>
+        <p>Open a resume PDF or a LinkedIn/Roadmap JSON file from the left panel.</p>
+      </div>
+    );
+  }
+
+  if (selectedArtifact === 'chat') {
+    return <ChatInterface />;
+  }
+
+  if (kind === 'pdf') {
+    return (
+      <iframe
+        className="h-[62vh] w-full border border-slate-200 bg-white lg:h-[calc(100vh-200px)]"
+        src={`/pdfs/${encodeURI(selectedArtifact.item.path)}`}
+        title="resume-pdf"
+      />
+    );
+  }
+
+  if (kind === 'linkedin-json' && parsedJson) {
+    return <LinkedinViewer data={parsedJson as LinkedinJson} onCopySection={onCopySection} />;
+  }
+
+  if (kind === 'resume-json' && parsedJson) {
+    return <ResumeViewer data={parsedJson as ResumeJson} onCopySection={onCopySection} />;
+  }
+
+  if (kind === 'json') {
+    return <JsonFallback rawContent={rawContent} />;
+  }
+
+  return (
+    <div className="mx-auto my-24 max-w-xl text-center text-slate-600">
+      <h2 className="m-0 text-xl font-extrabold text-slate-800">Unsupported Artifact</h2>
+      <p>This file type cannot be previewed yet.</p>
+    </div>
+  );
+};
+</file>
+
+<file path="src/components/MainToolbar.tsx">
+import { Copy, RefreshCw } from 'lucide-react';
+import { Button } from './ui';
+
+type MainToolbarProps = {
+  title: string;
+  showCopyAll: boolean;
+  onCopyAll: () => void;
+  onRefresh: () => void;
+};
+
+export const MainToolbar = (props: MainToolbarProps) => {
+  return (
+    <header className="flex items-center justify-between gap-3 border-b border-slate-200 px-4 py-3">
+      <p className="m-0 max-w-[55%] truncate text-sm font-bold">{props.title}</p>
+      <div className="flex items-center gap-2">
+        {props.showCopyAll ? (
+          <Button
+            type="button"
+            variant="outline"
+            onClick={props.onCopyAll}
+          >
+            <Copy size={14} /> Copy All
+          </Button>
+        ) : null}
+        <Button
+          type="button"
+          variant="secondary"
+          onClick={props.onRefresh}
+        >
+          <RefreshCw size={14} /> Refresh
+        </Button>
+      </div>
+    </header>
+  );
+};
+</file>
+
+<file path="src/components/StatusToast.tsx">
+type StatusToastProps = {
+  message: string;
+};
+
+export const StatusToast = (props: StatusToastProps) => {
+  return (
+    <div className="fixed bottom-5 right-5 rounded-full border border-slate-700 bg-slate-900/95 px-3 py-2 text-xs font-semibold text-slate-50 shadow-lg backdrop-blur">
+      {props.message}
+    </div>
+  );
+};
+</file>
+
+<file path="src/components/ui/badge.tsx">
+import { cva, type VariantProps } from 'class-variance-authority';
+import type { HTMLAttributes } from 'react';
+import { cn } from '../../lib/utils';
+
+const badgeVariants = cva('inline-flex items-center rounded-full border px-2 py-0.5 text-[11px] font-semibold', {
+  variants: {
+    variant: {
+      default: 'border-slate-300 bg-white/90 text-slate-700',
+      brand: 'border-teal-200 bg-teal-50 text-teal-700',
+      success: 'border-emerald-200 bg-emerald-50 text-emerald-700',
+      muted: 'border-slate-200 bg-slate-100 text-slate-600'
+    }
+  },
+  defaultVariants: {
+    variant: 'default'
+  }
+});
+
+export interface BadgeProps extends HTMLAttributes<HTMLSpanElement>, VariantProps<typeof badgeVariants> {}
+
+export const Badge = ({ className, variant, ...props }: BadgeProps) => (
+  <span className={cn(badgeVariants({ variant }), className)} {...props} />
+);
+</file>
+
+<file path="src/components/ui/button.tsx">
+import { cva, type VariantProps } from 'class-variance-authority';
+import type { ButtonHTMLAttributes } from 'react';
+import { cn } from '../../lib/utils';
+
+const buttonVariants = cva(
+  'inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+  {
+    variants: {
+      variant: {
+        default: 'bg-slate-900 text-slate-50 hover:bg-slate-900/90',
+        secondary: 'bg-slate-100 text-slate-900 hover:bg-slate-100/80',
+        brand: 'bg-slate-900 text-slate-50 hover:bg-slate-900/90',
+        ghost: 'hover:bg-slate-100 hover:text-slate-900',
+        outline: 'border border-slate-200 bg-white hover:bg-slate-100 hover:text-slate-900'
+      },
+      size: {
+        default: 'h-9 px-4 py-2',
+        sm: 'h-8 px-3',
+        lg: 'h-10 px-5',
+        icon: 'h-9 w-9 rounded-md p-0'
+      }
+    },
+    defaultVariants: {
+      variant: 'default',
+      size: 'default'
+    }
+  }
+);
+
+export interface ButtonProps
+  extends ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {}
+
+export const Button = ({ className, variant, size, ...props }: ButtonProps) => {
+  return <button className={cn(buttonVariants({ variant, size }), className)} {...props} />;
+};
+</file>
+
+<file path="src/components/ui/card.tsx">
+import type { HTMLAttributes } from 'react';
+import { cn } from '../../lib/utils';
+
+export const Card = ({ className, ...props }: HTMLAttributes<HTMLDivElement>) => (
+  <div
+    className={cn('border border-slate-200 bg-white text-slate-950 shadow-sm', className)}
+    {...props}
+  />
+);
+
+export const CardHeader = ({ className, ...props }: HTMLAttributes<HTMLDivElement>) => (
+  <div className={cn('flex items-center justify-between gap-2 border-b border-slate-200 px-3 py-2', className)} {...props} />
+);
+
+export const CardTitle = ({ className, ...props }: HTMLAttributes<HTMLHeadingElement>) => (
+  <h3 className={cn('m-0 text-sm font-extrabold tracking-tight', className)} {...props} />
+);
+
+export const CardContent = ({ className, ...props }: HTMLAttributes<HTMLDivElement>) => (
+  <div className={cn('p-3', className)} {...props} />
+);
+
+export const CardFooter = ({ className, ...props }: HTMLAttributes<HTMLDivElement>) => (
+  <div className={cn('flex items-center justify-end gap-2 border-t border-slate-200 px-3 py-2', className)} {...props} />
+);
+</file>
+
+<file path="src/components/ui/index.ts">
+export * from './badge';
+export * from './button';
+export * from './card';
+export * from './input';
+export * from './separator';
+export * from './tabs';
+export * from './textarea';
+</file>
+
+<file path="src/components/ui/input.tsx">
+import type { InputHTMLAttributes } from 'react';
+import { cn } from '../../lib/utils';
+
+export type InputProps = InputHTMLAttributes<HTMLInputElement>;
+
+export const Input = ({ className, type = 'text', ...props }: InputProps) => (
+  <input
+    type={type}
+    className={cn(
+      'flex h-9 w-full border border-slate-200 bg-white px-3 py-1 text-sm text-slate-900 shadow-sm transition-colors placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
+      className
+    )}
+    {...props}
+  />
+);
+</file>
+
+<file path="src/components/ui/separator.tsx">
+import type { HTMLAttributes } from 'react';
+import { cn } from '../../lib/utils';
+
+export const Separator = ({ className, ...props }: HTMLAttributes<HTMLDivElement>) => (
+  <div className={cn('h-px w-full bg-slate-200', className)} role="separator" {...props} />
+);
+</file>
+
+<file path="src/components/ui/tabs.tsx">
+import type { ButtonHTMLAttributes, HTMLAttributes, ReactNode } from 'react';
+import { createContext, useContext } from 'react';
+import { cn } from '../../lib/utils';
+
+type TabsContextValue = {
+  value: string;
+  onValueChange: (value: string) => void;
+};
+
+const TabsContext = createContext<TabsContextValue | null>(null);
+
+type TabsProps = {
+  value: string;
+  onValueChange: (value: string) => void;
+  children: ReactNode;
+  className?: string;
+};
+
+export const Tabs = ({ value, onValueChange, children, className }: TabsProps) => (
+  <TabsContext.Provider value={{ value, onValueChange }}>
+    <div className={cn('grid gap-3', className)}>{children}</div>
+  </TabsContext.Provider>
+);
+
+export const TabsList = ({ className, ...props }: HTMLAttributes<HTMLDivElement>) => (
+  <div
+    className={cn('inline-flex w-full items-center gap-1 rounded-xl border border-slate-200 bg-slate-100 p-1', className)}
+    {...props}
+  />
+);
+
+type TabsTriggerProps = ButtonHTMLAttributes<HTMLButtonElement> & {
+  value: string;
+};
+
+export const TabsTrigger = ({ className, value, ...props }: TabsTriggerProps) => {
+  const ctx = useContext(TabsContext);
+  if (!ctx) {
+    return null;
+  }
+
+  const active = ctx.value === value;
+
+  return (
+    <button
+      type="button"
+      className={cn(
+        'flex-1 rounded-lg px-2.5 py-1.5 text-xs font-semibold transition-colors',
+        active ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900',
+        className
+      )}
+      onClick={() => ctx.onValueChange(value)}
+      {...props}
+    />
+  );
+};
+
+type TabsContentProps = HTMLAttributes<HTMLDivElement> & {
+  value: string;
+};
+
+export const TabsContent = ({ className, value, ...props }: TabsContentProps) => {
+  const ctx = useContext(TabsContext);
+  if (!ctx || ctx.value !== value) {
+    return null;
+  }
+
+  return <div className={cn('grid gap-3', className)} {...props} />;
+};
+</file>
+
+<file path="src/components/ui/textarea.tsx">
+import type { TextareaHTMLAttributes } from 'react';
+import { cn } from '../../lib/utils';
+
+export type TextareaProps = TextareaHTMLAttributes<HTMLTextAreaElement>;
+
+export const Textarea = ({ className, ...props }: TextareaProps) => (
+  <textarea
+    className={cn(
+      'flex min-h-24 w-full border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm transition-colors placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
+      className
+    )}
+    {...props}
+  />
+);
+</file>
+
+<file path="src/features/chat/ChatInterface.tsx">
+import { Send } from 'lucide-react';
+import { marked } from 'marked';
+import { useEffect, useRef, useState } from 'react';
+import { Button, Card, Textarea } from '../../components/ui';
+import { useChat } from './useChat';
+
+export const ChatInterface = () => {
+  const { messages, isLoading, sendMessage } = useChat();
+  const [draft, setDraft] = useState('');
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!scrollContainerRef.current) {
+      return;
+    }
+
+    scrollContainerRef.current.scrollTop = scrollContainerRef.current.scrollHeight;
+  }, [messages]);
+
+  return (
+    <div className="flex h-full min-h-0 flex-col border border-slate-200 bg-white">
+      <div ref={scrollContainerRef} className="min-h-0 flex-1 space-y-3 overflow-auto p-4">
+        {!messages.length ? (
+          <p className="m-0 text-sm text-slate-500">Start a conversation about your CV, LinkedIn profile, or career strategy.</p>
+        ) : null}
+
+        {messages.map((message, index) => (
+          <Card
+            key={`${message.role}-${index}`}
+            className={`max-w-4xl p-3 ${message.role === 'user' ? 'ml-auto w-[85%] bg-slate-900 text-slate-50' : 'mr-auto w-[95%] bg-white text-slate-900'}`}
+          >
+            {message.role === 'assistant' ? (
+              <div
+                className="prose prose-slate max-w-none text-sm leading-6"
+                dangerouslySetInnerHTML={{ __html: marked.parse(message.content) as string }}
+              />
+            ) : (
+              <p className="m-0 whitespace-pre-wrap text-sm leading-6">{message.content}</p>
+            )}
+          </Card>
+        ))}
+      </div>
+
+      <form
+        className="sticky bottom-0 border-t border-slate-200 bg-white p-3"
+        onSubmit={(event) => {
+          event.preventDefault();
+          void sendMessage(draft);
+          setDraft('');
+        }}
+      >
+        <div className="flex items-end gap-2">
+          <Textarea
+            value={draft}
+            onChange={(event) => setDraft(event.target.value)}
+            placeholder="Ask for a better LinkedIn headline, role summary, or interview prep response..."
+            className="min-h-[72px] resize-y"
+          />
+          <Button type="submit" disabled={isLoading || !draft.trim()}>
+            <Send size={14} />
+            Send
+          </Button>
+        </div>
+      </form>
+    </div>
+  );
+};
+</file>
+
+<file path="src/features/chat/useChat.ts">
+import { useCallback, useState } from 'react';
+
+export type ChatMessage = {
+  role: 'user' | 'assistant';
+  content: string;
+};
+
+type ChatApiMessage = {
+  role: 'system' | 'user' | 'assistant';
+  content: string;
+};
+
+const toApiMessages = (messages: ChatMessage[]): ChatApiMessage[] =>
+  messages.map((message) => ({
+    role: message.role,
+    content: message.content
+  }));
+
+export const useChat = () => {
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const sendMessage = useCallback(
+    async (content: string): Promise<void> => {
+      const trimmed = content.trim();
+      if (!trimmed || isLoading) {
+        return;
+      }
+
+      const nextMessages: ChatMessage[] = [...messages, { role: 'user', content: trimmed }];
+      setMessages([...nextMessages, { role: 'assistant', content: '' }]);
+      setIsLoading(true);
+
+      try {
+        const response = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ messages: toApiMessages(nextMessages) })
+        });
+
+        if (!response.ok || !response.body) {
+          throw new Error('Failed to stream chat response.');
+        }
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) {
+            break;
+          }
+
+          const chunk = decoder.decode(value, { stream: true });
+          if (!chunk) {
+            continue;
+          }
+
+          setMessages((prev) => {
+            if (!prev.length) {
+              return prev;
+            }
+
+            const updated = [...prev];
+            const last = updated[updated.length - 1];
+            if (last.role !== 'assistant') {
+              return prev;
+            }
+
+            updated[updated.length - 1] = {
+              ...last,
+              content: `${last.content}${chunk}`
+            };
+
+            return updated;
+          });
+        }
+      } catch (error) {
+        const fallback = error instanceof Error ? error.message : 'Unknown chat error';
+        setMessages((prev) => {
+          if (!prev.length) {
+            return prev;
+          }
+
+          const updated = [...prev];
+          const last = updated[updated.length - 1];
+          if (last.role !== 'assistant') {
+            return prev;
+          }
+
+          updated[updated.length - 1] = {
+            ...last,
+            content: `Chat error: ${fallback}`
+          };
+
+          return updated;
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [messages, isLoading]
+  );
+
+  return {
+    messages,
+    isLoading,
+    sendMessage
+  };
+};
+</file>
+
+<file path="src/features/library/api.ts">
+import type { LibraryPayload } from '../../types';
+
+export const fetchLibrary = async (): Promise<LibraryPayload> => {
+  const response = await fetch('/api/library');
+  if (!response.ok) {
+    throw new Error('Could not load library');
+  }
+
+  return (await response.json()) as LibraryPayload;
+};
+
+export const fetchArtifactText = async (artifactPath: string): Promise<string> => {
+  const response = await fetch(`/api/file?path=${encodeURIComponent(artifactPath)}`);
+  if (!response.ok) {
+    throw new Error('Could not load artifact');
+  }
+
+  return response.text();
+};
+</file>
+
+<file path="src/features/library/constants.ts">
+import type { Category } from '../../types';
+
+export const categoryLabels: Record<Category, string> = {
+  resumes: 'Resumes (PDF)',
+  linkedinDrafts: 'LinkedIn JSON',
+  roadmaps: 'Roadmap JSON'
+};
+</file>
+
+<file path="src/features/library/format.ts">
+export const formatDate = (value: number): string => {
+  const date = new Date(value);
+  if (Number.isNaN(date.valueOf())) {
+    return 'Unknown date';
+  }
+
+  return date.toLocaleString();
+};
+</file>
+
+<file path="src/features/library/markdown.ts">
+import type { LibraryPayload, MarkdownSection } from '../../types';
+
+export const splitMarkdownSections = (raw: string): MarkdownSection[] => {
+  const levelTwo = [...raw.matchAll(/^##\s+(.+)$/gmu)];
+  const levelThree = [...raw.matchAll(/^###\s+(.+)$/gmu)];
+  const matches = levelTwo.length > 1 ? levelTwo : levelThree;
+
+  if (!matches.length) {
+    return [{ title: 'Full Content', markdown: raw }];
+  }
+
+  return matches.map((match, index) => {
+    const start = match.index ?? 0;
+    const end = index + 1 < matches.length ? (matches[index + 1].index ?? raw.length) : raw.length;
+
+    return {
+      title: String(match[1] ?? `Section ${index + 1}`).trim(),
+      markdown: raw.slice(start, end).trim()
+    };
+  });
+};
+
+export const buildLibrarySignature = (payload: LibraryPayload): string =>
+  JSON.stringify({
+    resumes: payload.resumes.map((item) => [item.path, item.modifiedAt]),
+    linkedinDrafts: payload.linkedinDrafts.map((item) => [item.path, item.modifiedAt]),
+    roadmaps: payload.roadmaps.map((item) => [item.path, item.modifiedAt])
+  });
+</file>
+
+<file path="src/features/viewers/LinkedinViewer.tsx">
+import { AtSign, BriefcaseBusiness, Copy, Sparkles } from 'lucide-react';
+import { useMemo, useState } from 'react';
+import { Badge, Button, Card, CardContent, CardFooter, CardHeader, CardTitle, Separator, Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui';
+import type { LinkedinJson, LinkedinLanguageProfile } from '../../types';
+
+type LinkedinViewerProps = {
+  data: LinkedinJson;
+  onCopySection: (text: string, label: string) => void;
+};
+
+const availableLanguages = (value: LinkedinJson): string[] => {
+  const profile = value.profile ?? {};
+  return Object.keys(profile).filter((key) => profile[key]);
+};
+
+const getLanguageProfile = (value: LinkedinJson, lang: string): LinkedinLanguageProfile => {
+  const profile = value.profile?.[lang];
+  if (!profile) {
+    return {};
+  }
+
+  return profile;
+};
+
+const safeText = (value: string | undefined, fallback = ''): string => {
+  if (!value) {
+    return fallback;
+  }
+
+  return value.trim();
+};
+
+const copyReady = (value: string | undefined, fallback = ''): string => {
+  if (value == null || value.length === 0) {
+    return fallback;
+  }
+
+  // Keep user/model spacing intact while using Windows-friendly line endings.
+  return value.replace(/\r?\n/g, '\r\n');
+};
+
+const formatMonthYear = (value: string | undefined, locale: string): string => {
+  if (!value) {
+    return locale === 'es' ? 'Fecha no especificada' : 'Date not specified';
+  }
+
+  const match = value.match(/^(\d{4})-(\d{2})$/);
+  if (!match) {
+    return value;
+  }
+
+  const year = Number(match[1]);
+  const month = Number(match[2]);
+  if (!Number.isFinite(year) || !Number.isFinite(month) || month < 1 || month > 12) {
+    return value;
+  }
+
+  const date = new Date(Date.UTC(year, month - 1, 1));
+  const formatted = new Intl.DateTimeFormat(locale, { month: 'short', year: 'numeric' }).format(date);
+  return locale === 'es' ? formatted.replace(' ', '. ') : formatted;
+};
+
+const formatJobBlock = (
+  entry: LinkedinLanguageProfile['experience'] extends Array<infer T> ? T : never,
+  lang: string
+): string => {
+  const locale = lang.toLowerCase().startsWith('es') ? 'es-ES' : 'en-US';
+  const isSpanish = locale === 'es-ES';
+  const start = formatMonthYear(entry.startDate, locale);
+  const end = safeText(entry.endDate, isSpanish ? 'Actualidad' : 'Present');
+  const period = `${start} - ${end}`;
+  const location = safeText(entry.location, isSpanish ? 'Ubicacion no especificada' : 'Location not specified');
+  const employment = safeText(entry.employmentType, isSpanish ? 'Jornada completa' : 'Full-time');
+  const description = safeText(entry.description, isSpanish ? 'Sin descripcion generada.' : 'No description generated.');
+  const achievements = (entry.achievements ?? []).filter((item) => item.trim().length > 0);
+  const techContext = (entry.techContext ?? []).filter((item) => item.trim().length > 0);
+
+  const lines: string[] = [
+    safeText(entry.title, isSpanish ? 'Puesto' : 'Role'),
+    '',
+    `${safeText(entry.company, isSpanish ? 'Empresa' : 'Company')} · ${employment}`,
+    '',
+    period,
+    '',
+    location,
+    '',
+    description
+  ];
+
+  if (achievements.length) {
+    lines.push('', ...achievements.map((item) => `• ${item}`));
+  }
+
+  if (techContext.length) {
+    const top = techContext.slice(0, 3).join(', ');
+    const rest = Math.max(0, techContext.length - 3);
+    const suffix = rest > 0 ? (isSpanish ? ` y ${rest} aptitudes mas` : ` and ${rest} more skills`) : '';
+    lines.push('', `${top}${suffix}`);
+  }
+
+  return lines.join('\n');
+};
+
+const Snippet = (props: { text: string }) => (
+  <pre className="m-0 overflow-x-auto rounded-md border border-slate-200 bg-slate-50 p-3 font-mono text-xs leading-6 text-slate-800 whitespace-pre-wrap">
+    {props.text}
+  </pre>
+);
+
+export const LinkedinViewer = ({ data, onCopySection }: LinkedinViewerProps) => {
+  const langs = useMemo(() => {
+    const values = availableLanguages(data);
+    return values.length ? values : ['en'];
+  }, [data]);
+
+  const [currentLang, setCurrentLang] = useState(langs[0]);
+
+  return (
+    <Tabs value={currentLang} onValueChange={setCurrentLang}>
+      <TabsList>
+        {langs.map((lang) => (
+          <TabsTrigger key={lang} value={lang}>
+            {lang.toUpperCase()}
+          </TabsTrigger>
+        ))}
+      </TabsList>
+
+      {langs.map((lang) => {
+        const langProfile = getLanguageProfile(data, lang);
+        const profile = langProfile.profile ?? {};
+        const aboutData = langProfile.about ?? {};
+        const about = langProfile.about ?? {};
+        const experience = langProfile.experience ?? [];
+        const headline = safeText(profile.headline, 'No headline generated yet');
+        const aboutPaste = safeText(about.descriptionToPaste, about.long ?? about.short ?? 'No About section generated yet.');
+        const valueProp = safeText(about.valueProposition);
+
+        return (
+          <TabsContent key={lang} value={lang}>
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <AtSign size={16} /> {profile.fullName ?? 'LinkedIn Profile'}
+                </CardTitle>
+                <Badge variant="brand">{lang.toUpperCase()}</Badge>
+              </CardHeader>
+              <CardContent className="grid gap-2 text-sm text-slate-700">
+                <p className="m-0 text-xs font-semibold uppercase tracking-wide text-slate-500">Headline (copy-ready)</p>
+                <Snippet text={headline} />
+              </CardContent>
+              <CardFooter>
+                <Button type="button" size="sm" variant="outline" onClick={() => onCopySection(copyReady(profile.headline, headline), `LinkedIn headline (${lang})`)}>
+                  <Copy size={14} /> Copy Headline
+                </Button>
+              </CardFooter>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Sparkles size={15} /> About (paste-ready)
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="grid gap-3 text-sm text-slate-700">
+                <Snippet text={aboutPaste} />
+                {valueProp ? <Snippet text={valueProp} /> : null}
+              </CardContent>
+              <CardFooter>
+                <Button type="button" size="sm" variant="outline" onClick={() => onCopySection(copyReady(about.descriptionToPaste ?? about.long ?? about.short, aboutPaste), `LinkedIn about (${lang})`)}>
+                  <Copy size={14} /> Copy About
+                </Button>
+                {valueProp ? (
+                  <Button type="button" size="sm" variant="outline" onClick={() => onCopySection(copyReady(about.valueProposition, valueProp), `LinkedIn value proposition (${lang})`)}>
+                    <Copy size={14} /> Copy Value Prop
+                  </Button>
+                ) : null}
+              </CardFooter>
+            </Card>
+
+            <Separator />
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <BriefcaseBusiness size={15} /> Job descriptions (copy-ready)
+                </CardTitle>
+                <Badge variant="muted">{experience.length}</Badge>
+              </CardHeader>
+              <CardContent className="grid gap-4 text-sm text-slate-700">
+                {experience.map((entry, index) => (
+                  <div className="grid gap-2 border border-slate-200 p-3" key={`${entry.company ?? 'company'}-${index}`}>
+                    <p className="m-0 text-sm font-semibold text-slate-900">{entry.title ?? 'Role'} · {entry.company ?? 'Company'}</p>
+                    <p className="m-0 text-xs text-slate-500">{entry.startDate ?? 'Start'} - {entry.endDate ?? 'Present'}</p>
+                    <Snippet text={formatJobBlock(entry, lang)} />
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        onClick={() => onCopySection(copyReady(formatJobBlock(entry, lang)), `${entry.title ?? 'Job'} LinkedIn block (${lang})`)}
+                      >
+                        <Copy size={14} /> Copy Full Entry
+                      </Button>
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => onCopySection(copyReady(entry.description, safeText(entry.description)), `${entry.title ?? 'Job'} description (${lang})`)}
+                      >
+                        <Copy size={14} /> Copy Description Only
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+
+            {aboutData.callToAction ? (
+              <Card>
+                <CardHeader>
+                  <CardTitle>Call to action</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <Snippet text={aboutData.callToAction} />
+                </CardContent>
+                <CardFooter>
+                  <Button type="button" size="sm" variant="outline" onClick={() => onCopySection(copyReady(aboutData.callToAction ?? ''), `LinkedIn CTA (${lang})`)}>
+                    <Copy size={14} /> Copy CTA
+                  </Button>
+                </CardFooter>
+              </Card>
+            ) : null}
+          </TabsContent>
+        );
+      })}
+    </Tabs>
+  );
+};
+</file>
+
+<file path="src/features/viewers/MarkdownViewer.tsx">
+import { Copy, FileText } from 'lucide-react';
+import { Button, Card, CardContent, CardFooter, CardHeader } from '../../components/ui';
+import type { MarkdownSection } from '../../types';
+
+type MarkdownViewerProps = {
+  sections: MarkdownSection[];
+  onCopySection: (text: string, label: string) => void;
+};
+
+export const MarkdownViewer = ({ sections, onCopySection }: MarkdownViewerProps) => {
+  if (!sections.length) {
+    return null;
+  }
+
+  return (
+    <div className="grid gap-3">
+      {sections.map((section, index) => (
+        <Card key={`${section.title}-${index}`} className="overflow-hidden rounded-xl bg-white">
+          <CardHeader className="px-3 py-2">
+            <p className="m-0 flex items-center gap-1.5 text-sm font-extrabold">
+              <FileText size={14} /> {section.title}
+            </p>
+          </CardHeader>
+          <CardContent className="whitespace-pre-wrap px-3 py-3 text-sm leading-6 text-slate-800">{section.markdown}</CardContent>
+          <CardFooter>
+            <Button type="button" variant="outline" size="sm" onClick={() => onCopySection(section.markdown, section.title)}>
+              <Copy size={14} /> Copy Section
+            </Button>
+          </CardFooter>
+        </Card>
+      ))}
+    </div>
+  );
+};
+</file>
+
+<file path="src/features/viewers/ResumeViewer.tsx">
+import { Copy, GraduationCap, Languages, Lightbulb, Mail, Phone, UserRound, Wrench } from 'lucide-react';
+import { Badge, Button, Card, CardContent, CardFooter, CardHeader, CardTitle, Separator } from '../../components/ui';
+import type { ResumeJson } from '../../types';
+
+type ResumeViewerProps = {
+  data: ResumeJson;
+  onCopySection: (text: string, label: string) => void;
+};
+
+const asList = (value: unknown): string[] => {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value.filter((item): item is string => typeof item === 'string' && item.trim().length > 0);
+};
+
+const pickLabel = (value: string | undefined, fallback: string): string => (value && value.trim().length ? value : fallback);
+
+export const ResumeViewer = ({ data, onCopySection }: ResumeViewerProps) => {
+  const work = data.work ?? [];
+  const education = data.education ?? [];
+  const skills = data.skills ?? [];
+  const languages = data.languages ?? [];
+  const projects = data.projects ?? [];
+
+  const basics = data.basics ?? {};
+
+  return (
+    <div className="grid gap-3">
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-base">
+            <UserRound size={16} /> {pickLabel(basics.name, 'Unnamed candidate')}
+          </CardTitle>
+          <Badge variant="brand">Resume JSON</Badge>
+        </CardHeader>
+        <CardContent className="grid gap-2 text-sm text-slate-700">
+          <p className="m-0 font-semibold text-slate-900">{pickLabel(basics.label, 'No professional headline')}</p>
+          {basics.summary ? <p className="m-0 leading-6">{basics.summary}</p> : null}
+          <div className="grid gap-1 text-xs">
+            {basics.email ? (
+              <p className="m-0 flex items-center gap-1.5">
+                <Mail size={13} /> {basics.email}
+              </p>
+            ) : null}
+            {basics.phone ? (
+              <p className="m-0 flex items-center gap-1.5">
+                <Phone size={13} /> {basics.phone}
+              </p>
+            ) : null}
+          </div>
+        </CardContent>
+        <CardFooter>
+          <Button type="button" size="sm" variant="outline" onClick={() => onCopySection(JSON.stringify(basics, null, 2), 'Resume basics')}>
+            <Copy size={14} /> Copy Basics
+          </Button>
+        </CardFooter>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Wrench size={15} /> {pickLabel(data.sectionLabels?.experience, 'Experience')}
+          </CardTitle>
+          <Badge variant="muted">{work.length}</Badge>
+        </CardHeader>
+        <CardContent className="grid gap-3">
+          {work.map((entry, index) => (
+            <div className="grid gap-1 text-sm text-slate-700" key={`${entry.name ?? 'company'}-${index}`}>
+              <p className="m-0 font-semibold text-slate-900">
+                {pickLabel(entry.position, 'Role')} at {pickLabel(entry.name, 'Company')}
+              </p>
+              <p className="m-0 text-xs text-slate-500">
+                {pickLabel(entry.startDate, 'Unknown start')} - {pickLabel(entry.endDate, data.labels?.present ?? 'Present')}
+              </p>
+              {entry.summary ? <p className="m-0 leading-6">{entry.summary}</p> : null}
+              {asList(entry.highlights).length ? (
+                <div className="flex flex-wrap gap-1 pt-1">
+                  {asList(entry.highlights).map((item) => (
+                    <Badge key={item} variant="success">
+                      {item}
+                    </Badge>
+                  ))}
+                </div>
+              ) : null}
+            </div>
+          ))}
+        </CardContent>
+        <CardFooter>
+          <Button type="button" size="sm" variant="outline" onClick={() => onCopySection(JSON.stringify(work, null, 2), 'Resume experience')}>
+            <Copy size={14} /> Copy Experience
+          </Button>
+        </CardFooter>
+      </Card>
+
+      <Separator />
+
+      <div className="grid gap-3 lg:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <GraduationCap size={15} /> {pickLabel(data.sectionLabels?.education, 'Education')}
+            </CardTitle>
+            <Badge variant="muted">{education.length}</Badge>
+          </CardHeader>
+          <CardContent className="grid gap-2 text-sm text-slate-700">
+            {education.map((item, index) => (
+              <div key={`${item.institution ?? 'school'}-${index}`}>
+                <p className="m-0 font-semibold text-slate-900">{pickLabel(item.institution, 'Institution')}</p>
+                <p className="m-0 text-xs text-slate-500">
+                  {pickLabel(item.studyType, 'Program')} · {pickLabel(item.area, 'Area')}
+                </p>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Languages size={15} /> {pickLabel(data.sectionLabels?.languages, 'Languages')}
+            </CardTitle>
+            <Badge variant="muted">{languages.length}</Badge>
+          </CardHeader>
+          <CardContent className="grid gap-2 text-sm text-slate-700">
+            {languages.map((item, index) => (
+              <div key={`${item.language ?? 'language'}-${index}`}>
+                <p className="m-0 font-semibold text-slate-900">{pickLabel(item.language, 'Language')}</p>
+                <p className="m-0 text-xs text-slate-500">{pickLabel(item.fluency, 'Not specified')}</p>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Lightbulb size={15} /> {pickLabel(data.sectionLabels?.skills, 'Skills')}
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="grid gap-2">
+          {skills.map((skill, index) => (
+            <div className="grid gap-1" key={`${skill.name ?? 'skills'}-${index}`}>
+              <p className="m-0 text-sm font-semibold text-slate-900">{pickLabel(skill.name, 'Category')}</p>
+              <div className="flex flex-wrap gap-1">
+                {asList(skill.keywords).map((keyword) => (
+                  <Badge key={keyword} variant="brand">
+                    {keyword}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          ))}
+        </CardContent>
+      </Card>
+
+      {projects.length ? (
+        <Card>
+          <CardHeader>
+            <CardTitle>Projects</CardTitle>
+            <Badge variant="muted">{projects.length}</Badge>
+          </CardHeader>
+          <CardContent className="grid gap-2 text-sm text-slate-700">
+            {projects.map((project, index) => (
+              <div className="grid gap-0.5" key={`${project.name ?? 'project'}-${index}`}>
+                <p className="m-0 font-semibold text-slate-900">{pickLabel(project.name, 'Project')}</p>
+                {project.description ? <p className="m-0 leading-6">{project.description}</p> : null}
+              </div>
+            ))}
+          </CardContent>
+          <CardFooter>
+            <Button type="button" size="sm" variant="outline" onClick={() => onCopySection(JSON.stringify(projects, null, 2), 'Resume projects')}>
+              <Copy size={14} /> Copy Projects
+            </Button>
+          </CardFooter>
+        </Card>
+      ) : null}
+    </div>
+  );
+};
+</file>
+
+<file path="src/hooks/useArtifactContent.ts">
+import { useEffect, useState } from 'react';
+import { fetchArtifactText } from '../features/library/api';
+import type { ArtifactKind, LinkedinJson, MarkdownSection, ResumeJson, Selection } from '../types';
+
+const resolveArtifactKind = (selection: Selection | null): ArtifactKind => {
+  if (!selection) {
+    return 'unknown';
+  }
+
+  if (selection.category === 'resumes') {
+    return 'pdf';
+  }
+
+  const lower = selection.item.filename.toLowerCase();
+  if (lower.endsWith('.json')) {
+    if (lower.includes('linkedin')) {
+      return 'linkedin-json';
+    }
+
+    if (lower.includes('resume')) {
+      return 'resume-json';
+    }
+
+    return 'json';
+  }
+
+  return 'unknown';
+};
+
+export const useArtifactContent = (selection: Selection | null): {
+  rawContent: string;
+  sections: MarkdownSection[];
+  parsedJson: LinkedinJson | ResumeJson | Record<string, unknown> | null;
+  kind: ArtifactKind;
+  clearContent: () => void;
+} => {
+  const [rawContent, setRawContent] = useState('');
+  const [sections, setSections] = useState<MarkdownSection[]>([]);
+  const [parsedJson, setParsedJson] = useState<LinkedinJson | ResumeJson | Record<string, unknown> | null>(null);
+  const [kind, setKind] = useState<ArtifactKind>('unknown');
+
+  useEffect(() => {
+    if (!selection) {
+      setKind('unknown');
+      return;
+    }
+
+    const currentKind = resolveArtifactKind(selection);
+    setKind(currentKind);
+
+    if (currentKind === 'pdf') {
+      return;
+    }
+
+    let cancelled = false;
+
+    const loadFile = async (): Promise<void> => {
+      const text = await fetchArtifactText(selection.item.path);
+      if (cancelled) {
+        return;
+      }
+
+      setRawContent(text);
+
+      if (currentKind === 'linkedin-json' || currentKind === 'resume-json' || currentKind === 'json') {
+        setSections([]);
+        try {
+          const parsed = JSON.parse(text) as Record<string, unknown>;
+          setParsedJson(parsed);
+        } catch {
+          setParsedJson(null);
+        }
+        return;
+      }
+
+      setParsedJson(null);
+      setSections([]);
+    };
+
+    void loadFile();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [selection]);
+
+  const clearContent = (): void => {
+    setRawContent('');
+    setSections([]);
+    setParsedJson(null);
+    setKind('unknown');
+  };
+
+  return {
+    rawContent,
+    sections,
+    parsedJson,
+    kind,
+    clearContent
+  };
+};
+</file>
+
+<file path="src/hooks/useLibrary.ts">
+import { useEffect, useMemo, useState } from 'react';
+import { fetchLibrary } from '../features/library/api';
+import { buildLibrarySignature } from '../features/library/markdown';
+import { emptyLibrary, type LibraryPayload } from '../types';
+
+export const useLibrary = (): {
+  library: LibraryPayload;
+  signature: string;
+  refreshLibrary: () => Promise<void>;
+} => {
+  const [library, setLibrary] = useState<LibraryPayload>(emptyLibrary);
+
+  const refreshLibrary = async (): Promise<void> => {
+    const payload = await fetchLibrary();
+    setLibrary(payload);
+  };
+
+  useEffect(() => {
+    void refreshLibrary();
+  }, []);
+
+  const signature = useMemo(() => buildLibrarySignature(library), [library]);
+
+  return {
+    library,
+    signature,
+    refreshLibrary
+  };
+};
+</file>
+
+<file path="src/hooks/useLibraryEvents.ts">
+import { useEffect } from 'react';
+
+export const useLibraryEvents = (onLibraryUpdated: () => void): void => {
+  useEffect(() => {
+    const events = new EventSource('/api/events');
+
+    const handleLibraryUpdated = (): void => {
+      onLibraryUpdated();
+    };
+
+    events.addEventListener('library-updated', handleLibraryUpdated);
+
+    events.onerror = () => {
+      events.close();
+    };
+
+    return () => {
+      events.removeEventListener('library-updated', handleLibraryUpdated);
+      events.close();
+    };
+  }, [onLibraryUpdated]);
+};
+</file>
+
+<file path="src/index.css">
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import 'tailwindcss';
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  @apply font-sans bg-slate-50 text-slate-900 antialiased overflow-hidden;
+}
+</file>
+
+<file path="src/lib/utils.ts">
+import { clsx, type ClassValue } from 'clsx';
+import { twMerge } from 'tailwind-merge';
+
+export const cn = (...inputs: ClassValue[]): string => twMerge(clsx(inputs));
+</file>
+
+<file path="src/main.tsx">
+import React from 'react';
+import { createRoot } from 'react-dom/client';
+import { App } from './App.tsx';
+import './index.css';
+
+createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
+</file>
+
+<file path="src/types.ts">
+export type Artifact = {
+  filename: string;
+  path: string;
+  modifiedAt: number;
+};
+
+export type LibraryPayload = {
+  resumes: Artifact[];
+  linkedinDrafts: Artifact[];
+  roadmaps: Artifact[];
+};
+
+export type Category = keyof LibraryPayload;
+
+export type Selection = {
+  category: Category;
+  item: Artifact;
+};
+
+export type ViewSelection = Selection | 'chat';
+
+export type MarkdownSection = {
+  title: string;
+  markdown: string;
+};
+
+export type ArtifactKind = 'pdf' | 'linkedin-json' | 'resume-json' | 'json' | 'unknown';
+
+export type ResumeJson = {
+  sectionLabels?: Record<string, string>;
+  labels?: Record<string, string>;
+  basics?: {
+    name?: string;
+    label?: string;
+    email?: string;
+    phone?: string;
+    summary?: string;
+    location?: {
+      city?: string;
+      region?: string;
+      countryCode?: string;
+    };
+    profiles?: Array<{
+      network?: string;
+      username?: string;
+      url?: string;
+    }>;
+  };
+  work?: Array<{
+    name?: string;
+    position?: string;
+    startDate?: string;
+    endDate?: string;
+    summary?: string;
+    highlights?: string[];
+  }>;
+  education?: Array<{
+    institution?: string;
+    area?: string;
+    studyType?: string;
+    startDate?: string;
+    endDate?: string;
+  }>;
+  skills?: Array<{
+    name?: string;
+    keywords?: string[];
+  }>;
+  languages?: Array<{
+    language?: string;
+    fluency?: string;
+  }>;
+  projects?: Array<{
+    name?: string;
+    description?: string;
+    highlights?: string[];
+    url?: string;
+  }>;
+};
+
+export type LinkedinLanguageProfile = {
+  profile?: {
+    fullName?: string;
+    headline?: string;
+    location?: string;
+    industry?: string;
+    customUrlSlug?: string;
+    openToWork?: string[];
+  };
+  about?: {
+    short?: string;
+    long?: string;
+    descriptionToPaste?: string;
+    valueProposition?: string;
+    callToAction?: string;
+  };
+  experience?: Array<{
+    title?: string;
+    company?: string;
+    employmentType?: string;
+    location?: string;
+    startDate?: string;
+    endDate?: string;
+    description?: string;
+    techContext?: string[];
+    achievements?: string[];
+  }>;
+  education?: Array<{
+    school?: string;
+    degree?: string;
+    fieldOfStudy?: string;
+    startDate?: string;
+    endDate?: string;
+    description?: string;
+  }>;
+  projects?: Array<{
+    name?: string;
+    description?: string;
+    highlights?: string[];
+    url?: string;
+  }>;
+  skills?: {
+    top?: string[];
+    byCategory?: Array<{
+      category?: string;
+      items?: string[];
+    }>;
+    keywords?: string[];
+  };
+  languages?: Array<{
+    name?: string;
+    proficiency?: string;
+  }>;
+  certifications?: Array<{
+    name?: string;
+    issuer?: string;
+    date?: string;
+  }>;
+};
+
+export type LinkedinJson = {
+  meta?: Record<string, unknown>;
+  profile?: {
+    en?: LinkedinLanguageProfile;
+    es?: LinkedinLanguageProfile;
+    [key: string]: LinkedinLanguageProfile | undefined;
+  };
+};
+
+export const emptyLibrary = (): LibraryPayload => ({
+  resumes: [],
+  linkedinDrafts: [],
+  roadmaps: []
+});
+</file>
+
+<file path="tailwind.config.js">
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: ['./index.html', './src/**/*.{ts,tsx}'],
+  theme: {
+    extend: {
+      fontFamily: {
+        sans: ['Inter', 'system-ui', 'sans-serif'],
+        mono: ['IBM Plex Mono', 'Consolas', 'monospace']
+      }
+    }
+  },
+  plugins: []
+};
+</file>
+
+<file path="tsconfig.json">
+{
+    "compilerOptions": {
+        "target": "ES2022",
+        "module": "ESNext",
+        "moduleResolution": "Bundler",
+        "allowImportingTsExtensions": true,
+        "noEmit": true,
+        "jsx": "react-jsx",
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "types": [
+            "vite/client",
+            "react",
+            "react-dom"
+        ]
+    },
+    "include": [
+        "src/**/*.ts",
+        "src/**/*.tsx"
+    ]
+}
+</file>
+
+<file path="vite.config.ts">
+import tailwindcss from '@tailwindcss/vite';
+import react from '@vitejs/plugin-react';
+import path from 'node:path';
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+  root: path.resolve(__dirname),
+  plugins: [react(), tailwindcss()],
+  server: {
+    port: 5173,
+    proxy: {
+      '/api': 'http://localhost:3000',
+      '/pdfs': 'http://localhost:3000'
+    }
+  }
+});
+</file>
+
+</files>

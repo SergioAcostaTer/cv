@@ -35,8 +35,8 @@ export const ResumeViewer = ({ data, onCopySection }: ResumeViewerProps) => {
           </CardTitle>
           <Badge variant="brand">Resume JSON</Badge>
         </CardHeader>
-        <CardContent className="grid gap-2 text-sm text-slate-700">
-          <p className="m-0 font-semibold text-slate-900">{pickLabel(basics.label, 'No professional headline')}</p>
+        <CardContent className="grid gap-2 text-sm text-muted-foreground">
+          <p className="m-0 font-semibold text-foreground">{pickLabel(basics.label, 'No professional headline')}</p>
           {basics.summary ? <p className="m-0 leading-6">{basics.summary}</p> : null}
           <div className="grid gap-1 text-xs">
             {basics.email ? (
@@ -67,11 +67,11 @@ export const ResumeViewer = ({ data, onCopySection }: ResumeViewerProps) => {
         </CardHeader>
         <CardContent className="grid gap-3">
           {work.map((entry, index) => (
-            <div className="grid gap-1 text-sm text-slate-700" key={`${entry.name ?? 'company'}-${index}`}>
-              <p className="m-0 font-semibold text-slate-900">
+            <div className="grid gap-1 text-sm text-muted-foreground" key={`${entry.name ?? 'company'}-${index}`}>
+              <p className="m-0 font-semibold text-foreground">
                 {pickLabel(entry.position, 'Role')} at {pickLabel(entry.name, 'Company')}
               </p>
-              <p className="m-0 text-xs text-slate-500">
+              <p className="m-0 text-xs text-muted-foreground">
                 {pickLabel(entry.startDate, 'Unknown start')} - {pickLabel(entry.endDate, data.labels?.present ?? 'Present')}
               </p>
               {entry.summary ? <p className="m-0 leading-6">{entry.summary}</p> : null}
@@ -104,11 +104,11 @@ export const ResumeViewer = ({ data, onCopySection }: ResumeViewerProps) => {
             </CardTitle>
             <Badge variant="muted">{education.length}</Badge>
           </CardHeader>
-          <CardContent className="grid gap-2 text-sm text-slate-700">
+          <CardContent className="grid gap-2 text-sm text-muted-foreground">
             {education.map((item, index) => (
               <div key={`${item.institution ?? 'school'}-${index}`}>
-                <p className="m-0 font-semibold text-slate-900">{pickLabel(item.institution, 'Institution')}</p>
-                <p className="m-0 text-xs text-slate-500">
+                <p className="m-0 font-semibold text-foreground">{pickLabel(item.institution, 'Institution')}</p>
+                <p className="m-0 text-xs text-muted-foreground">
                   {pickLabel(item.studyType, 'Program')} · {pickLabel(item.area, 'Area')}
                 </p>
               </div>
@@ -123,11 +123,11 @@ export const ResumeViewer = ({ data, onCopySection }: ResumeViewerProps) => {
             </CardTitle>
             <Badge variant="muted">{languages.length}</Badge>
           </CardHeader>
-          <CardContent className="grid gap-2 text-sm text-slate-700">
+          <CardContent className="grid gap-2 text-sm text-muted-foreground">
             {languages.map((item, index) => (
               <div key={`${item.language ?? 'language'}-${index}`}>
-                <p className="m-0 font-semibold text-slate-900">{pickLabel(item.language, 'Language')}</p>
-                <p className="m-0 text-xs text-slate-500">{pickLabel(item.fluency, 'Not specified')}</p>
+                <p className="m-0 font-semibold text-foreground">{pickLabel(item.language, 'Language')}</p>
+                <p className="m-0 text-xs text-muted-foreground">{pickLabel(item.fluency, 'Not specified')}</p>
               </div>
             ))}
           </CardContent>
@@ -143,7 +143,7 @@ export const ResumeViewer = ({ data, onCopySection }: ResumeViewerProps) => {
         <CardContent className="grid gap-2">
           {skills.map((skill, index) => (
             <div className="grid gap-1" key={`${skill.name ?? 'skills'}-${index}`}>
-              <p className="m-0 text-sm font-semibold text-slate-900">{pickLabel(skill.name, 'Category')}</p>
+              <p className="m-0 text-sm font-semibold text-foreground">{pickLabel(skill.name, 'Category')}</p>
               <div className="flex flex-wrap gap-1">
                 {asList(skill.keywords).map((keyword) => (
                   <Badge key={keyword} variant="brand">
@@ -162,10 +162,10 @@ export const ResumeViewer = ({ data, onCopySection }: ResumeViewerProps) => {
             <CardTitle>Projects</CardTitle>
             <Badge variant="muted">{projects.length}</Badge>
           </CardHeader>
-          <CardContent className="grid gap-2 text-sm text-slate-700">
+          <CardContent className="grid gap-2 text-sm text-muted-foreground">
             {projects.map((project, index) => (
               <div className="grid gap-0.5" key={`${project.name ?? 'project'}-${index}`}>
-                <p className="m-0 font-semibold text-slate-900">{pickLabel(project.name, 'Project')}</p>
+                <p className="m-0 font-semibold text-foreground">{pickLabel(project.name, 'Project')}</p>
                 {project.description ? <p className="m-0 leading-6">{project.description}</p> : null}
               </div>
             ))}

@@ -24,7 +24,7 @@ export const Tabs = ({ value, onValueChange, children, className }: TabsProps) =
 
 export const TabsList = ({ className, ...props }: HTMLAttributes<HTMLDivElement>) => (
   <div
-    className={cn('inline-flex w-full items-center gap-1 rounded-xl border border-slate-200 bg-slate-100 p-1', className)}
+    className={cn('inline-flex w-full items-center gap-1 rounded-md border border-border bg-muted p-1', className)}
     {...props}
   />
 );
@@ -45,8 +45,8 @@ export const TabsTrigger = ({ className, value, ...props }: TabsTriggerProps) =>
     <button
       type="button"
       className={cn(
-        'flex-1 rounded-lg px-2.5 py-1.5 text-xs font-semibold transition-colors',
-        active ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900',
+        'flex-1 rounded-sm px-2.5 py-1.5 text-xs font-semibold transition-colors duration-200',
+        active ? 'bg-background text-foreground' : 'text-muted-foreground hover:text-foreground',
         className
       )}
       onClick={() => ctx.onValueChange(value)}

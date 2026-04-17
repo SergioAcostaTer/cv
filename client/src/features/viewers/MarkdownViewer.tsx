@@ -15,13 +15,13 @@ export const MarkdownViewer = ({ sections, onCopySection }: MarkdownViewerProps)
   return (
     <div className="grid gap-3">
       {sections.map((section, index) => (
-        <Card key={`${section.title}-${index}`} className="overflow-hidden rounded-xl bg-white">
+        <Card key={`${section.title}-${index}`} className="overflow-hidden">
           <CardHeader className="px-3 py-2">
             <p className="m-0 flex items-center gap-1.5 text-sm font-extrabold">
               <FileText size={14} /> {section.title}
             </p>
           </CardHeader>
-          <CardContent className="whitespace-pre-wrap px-3 py-3 text-sm leading-6 text-slate-800">{section.markdown}</CardContent>
+          <CardContent className="whitespace-pre-wrap px-3 py-3 text-sm leading-6 text-foreground">{section.markdown}</CardContent>
           <CardFooter>
             <Button type="button" variant="outline" size="sm" onClick={() => onCopySection(section.markdown, section.title)}>
               <Copy size={14} /> Copy Section

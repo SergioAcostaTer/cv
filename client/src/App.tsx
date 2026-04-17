@@ -87,7 +87,7 @@ export const App = () => {
 
   return (
     <>
-      <div className="grid h-full grid-cols-1 grid-rows-[38dvh_1fr] lg:grid-cols-[340px_1fr] lg:grid-rows-1">
+      <div className="grid h-screen grid-cols-1 md:grid-cols-[280px_1fr]">
         <LibrarySidebar
           library={library}
           selectedKey={selectedKey}
@@ -99,7 +99,7 @@ export const App = () => {
           isChatSelected={isChatSelected}
         />
 
-        <main className="min-h-0 overflow-hidden border-t border-slate-200 bg-white lg:border-t-0 lg:border-l">
+        <main className="min-h-0 overflow-hidden border-t border-border bg-background md:border-t-0 md:border-l">
           <MainToolbar
             title={title}
             showCopyAll={kind === 'markdown' && Boolean(rawContent)}
@@ -111,7 +111,7 @@ export const App = () => {
             }}
           />
 
-          <section className="h-[calc(100%-57px)] overflow-auto p-4 lg:p-5">
+          <section className="h-[calc(100%-57px)] overflow-auto p-4 md:p-5">
             <MainArea
               selectedArtifact={selectedView}
               sections={sections}
