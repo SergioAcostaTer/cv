@@ -6,7 +6,8 @@
     "scripts": {
         "build": "node generate.js",
         "build:minimal": "node generate.js minimal",
-        "build:modern": "node generate.js modern"
+        "build:modern": "node generate.js modern",
+        "linkedin": "node generate-linkedin.js"
     },
     "dependencies": {
         "handlebars": "^4.7.7",
