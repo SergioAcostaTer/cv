@@ -27,7 +27,6 @@ type GroupedSelections = {
   targetSeniority: string;
   constraints: string;
   selectedKeywordClusterName: string;
-  languageSelection: string;
 };
 
 type CliArgs = Record<string, string | boolean>;
@@ -230,6 +229,30 @@ const askText = async (message: string, initialValue: string): Promise<string> =
   return unwrapCancel(result, `Input cancelled: ${message}`).trim() || initialValue;
 };
 
+const chooseLanguages = async (defaultLanguages: string): Promise<string> => {
+  const normalizedDefault = defaultLanguages.trim() || 'en,es';
+  const presetOptions = ['en,es', 'en', 'es'];
+  const initialValue = presetOptions.includes(normalizedDefault) ? normalizedDefault : 'custom';
+
+  const selection = await clack.select({
+    message: 'Select output languages for the LinkedIn profile',
+    options: [
+      { value: 'en,es', label: 'English + Spanish (default)' },
+      { value: 'en', label: 'English only' },
+      { value: 'es', label: 'Spanish only' },
+      { value: 'custom', label: 'Custom (comma-separated)' }
+    ],
+    initialValue
+  });
+
+  const selected = unwrapCancel(selection, 'Language selection cancelled.');
+  if (selected === 'custom') {
+    return askText('Language codes (comma-separated)', normalizedDefault);
+  }
+
+  return selected;
+};
+
 export const run = async (providedArgs?: string[]): Promise<void> => {
   const args = parseArgs(providedArgs ?? process.argv.slice(2));
   const { defaultResumePath, linkedinOutputPath } = getAppPaths();
@@ -283,7 +306,6 @@ export const run = async (providedArgs?: string[]): Promise<void> => {
   const positionings = normalizeOptions(options.positioningAngles);
   const markets = normalizeOptions(options.targetMarkets);
   const seniorities = normalizeOptions(options.seniorityTracks);
-  const languagePlans = normalizeOptions(options.languagePlans);
   const modelOptions = normalizeOptions(options.modelOptions);
   const constraintsProfiles = normalizeOptions(options.constraintsProfiles);
   const keywordClusters = options.keywordClusters.map((cluster) => ({
@@ -300,8 +322,7 @@ export const run = async (providedArgs?: string[]): Promise<void> => {
     targetMarket: () => chooseAIOption('Select target market', markets, recommended.market),
     targetSeniority: () => chooseAIOption('Select seniority track', seniorities, recommended.seniority),
     constraints: () => chooseAIOption('Select writing constraints', constraintsProfiles, recommended.constraintsProfile),
-    selectedKeywordClusterName: () => chooseAIOption('Select keyword cluster', keywordClusters, recommended.keywordCluster),
-    languageSelection: () => chooseAIOption('Select language plan', languagePlans, recommended.languagePlan)
+    selectedKeywordClusterName: () => chooseAIOption('Select keyword cluster', keywordClusters, recommended.keywordCluster)
   });
 
   providerOptions.model = groupedSelections.model;
@@ -312,8 +333,7 @@ export const run = async (providedArgs?: string[]): Promise<void> => {
   const constraints = groupedSelections.constraints;
   const selectedKeywordClusterName = groupedSelections.selectedKeywordClusterName;
   const selectedKeywordCluster = options.keywordClusters.find((cluster) => cluster.label === selectedKeywordClusterName);
-  const languageSelection = groupedSelections.languageSelection;
-  const languagesInput = languageSelection === 'custom' ? await askText('Language codes', 'en,es') : languageSelection;
+  const languagesInput = await chooseLanguages(preselectedLanguages.join(',') || 'en,es');
   const roleFocus = await askText('Role focus for the prompt', preferredPath);
   const outputPath = await askText('Output file path', path.relative(process.cwd(), linkedinOutputPath));
 
