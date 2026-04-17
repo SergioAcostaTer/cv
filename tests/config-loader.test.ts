@@ -38,6 +38,34 @@ describe('config-loader', () => {
     expect(filename).toBe('sergio-fullstack-es-2026-04-17.pdf');
   });
 
+  it('falls back to empty date string when toISOString has no date segment', () => {
+    mockedGetPersonaConfig.mockReturnValue({
+      personaId: 'sergio',
+      displayName: 'Sergio',
+      defaultLanguage: 'en',
+      defaultRole: 'backend',
+      outputNaming: '{persona}-{date}.pdf'
+    });
+
+    const isoSpy = vi.spyOn(Date.prototype, 'toISOString').mockReturnValue('SENTINEL' as never);
+    const originalSplit = String.prototype.split;
+    const splitSpy = vi
+      .spyOn(String.prototype, 'split')
+      .mockImplementation(function (this: string, separator: string | RegExp, limit?: number): string[] {
+        if (this === 'SENTINEL' && separator === 'T') {
+          return [];
+        }
+
+        return originalSplit.call(this, separator as never, limit);
+      });
+
+    const filename = resolveOutputFilename('en', 'backend');
+
+    expect(filename).toBe('sergio-.pdf');
+    expect(isoSpy).toHaveBeenCalled();
+    expect(splitSpy).toHaveBeenCalled();
+  });
+
   it('returns runtime persona via loadPersonaConfig', () => {
     const persona = loadPersonaConfig();
 

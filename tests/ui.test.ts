@@ -30,7 +30,8 @@ import {
     secondary,
     streamChunk,
     success,
-    unwrapCancel
+    unwrapCancel,
+    warning
 } from '../src/utils/ui';
 
 describe('ui helpers', () => {
@@ -50,6 +51,7 @@ describe('ui helpers', () => {
     expect(options.frames).toEqual(['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏']);
     expect(options.delay).toBe(70);
     expect(typeof options.styleFrame).toBe('function');
+    expect(options.styleFrame('x')).toBeTypeOf('string');
   });
 
   it('clears screen with ANSI reset code', () => {
@@ -131,12 +133,20 @@ describe('ui helpers', () => {
     note('body', 'title');
     info('hello');
     success('done');
+    warning('careful');
     outro('bye');
 
     expect(clackMocks.note).toHaveBeenCalled();
     expect(clackMocks.log.info).toHaveBeenCalled();
     expect(clackMocks.log.success).toHaveBeenCalled();
+    expect(clackMocks.log.warn).toHaveBeenCalled();
     expect(clackMocks.outro).toHaveBeenCalled();
+  });
+
+  it('routes note helper without title', () => {
+    note('body only');
+
+    expect(clackMocks.note).toHaveBeenCalledWith(expect.any(String), undefined);
   });
 
   it('formats branded/secondary/stream chunks and color wrappers', () => {

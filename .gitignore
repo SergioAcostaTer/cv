@@ -1,5 +1,26 @@
 node_modules/
 dist/
+coverage/
 .history/
+
 .env
-data/local/
+
+# Local/generated CV data (keep folder structure only)
+data/local/**
+!data/local/
+!data/local/.gitkeep
+!data/local/backend/
+!data/local/backend/.gitkeep
+!data/local/full-stack/
+!data/local/full-stack/.gitkeep
+!data/local/fullstack/
+!data/local/fullstack/.gitkeep
+
+# Generated history artifacts (keep folder structure only)
+data/history/**
+!data/history/
+!data/history/.gitkeep
+!data/history/linkedin/
+!data/history/linkedin/.gitkeep
+!data/history/roadmaps/
+!data/history/roadmaps/.gitkeep

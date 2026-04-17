@@ -6,23 +6,29 @@ export const getDashboardHtml = (): string => `<!doctype html>
     <title>CV Studio Dashboard</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.10.0/styles/github.min.css"
     />
     <style>
       :root {
-        --bg: #f6f8fb;
-        --panel: #ffffff;
-        --muted: #5b6474;
-        --text: #0f172a;
-        --line: #e2e8f0;
-        --line-strong: #d6deea;
-        --shadow: 0 16px 36px rgba(15, 23, 42, 0.08);
-        --accent: #2563eb;
-        --accent-soft: #dbeafe;
-        --radius: 14px;
+        --bg: #f1f5f9;
+        --panel: rgba(255, 255, 255, 0.82);
+        --panel-solid: #ffffff;
+        --text: #0b1220;
+        --muted: #4b5563;
+        --line: #d8e0eb;
+        --line-strong: #bcc8d9;
+        --brand: #0f766e;
+        --brand-soft: #dff8f3;
+        --danger: #b91c1c;
+        --shadow: 0 22px 56px rgba(15, 23, 42, 0.12);
+        --radius-lg: 18px;
+        --radius-md: 12px;
       }
 
       * {
@@ -33,65 +39,75 @@ export const getDashboardHtml = (): string => `<!doctype html>
       body {
         margin: 0;
         height: 100%;
-        font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
         color: var(--text);
-        background: radial-gradient(circle at 80% 0%, #eaf0ff 0%, transparent 40%), var(--bg);
+        font-family: Manrope, 'Segoe UI', sans-serif;
+        background:
+          radial-gradient(circle at 4% -6%, #ffe4d6 0%, transparent 34%),
+          radial-gradient(circle at 88% -10%, #d5f9f0 0%, transparent 36%),
+          radial-gradient(circle at 50% 120%, #dbeafe 0%, transparent 40%),
+          var(--bg);
       }
 
       .app {
         display: grid;
-        grid-template-columns: 320px 1fr;
-        gap: 16px;
+        grid-template-columns: 330px 1fr;
+        gap: 18px;
         height: 100vh;
-        padding: 16px;
+        padding: 18px;
+      }
+
+      .sidebar,
+      .main {
+        border-radius: var(--radius-lg);
+        border: 1px solid rgba(255, 255, 255, 0.65);
+        background: var(--panel);
+        backdrop-filter: blur(12px);
+        box-shadow: var(--shadow);
       }
 
       .sidebar {
-        background: var(--panel);
-        border: 1px solid var(--line);
-        border-radius: var(--radius);
-        box-shadow: var(--shadow);
+        min-height: 0;
         display: flex;
         flex-direction: column;
-        min-height: 0;
       }
 
       .sidebar-header {
-        padding: 16px;
+        padding: 18px;
         border-bottom: 1px solid var(--line);
       }
 
       .sidebar-header h1 {
         margin: 0;
-        font-size: 1.05rem;
-        font-weight: 700;
+        font-size: 1.08rem;
+        font-weight: 800;
+        letter-spacing: 0.02em;
       }
 
       .sidebar-header p {
-        margin: 6px 0 0;
+        margin: 7px 0 0;
         color: var(--muted);
-        font-size: 0.88rem;
+        font-size: 0.85rem;
       }
 
       .library {
         overflow: auto;
-        padding: 10px;
+        padding: 11px;
         display: grid;
-        gap: 8px;
+        gap: 10px;
       }
 
       details {
+        border-radius: var(--radius-md);
         border: 1px solid var(--line);
-        border-radius: 12px;
-        background: #fbfdff;
+        background: rgba(255, 255, 255, 0.72);
       }
 
       summary {
         list-style: none;
-        padding: 10px 12px;
-        font-weight: 600;
-        font-size: 0.9rem;
         cursor: pointer;
+        font-size: 0.86rem;
+        font-weight: 700;
+        padding: 10px 12px;
         border-bottom: 1px solid transparent;
       }
 
@@ -101,50 +117,46 @@ export const getDashboardHtml = (): string => `<!doctype html>
 
       .file-list {
         display: grid;
-        gap: 6px;
+        gap: 7px;
         padding: 8px;
       }
 
       .file-item {
-        border: 1px solid var(--line);
-        border-radius: 10px;
-        background: #ffffff;
-        text-align: left;
         width: 100%;
+        text-align: left;
         cursor: pointer;
+        border-radius: 10px;
+        border: 1px solid var(--line);
+        background: var(--panel-solid);
         padding: 10px;
-        transition: 130ms ease;
+        transition: transform 120ms ease, border-color 120ms ease, background-color 120ms ease;
       }
 
       .file-item:hover {
-        border-color: var(--line-strong);
         transform: translateY(-1px);
+        border-color: var(--line-strong);
       }
 
       .file-item.active {
-        border-color: #93c5fd;
-        background: var(--accent-soft);
+        border-color: #5eead4;
+        background: var(--brand-soft);
       }
 
       .file-name {
         display: block;
-        font-size: 0.86rem;
-        font-weight: 600;
-        color: #111827;
+        font-size: 0.84rem;
+        font-weight: 700;
       }
 
       .file-date {
         display: block;
         margin-top: 4px;
         color: var(--muted);
-        font-size: 0.75rem;
+        font-size: 0.74rem;
+        font-family: 'IBM Plex Mono', Consolas, monospace;
       }
 
       .main {
-        background: var(--panel);
-        border: 1px solid var(--line);
-        border-radius: var(--radius);
-        box-shadow: var(--shadow);
         min-height: 0;
         display: flex;
         flex-direction: column;
@@ -152,7 +164,7 @@ export const getDashboardHtml = (): string => `<!doctype html>
 
       .main-toolbar {
         border-bottom: 1px solid var(--line);
-        padding: 12px 16px;
+        padding: 14px 18px;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -161,45 +173,131 @@ export const getDashboardHtml = (): string => `<!doctype html>
 
       .main-title {
         margin: 0;
-        font-size: 0.92rem;
+        font-size: 0.94rem;
+        font-weight: 700;
       }
 
-      .copy-btn {
+      .toolbar-actions {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .btn {
         border: 1px solid var(--line-strong);
-        background: #ffffff;
-        padding: 8px 12px;
+        background: var(--panel-solid);
         border-radius: 999px;
-        font-size: 0.8rem;
-        font-weight: 600;
+        padding: 8px 12px;
+        font-size: 0.78rem;
+        font-weight: 700;
         cursor: pointer;
+      }
+
+      .btn:hover {
+        border-color: #7dd3fc;
+      }
+
+      .btn-primary {
+        color: #ffffff;
+        border-color: transparent;
+        background: linear-gradient(92deg, #0f766e, #0ea5a4);
+      }
+
+      .btn.hidden {
         display: none;
       }
 
-      .copy-btn.visible {
-        display: inline-flex;
+      .content {
+        min-height: 0;
+        overflow: auto;
+        padding: 20px;
       }
 
-      .content {
-        padding: 20px;
-        overflow: auto;
-        min-height: 0;
+      .empty-state {
+        margin: auto;
+        text-align: center;
+        max-width: 520px;
+        color: var(--muted);
+      }
+
+      .empty-state h2 {
+        margin: 0;
+        font-size: 1.25rem;
+      }
+
+      .empty-state p {
+        margin-top: 8px;
+      }
+
+      .pdf-frame {
+        width: 100%;
+        height: calc(100vh - 190px);
+        border-radius: var(--radius-md);
+        border: 1px solid var(--line);
+        background: var(--panel-solid);
+      }
+
+      .sections-grid {
+        display: grid;
+        gap: 14px;
+      }
+
+      .section-card {
+        border: 1px solid var(--line);
+        border-radius: var(--radius-md);
+        background: var(--panel-solid);
+        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.04);
+        overflow: hidden;
+      }
+
+      .section-header {
+        padding: 10px 12px;
+        border-bottom: 1px solid var(--line);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+      }
+
+      .section-title {
+        margin: 0;
+        font-size: 0.86rem;
+        font-weight: 800;
+      }
+
+      .section-body {
+        padding: 12px;
         line-height: 1.55;
+      }
+
+      .copy-section-btn {
+        border: 1px solid var(--line-strong);
+        background: #f8fafc;
+        border-radius: 999px;
+        padding: 6px 10px;
+        font-size: 0.74rem;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      .copy-section-btn:hover {
+        border-color: #67e8f9;
       }
 
       .toast {
         position: fixed;
-        right: 20px;
-        bottom: 20px;
-        background: #0f172a;
-        color: #f8fafc;
+        right: 22px;
+        bottom: 22px;
+        background: #111827;
+        color: #f9fafb;
         border-radius: 999px;
         padding: 9px 14px;
         font-size: 0.78rem;
-        font-weight: 600;
+        font-weight: 700;
         opacity: 0;
         transform: translateY(8px);
-        pointer-events: none;
         transition: opacity 180ms ease, transform 180ms ease;
+        pointer-events: none;
       }
 
       .toast.visible {
@@ -207,36 +305,22 @@ export const getDashboardHtml = (): string => `<!doctype html>
         transform: translateY(0);
       }
 
-      .empty-state {
-        margin: auto;
-        text-align: center;
-        color: var(--muted);
-        max-width: 460px;
-      }
-
-      .pdf-frame {
-        width: 100%;
-        height: calc(100vh - 180px);
-        border: 1px solid var(--line);
-        border-radius: 12px;
-      }
-
       pre {
-        border: 1px solid var(--line);
         border-radius: 10px;
+        border: 1px solid var(--line);
         background: #f8fafc;
         padding: 12px;
         overflow: auto;
       }
 
       code {
-        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-family: 'IBM Plex Mono', Consolas, monospace;
       }
 
-      @media (max-width: 980px) {
+      @media (max-width: 1024px) {
         .app {
           grid-template-columns: 1fr;
-          grid-template-rows: 42vh 1fr;
+          grid-template-rows: 44vh 1fr;
         }
 
         .pdf-frame {
@@ -250,7 +334,7 @@ export const getDashboardHtml = (): string => `<!doctype html>
       <aside class="sidebar">
         <div class="sidebar-header">
           <h1>CV Studio Library</h1>
-          <p>Browse archived artifacts and generated resumes.</p>
+          <p>Browse generated resumes, LinkedIn drafts and career roadmaps.</p>
         </div>
         <div id="library" class="library"></div>
       </aside>
@@ -258,12 +342,14 @@ export const getDashboardHtml = (): string => `<!doctype html>
       <main class="main">
         <div class="main-toolbar">
           <p id="mainTitle" class="main-title">Select an artifact from the sidebar</p>
-          <button id="copyButton" class="copy-btn" type="button">Copy to Clipboard</button>
+          <div class="toolbar-actions">
+            <button id="copyButton" class="btn btn-primary hidden" type="button">Copy All</button>
+          </div>
         </div>
         <section id="content" class="content">
           <div class="empty-state">
             <h2>Ready</h2>
-            <p>Open a PDF, LinkedIn draft, or roadmap from the left panel.</p>
+            <p>Open a PDF, LinkedIn draft, or roadmap from the left panel. Markdown files support Copy All and Copy Section actions.</p>
           </div>
         </section>
       </main>
@@ -276,6 +362,7 @@ export const getDashboardHtml = (): string => `<!doctype html>
         selectedKey: null,
         selectedItem: null,
         rawText: '',
+        sections: [],
         lastLibrarySignature: '',
         toastTimer: null
       };
@@ -286,7 +373,6 @@ export const getDashboardHtml = (): string => `<!doctype html>
       const copyButton = document.getElementById('copyButton');
       const toastEl = document.createElement('div');
       toastEl.className = 'toast';
-      toastEl.textContent = 'Library updated';
       document.body.appendChild(toastEl);
 
       marked.setOptions({
@@ -312,12 +398,8 @@ export const getDashboardHtml = (): string => `<!doctype html>
         return date.toLocaleString();
       };
 
-      const setCopyButton = (visible, text) => {
-        state.rawText = text || '';
-        copyButton.classList.toggle('visible', Boolean(visible));
-      };
-
-      const showUpdateToast = () => {
+      const showToast = (message) => {
+        toastEl.textContent = message;
         toastEl.classList.add('visible');
         if (state.toastTimer) {
           clearTimeout(state.toastTimer);
@@ -329,6 +411,71 @@ export const getDashboardHtml = (): string => `<!doctype html>
         }, 1300);
       };
 
+      const setCopyButton = (visible, text) => {
+        state.rawText = text || '';
+        copyButton.classList.toggle('hidden', !visible);
+      };
+
+      const copyText = async (text, label) => {
+        if (!text) {
+          return;
+        }
+
+        try {
+          await navigator.clipboard.writeText(text);
+          showToast(label + ' copied');
+        } catch (error) {
+          showToast('Clipboard failed');
+          console.error(error);
+        }
+      };
+
+      const splitMarkdownSections = (raw) => {
+        const levelTwoMatches = Array.from(raw.matchAll(/^##\s+(.+)$/gmu));
+        const levelThreeMatches = Array.from(raw.matchAll(/^###\s+(.+)$/gmu));
+        const matches = levelTwoMatches.length > 1 ? levelTwoMatches : levelThreeMatches;
+
+        if (!matches.length) {
+          return [
+            {
+              title: 'Full Content',
+              markdown: raw
+            }
+          ];
+        }
+
+        return matches.map((match, index) => {
+          const start = match.index || 0;
+          const end = index + 1 < matches.length ? matches[index + 1].index || raw.length : raw.length;
+
+          return {
+            title: String(match[1] || 'Section ' + (index + 1)).trim(),
+            markdown: raw.slice(start, end).trim()
+          };
+        });
+      };
+
+      const renderMarkdownSections = async (raw) => {
+        state.sections = splitMarkdownSections(raw);
+        const cards = await Promise.all(
+          state.sections.map(async (section, index) => {
+            const parsed = marked.parse(section.markdown);
+            const html = typeof parsed === 'string' ? parsed : await parsed;
+            return (
+              '<article class="section-card">' +
+              '<header class="section-header">' +
+              '<p class="section-title">' + section.title + '</p>' +
+              '<button class="copy-section-btn" data-section-index="' + index + '" type="button">Copy Section</button>' +
+              '</header>' +
+              '<div class="section-body">' + html + '</div>' +
+              '</article>'
+            );
+          })
+        );
+
+        contentEl.innerHTML = '<div class="sections-grid">' + cards.join('') + '</div>';
+      };
+
       const showMarkdown = async (item) => {
         titleEl.textContent = item.filename;
         const response = await fetch('/api/file?path=' + encodeURIComponent(item.path));
@@ -337,14 +484,14 @@ export const getDashboardHtml = (): string => `<!doctype html>
         }
 
         const raw = await response.text();
-        const rendered = marked.parse(raw);
-        contentEl.innerHTML = rendered;
+        await renderMarkdownSections(raw);
         setCopyButton(true, raw);
       };
 
       const showPdf = (item) => {
         titleEl.textContent = item.filename;
         contentEl.innerHTML = '<iframe class="pdf-frame" src="/pdfs/' + encodeURI(item.path) + '"></iframe>';
+        state.sections = [];
         setCopyButton(false, '');
       };
 
@@ -384,6 +531,7 @@ export const getDashboardHtml = (): string => `<!doctype html>
                 path: item.path,
                 key
               };
+
               if (category === 'resumes') {
                 showPdf(item);
               } else {
@@ -448,7 +596,7 @@ export const getDashboardHtml = (): string => `<!doctype html>
           rerenderLibrary(data);
 
           if (mode === 'poll' && hasChanged) {
-            showUpdateToast();
+            showToast('Library updated');
           }
         } catch (error) {
           if (mode === 'initial') {
@@ -458,20 +606,32 @@ export const getDashboardHtml = (): string => `<!doctype html>
       };
 
       copyButton.addEventListener('click', async () => {
-        if (!state.rawText) {
+        await copyText(state.rawText, 'Full document');
+      });
+
+      contentEl.addEventListener('click', async (event) => {
+        const target = event.target;
+        if (!(target instanceof HTMLElement)) {
           return;
         }
 
-        try {
-          await navigator.clipboard.writeText(state.rawText);
-          const oldText = copyButton.textContent;
-          copyButton.textContent = 'Copied';
-          setTimeout(() => {
-            copyButton.textContent = oldText;
-          }, 1000);
-        } catch (error) {
-          alert('Clipboard access failed: ' + String(error));
+        const sectionButton = target.closest('[data-section-index]');
+        if (!(sectionButton instanceof HTMLElement)) {
+          return;
         }
+
+        const rawIndex = sectionButton.dataset.sectionIndex;
+        const index = Number(rawIndex);
+        if (!Number.isFinite(index)) {
+          return;
+        }
+
+        const section = state.sections[index];
+        if (!section) {
+          return;
+        }
+
+        await copyText(section.markdown, section.title);
       });
 
       void loadLibrary('initial');
