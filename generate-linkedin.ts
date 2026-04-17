@@ -3,6 +3,7 @@
 import { prompt } from 'enquirer';
 import fs from 'fs';
 import path from 'path';
+import { loadEnv } from './lib/env-loader';
 import { generateLinkedinProfiles, generateStrategyOptions } from './lib/linkedin-generator';
 
 type PromptChoice = { name: string; message: string };
@@ -88,33 +89,6 @@ const parseArgs = (argv: string[]): Record<string, any> => {
   }
 
   return args;
-};
-
-const loadDotEnv = (envPath = '.env'): void => {
-  const absolutePath = path.resolve(envPath);
-  if (!fs.existsSync(absolutePath)) {
-    return;
-  }
-
-  const envContent = fs.readFileSync(absolutePath, 'utf8');
-  for (const rawLine of envContent.split(/\r?\n/)) {
-    const line = rawLine.trim();
-    if (!line || line.startsWith('#')) {
-      continue;
-    }
-
-    const separator = line.indexOf('=');
-    if (separator === -1) {
-      continue;
-    }
-
-    const key = line.slice(0, separator).trim();
-    const value = line.slice(separator + 1).trim().replace(/^"|"$/g, '');
-
-    if (key && process.env[key] === undefined) {
-      process.env[key] = value;
-    }
-  }
 };
 
 const printHelp = (): void => {
@@ -354,7 +328,7 @@ const chooseAIOption = async (title: string, items: OptionItem[], recommended?: 
 };
 
 const run = async (): Promise<void> => {
-  loadDotEnv();
+  loadEnv();
 
   const args = parseArgs(process.argv.slice(2));
   if (args.help || args.h) {
@@ -387,12 +361,13 @@ const run = async (): Promise<void> => {
 
   status('Generating intelligent option sets from selected JSON...');
 
-  const strategy = await generateStrategyOptions({
-    inputPath,
-    provider,
-    providerOptions,
-    availableModels: OPENAI_MODEL_CATALOG
-  });
+  try {
+    const strategy = await generateStrategyOptions({
+      inputPath,
+      provider,
+      providerOptions,
+      availableModels: OPENAI_MODEL_CATALOG
+    });
 
   clearScreen();
   header('Strategy Generated', strategy.options.analysisSummary || 'No analysis summary returned by model.');
@@ -507,6 +482,16 @@ const run = async (): Promise<void> => {
   console.log(color(`Model: ${providerConfig.model}`, ANSI.green));
   console.log(color(`Input: ${inputPath}`, ANSI.green));
   console.log(color(`Output: ${generatedPath}\n`, ANSI.green));
+  } catch (strategyError: any) {
+    clearScreen();
+    header('Strategy Generation Error', 'Failed to generate intelligent options');
+    console.log(color(`Error: ${strategyError?.message || String(strategyError)}`, ANSI.yellow));
+    console.log(color('\nTroubleshooting tips:', ANSI.dim));
+    console.log(color('1. Verify OPENAI_API_KEY is set in .env', ANSI.dim));
+    console.log(color('2. Check your API quota and rate limits', ANSI.dim));
+    console.log(color('3. Try again with a different model: --model gpt-4.1', ANSI.dim));
+    throw strategyError;
+  }
 };
 
 run().catch((error: any) => {

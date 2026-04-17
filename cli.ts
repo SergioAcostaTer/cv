@@ -3,12 +3,43 @@
 import { spawn } from 'child_process';
 import { select } from 'enquirer';
 import * as path from 'path';
+import { loadEnv } from './lib/env-loader';
+
+// Load environment variables from .env
+loadEnv();
+
+// ANSI Colors & Styles
+const COLORS = {
+  reset: '\x1b[0m',
+  bright: '\x1b[1m',
+  dim: '\x1b[2m',
+  italic: '\x1b[3m',
+  
+  black: '\x1b[30m',
+  red: '\x1b[31m',
+  green: '\x1b[32m',
+  yellow: '\x1b[33m',
+  blue: '\x1b[34m',
+  magenta: '\x1b[35m',
+  cyan: '\x1b[36m',
+  white: '\x1b[37m',
+  
+  bgBlue: '\x1b[44m',
+  bgCyan: '\x1b[46m',
+  bgGray: '\x1b[100m',
+};
+
+type Color = keyof typeof COLORS;
+
+const style = (text: string, ...styles: Color[]): string => {
+  return styles.reduce((acc, s) => COLORS[s] + acc, text) + COLORS.reset;
+};
 
 const COMMANDS = [
-  { name: 'LinkedIn Generator', value: 'linkedin' },
-  { name: 'Chat with CV', value: 'chat' },
-  { name: 'Build Resumes', value: 'build' },
-  { name: 'Exit', value: 'exit' }
+  { name: style('🤖 LinkedIn Generator', 'cyan', 'bright'), value: 'linkedin' },
+  { name: style('💬 Chat with CV', 'green', 'bright'), value: 'chat' },
+  { name: style('🏗️  Build Resumes', 'yellow', 'bright'), value: 'build' },
+  { name: style('🚪 Exit', 'dim'), value: 'exit' }
 ];
 
 const runCommand = (scriptPath: string): Promise<void> => {
@@ -31,11 +62,26 @@ const runCommand = (scriptPath: string): Promise<void> => {
   });
 };
 
-const main = async (): Promise<void> => {
+const printHeader = (): void => {
   console.clear();
-  console.log('╔════════════════════════════════════════╗');
-  console.log('║  📋 CV Generator CLI                   ║');
-  console.log('╚════════════════════════════════════════╝\n');
+  const width = 56;
+  const line = '─'.repeat(width);
+  
+  console.log();
+  console.log(style('  ' + line, 'cyan', 'dim'));
+  console.log(style('  │', 'cyan', 'dim') + style('  CV Generator Suite', 'bold', 'cyan') + style('  │', 'cyan', 'dim'));
+  console.log(style('  │', 'cyan', 'dim') + style('  Professional Resume & Interview AI', 'dim', 'cyan') + style('  │', 'cyan', 'dim'));
+  console.log(style('  ' + line, 'cyan', 'dim'));
+  console.log();
+};
+
+const printFooter = (): void => {
+  console.log();
+  console.log(style('  ' + '─'.repeat(56), 'dim'));
+};
+
+const main = async (): Promise<void> => {
+  printHeader();
 
   let running = true;
 
@@ -43,7 +89,7 @@ const main = async (): Promise<void> => {
     try {
       const answer = await select({
         name: 'command',
-        message: 'What would you like to do?',
+        message: style('Select an option:', 'bright'),
         choices: COMMANDS,
         result() {
           return this.focused.value;
@@ -52,32 +98,52 @@ const main = async (): Promise<void> => {
 
       console.log();
 
+      let startMsg = '';
+      let emoji = '';
+
       switch (answer) {
         case 'linkedin':
-          console.log('🚀 Starting LinkedIn Generator...\n');
+          emoji = '🤖';
+          startMsg = 'LinkedIn Generator';
+          console.log(style(`  ${emoji}  Initializing ${startMsg}...`, 'cyan', 'bright'));
+          printFooter();
+          console.log();
           await runCommand(path.join(__dirname, 'generate-linkedin.ts'));
           break;
         case 'chat':
-          console.log('💬 Starting Chat...\n');
+          emoji = '💬';
+          startMsg = 'Chat Interface';
+          console.log(style(`  ${emoji}  Initializing ${startMsg}...`, 'green', 'bright'));
+          printFooter();
+          console.log();
           await runCommand(path.join(__dirname, 'chat-cv.ts'));
           break;
         case 'build':
-          console.log('🏗️  Building Resumes...\n');
+          emoji = '🏗️ ';
+          startMsg = 'Resume Builder';
+          console.log(style(`  ${emoji} Initializing ${startMsg}...`, 'yellow', 'bright'));
+          printFooter();
+          console.log();
           await runCommand(path.join(__dirname, 'generate.ts'));
           break;
         case 'exit':
-          console.log('\n👋 Goodbye!\n');
+          console.log();
+          console.log(style('  👋  Thanks for using CV Generator!', 'dim', 'cyan'));
+          printFooter();
+          console.log();
           running = false;
           break;
       }
 
       if (running) {
-        console.log('\n' + '─'.repeat(42) + '\n');
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        await new Promise((resolve) => setTimeout(resolve, 1500));
+        printHeader();
       }
     } catch (error) {
       if (error instanceof Error && !error.message.includes('Prompt was cancelled')) {
-        console.error('Error:', error.message);
+        console.log();
+        console.log(style(`  ✗ Error: ${error.message}`, 'red', 'bright'));
+        console.log();
       }
       running = false;
     }
@@ -85,6 +151,6 @@ const main = async (): Promise<void> => {
 };
 
 main().catch((error) => {
-  console.error('Fatal error:', error);
+  console.error(style(`  ✗ Fatal error: ${error}`, 'red', 'bright'));
   process.exit(1);
 });

@@ -1,8 +1,39 @@
 import * as fs from "fs";
 import * as path from "path";
 import * as readline from "readline";
+import { loadEnv } from "./lib/env-loader";
+
+// Load environment variables from .env
+loadEnv();
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
+
+// ANSI Colors & Styles
+const COLORS = {
+  reset: '\x1b[0m',
+  bright: '\x1b[1m',
+  dim: '\x1b[2m',
+  italic: '\x1b[3m',
+  
+  black: '\x1b[30m',
+  red: '\x1b[31m',
+  green: '\x1b[32m',
+  yellow: '\x1b[33m',
+  blue: '\x1b[34m',
+  magenta: '\x1b[35m',
+  cyan: '\x1b[36m',
+  white: '\x1b[37m',
+  
+  bgBlue: '\x1b[44m',
+  bgCyan: '\x1b[46m',
+  bgGray: '\x1b[100m',
+};
+
+type Color = keyof typeof COLORS;
+
+const style = (text: string, ...styles: Color[]): string => {
+  return styles.reduce((acc, s) => COLORS[s] + acc, text) + COLORS.reset;
+};
 
 interface ChatMessage {
   role: "user" | "assistant" | "system";
@@ -13,6 +44,7 @@ class CVChat {
   private conversationHistory: ChatMessage[] = [];
   private cvContext: string = "";
   private rl: readline.Interface;
+  private sourceFile: string = "";
 
   constructor() {
     this.rl = readline.createInterface({
@@ -28,7 +60,8 @@ class CVChat {
       try {
         const data = JSON.parse(fs.readFileSync(linkedinPath, "utf-8"));
         this.cvContext = JSON.stringify(data, null, 2);
-        console.log("✓ Loaded LinkedIn profile from dist/linkedin.json\n");
+        this.sourceFile = "LinkedIn Profile";
+        console.log(style("  ✓ Loaded ", "green") + style("LinkedIn Profile", "cyan", "bright") + style(" from dist/linkedin.json", "dim"));
         return;
       } catch {
         // fallback to resume
@@ -41,19 +74,20 @@ class CVChat {
       try {
         const data = JSON.parse(fs.readFileSync(resumePath, "utf-8"));
         this.cvContext = JSON.stringify(data, null, 2);
-        console.log("✓ Loaded resume from src/backend/en/resume.json\n");
+        this.sourceFile = "Resume";
+        console.log(style("  ✓ Loaded ", "green") + style("Resume", "cyan", "bright") + style(" from src/backend/en/resume.json", "dim"));
         return;
       } catch {
-        console.warn("⚠ Could not parse resume.json, continuing without CV context\n");
+        console.warn(style("  ⚠ Could not parse resume.json", "yellow"));
       }
     }
 
-    console.warn("⚠ No CV data found. Run 'pnpm build' or 'pnpm linkedin' first.\n");
+    console.warn(style("  ⚠ No CV data found. Run ", "yellow") + style("pnpm build", "bright") + style(" or ", "yellow") + style("pnpm linkedin", "bright") + style(" first.", "yellow"));
   }
 
   private async requestOpenAI(userMessage: string): Promise<string> {
     if (!OPENAI_API_KEY) {
-      throw new Error("OPENAI_API_KEY environment variable not set");
+      throw new Error("OPENAI_API_KEY environment variable not set. Please set it in your .env file.");
     }
 
     // Add user message to history
@@ -78,7 +112,7 @@ class CVChat {
 
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(`OpenAI API error: ${error.error?.message || response.statusText}`);
+      throw new Error(`OpenAI API: ${error.error?.message || response.statusText}`);
     }
 
     const data: any = await response.json();
@@ -102,6 +136,7 @@ Your role is to:
 - Suggest improvements or opportunities
 - Help with career strategy and positioning
 - Be conversational, helpful, and professional
+- Keep responses concise but insightful
 
 Here is the user's CV/LinkedIn profile data:
 
@@ -123,25 +158,44 @@ Use this information to provide contextual, personalized advice and discussion.`
   }
 
   private displayHelp(): void {
-    console.log("\n📋 Chat Commands:");
-    console.log("  /clear    - Clear conversation history");
-    console.log("  /help     - Show this help message");
-    console.log("  /reload   - Reload CV data");
-    console.log("  /exit     - Exit chat\n");
+    console.log();
+    console.log(style("  📋 Available Commands", "cyan", "bright"));
+    console.log(style("  " + "─".repeat(40), "dim"));
+    console.log(style("  /clear  ", "yellow") + style("Clear conversation history", "dim"));
+    console.log(style("  /help   ", "yellow") + style("Show this message", "dim"));
+    console.log(style("  /reload ", "yellow") + style("Reload CV data", "dim"));
+    console.log(style("  /exit   ", "yellow") + style("Exit chat", "dim"));
+    console.log(style("  " + "─".repeat(40), "dim"));
+    console.log();
+  }
+
+  private printHeader(): void {
+    console.clear();
+    console.log();
+    const width = 52;
+    const line = '─'.repeat(width);
+    
+    console.log(style("  " + line, "cyan", "dim"));
+    console.log(style("  │", "cyan", "dim") + style("  Career Advisor AI Chat", "bright", "cyan") + style("  │", "cyan", "dim"));
+    console.log(style("  │", "cyan", "dim") + style("  Powered by GPT-4.1", "dim", "cyan") + style("  │", "cyan", "dim"));
+    console.log(style("  " + line, "cyan", "dim"));
+    console.log();
   }
 
   async start(): Promise<void> {
-    console.log("╔════════════════════════════════════════╗");
-    console.log("║  🤖 CV Chat - Career Advisor           ║");
-    console.log("╚════════════════════════════════════════╝\n");
-
+    this.printHeader();
+    
     this.loadCVContext();
 
     if (!this.cvContext) {
-      console.error("Error: No CV context available. Exiting.\n");
+      console.log();
+      console.error(style("  ✗ Error: No CV context available.", "red", "bright"));
+      console.log();
       this.rl.close();
       process.exit(1);
     }
+
+    console.log();
 
     // Initialize with system prompt
     this.conversationHistory = [
@@ -151,36 +205,41 @@ Use this information to provide contextual, personalized advice and discussion.`
       },
     ];
 
-    console.log('Type your question or /help for commands. Type /exit to quit.\n');
+    console.log(style("  Type /help for commands or /exit to quit", "dim"));
+    console.log();
 
     while (true) {
-      const userInput = await this.prompt("You: ");
+      const userInput = await this.prompt(style("  You: ", "green", "bright"));
 
       if (!userInput.trim()) {
         continue;
       }
 
+      console.log();
+
       // Handle commands
       if (userInput.startsWith("/")) {
         switch (userInput.toLowerCase()) {
           case "/exit":
-            console.log("\n👋 Goodbye!\n");
+            console.log(style("  👋 Thank you for using Career Advisor AI!", "cyan", "dim"));
+            console.log();
             this.rl.close();
             return;
           case "/clear":
-            console.log("🗑️  Conversation history cleared.\n");
+            console.log(style("  ↻ Conversation history cleared.", "yellow"));
             this.conversationHistory = [
               {
                 role: "system",
                 content: this.buildSystemPrompt(),
               },
             ];
+            console.log();
             continue;
           case "/help":
             this.displayHelp();
             continue;
           case "/reload":
-            console.log("🔄 Reloading CV data...");
+            console.log(style("  ⟳ Reloading CV data...", "cyan"));
             this.loadCVContext();
             this.conversationHistory = [
               {
@@ -191,17 +250,35 @@ Use this information to provide contextual, personalized advice and discussion.`
             console.log();
             continue;
           default:
-            console.log('❓ Unknown command. Type /help for available commands.\n');
+            console.log(style("  ✗ Unknown command. Type ", "red") + style("/help", "bright") + style(" for available commands.", "red"));
+            console.log();
             continue;
         }
       }
 
       try {
-        console.log("\n🤔 Thinking...");
+        process.stdout.write(style("  ⟳ ", "cyan", "dim"));
+        let dotCount = 0;
+        const dotInterval = setInterval(() => {
+          process.stdout.write(style(".", "cyan", "dim"));
+          dotCount++;
+          if (dotCount >= 3) {
+            clearInterval(dotInterval);
+            process.stdout.write("\r" + "  ".repeat(20) + "\r");
+          }
+        }, 300);
+
         const response = await this.requestOpenAI(userInput);
-        console.log(`\nAssistant: ${response}\n`);
+        clearInterval(dotInterval);
+        process.stdout.write("\r" + "  ".repeat(20) + "\r");
+
+        console.log();
+        console.log(style("  Assistant: ", "magenta", "bright") + style(response, "white"));
+        console.log();
       } catch (error) {
-        console.error(`\n❌ Error: ${error instanceof Error ? error.message : String(error)}\n`);
+        console.log();
+        console.error(style("  ✗ Error: ", "red", "bright") + style(error instanceof Error ? error.message : String(error), "red"));
+        console.log();
       }
     }
   }
@@ -210,6 +287,6 @@ Use this information to provide contextual, personalized advice and discussion.`
 // Main execution
 const chat = new CVChat();
 chat.start().catch((error) => {
-  console.error("Fatal error:", error);
+  console.error(style("  ✗ Fatal error: ", "red", "bright") + error);
   process.exit(1);
 });
