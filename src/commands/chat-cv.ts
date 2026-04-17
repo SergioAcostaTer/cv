@@ -1,13 +1,44 @@
 import * as clack from '@clack/prompts';
 import fs from 'fs';
+import { marked } from 'marked';
+import TerminalRenderer from 'marked-terminal';
 import path from 'path';
 import { getAppPaths } from '../core/runtime';
 import { createAIClient, getModelsForProvider, type ProviderId } from '../utils/api';
-import { branded, colors, error, note, runCliEntry, streamChunk, success, unwrapCancel, warning } from '../utils/ui';
+import {
+    branded,
+    clearPrintedLines,
+    clearScreen,
+    colors,
+    createSpinner,
+    error,
+    note,
+    runCliEntry,
+    success,
+    unwrapCancel,
+    warning
+} from '../utils/ui';
 
 type ChatMessage = {
   role: 'user' | 'assistant' | 'system';
   content: string;
+};
+
+let markdownConfigured = false;
+
+const configureMarkdownRenderer = (): void => {
+  if (markdownConfigured) {
+    return;
+  }
+
+  marked.setOptions({
+    renderer: new TerminalRenderer({
+      reflowText: true,
+      tab: 2
+    }) as unknown as import('marked').Renderer
+  });
+
+  markdownConfigured = true;
 };
 
 class CVChat {
@@ -99,7 +130,7 @@ Use this information to provide contextual, personalized advice and discussion.`
       model: this.model
     });
 
-    const spinner = clack.spinner();
+    const spinner = createSpinner();
     spinner.start(`Contacting ${this.provider} (${this.model})`);
 
     const stream = await client.chat.completions.create({
@@ -109,9 +140,18 @@ Use this information to provide contextual, personalized advice and discussion.`
     });
 
     let response = '';
-    let contentStarted = false;
+    let previewText = '';
     let outputStarted = false;
     let isThinkingMode = false;
+
+    const writePreview = (text: string): void => {
+      if (!text) {
+        return;
+      }
+
+      previewText += text;
+      process.stdout.write(colors.muted(text));
+    };
 
     const startOutput = (status: string): void => {
       if (outputStarted) {
@@ -120,7 +160,7 @@ Use this information to provide contextual, personalized advice and discussion.`
 
       outputStarted = true;
       spinner.stop(status);
-      process.stdout.write(`\n${branded('Assistant: ')} `);
+      process.stdout.write(`\n${branded('Assistant (streaming preview):')}\n`);
     };
 
     const writeTaggedContent = (chunkText: string): string => {
@@ -145,7 +185,7 @@ Use this information to provide contextual, personalized advice and discussion.`
 
         if (isThinkingMode) {
           startOutput('Assistant is thinking');
-          process.stdout.write(colors.muted(segment));
+          writePreview(segment);
           continue;
         }
 
@@ -161,7 +201,7 @@ Use this information to provide contextual, personalized advice and discussion.`
 
       if (reasoningContent) {
         startOutput('Assistant is thinking');
-        process.stdout.write(colors.muted(reasoningContent));
+        writePreview(reasoningContent);
       }
 
       const content = delta?.content;
@@ -174,21 +214,23 @@ Use this information to provide contextual, personalized advice and discussion.`
         continue;
       }
 
-      if (!contentStarted) {
-        contentStarted = true;
+      if (!response) {
         startOutput('Assistant is responding');
-
-        if (isThinkingMode) {
-          process.stdout.write('\n');
-        }
       }
 
       response += visibleContent;
-      process.stdout.write(streamChunk(visibleContent));
+      writePreview(visibleContent);
     }
 
     if (outputStarted) {
-      process.stdout.write('\n\n');
+      const previewLines = previewText.split(/\r?\n/u).length + 1;
+      process.stdout.write('\n');
+      clearPrintedLines(previewLines);
+
+      process.stdout.write(`${branded('Assistant:')}\n`);
+      const rendered = marked.parse(response);
+      const output = typeof rendered === 'string' ? rendered : await rendered;
+      process.stdout.write(`${output}${output.endsWith('\n') ? '' : '\n'}\n`);
     } else {
       spinner.stop('Assistant response was empty');
     }
@@ -276,6 +318,8 @@ Use this information to provide contextual, personalized advice and discussion.`
 }
 
 export const run = async (): Promise<void> => {
+  configureMarkdownRenderer();
+  clearScreen();
   const chat = new CVChat();
   await chat.start();
 };

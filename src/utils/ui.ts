@@ -19,6 +19,27 @@ export const branded = (value: string): string => colors.accent(value);
 export const secondary = (value: string): string => colors.muted(value);
 export const streamChunk = (value: string): string => colors.accent(value);
 
+export const createSpinner = (): ReturnType<typeof clack.spinner> =>
+  clack.spinner({
+    frames: ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'],
+    delay: 70,
+    styleFrame: (frame) => colors.accent(frame)
+  });
+
+export const clearScreen = (): void => {
+  process.stdout.write('\x1Bc');
+};
+
+export const clearPrintedLines = (lineCount: number): void => {
+  const safeLines = Math.max(0, lineCount);
+  for (let index = 0; index < safeLines; index += 1) {
+    process.stdout.write('\x1b[2K\r');
+    if (index < safeLines - 1) {
+      process.stdout.write('\x1b[1A');
+    }
+  }
+};
+
 export const note = (message: string, title?: string): void => {
   clack.note(colors.muted(message), title ? colors.accent(title) : undefined);
 };

@@ -1,17 +1,21 @@
 #!/usr/bin/env node
 
 import * as clack from '@clack/prompts';
+import pc from 'picocolors';
 import { run as runChat } from './commands/chat-cv';
 import { run as runBuild } from './commands/generate';
 import { run as runLinkedin } from './commands/generate-linkedin';
 import { loadEnv } from './utils/env-loader';
-import { CliAbort, outro, runCliEntry, secondary, unwrapCancel } from './utils/ui';
+import { CliAbort, clearScreen, colors, outro, runCliEntry, secondary, unwrapCancel } from './utils/ui';
 
 type CommandId = 'linkedin' | 'chat' | 'build' | 'exit';
 
 export const main = async (): Promise<void> => {
   loadEnv();
-  clack.intro(`CV Studio ${secondary('blueprint CLI')}`);
+  const brandIntro = `${pc.bold(colors.primary('CV Studio'))} ${secondary('blueprint CLI')}`;
+
+  clearScreen();
+  clack.intro(brandIntro);
 
   let running = true;
 
@@ -32,12 +36,19 @@ export const main = async (): Promise<void> => {
       switch (command) {
         case 'linkedin':
           await runLinkedin([]);
+          clearScreen();
+          clack.intro(brandIntro);
           break;
         case 'chat':
+          clearScreen();
           await runChat();
+          clearScreen();
+          clack.intro(brandIntro);
           break;
         case 'build':
           await runBuild();
+          clearScreen();
+          clack.intro(brandIntro);
           break;
         case 'exit':
           running = false;

@@ -5,7 +5,7 @@ import path from 'path';
 import puppeteer, { type Browser } from 'puppeteer';
 import { clearRuntimeCache, getAppPaths } from '../core/runtime';
 import { applyOverrides, resolveOutputFilename } from '../utils/config-loader';
-import { info, note, runCliEntry, secondary, success, unwrapCancel } from '../utils/ui';
+import { createSpinner, info, note, runCliEntry, secondary, success, unwrapCancel } from '../utils/ui';
 
 const DEFAULT_THEME = 'harvard';
 type BuildOptions = { theme?: string; watch?: boolean };
@@ -85,7 +85,7 @@ const buildResumes = async (selectedTheme: string, existingBrowser?: Browser): P
   const templateSource = fs.readFileSync(path.join(templatesDir, 'resume.hbs'), 'utf8');
   const template = Handlebars.compile(templateSource);
   const css = getThemeCss(selectedTheme);
-  const spinner = clack.spinner();
+  const spinner = createSpinner();
   spinner.start(`Building PDFs with theme ${selectedTheme}`);
 
   const ownsBrowser = !existingBrowser;
@@ -94,10 +94,12 @@ const buildResumes = async (selectedTheme: string, existingBrowser?: Browser): P
   try {
     const page = await browser.newPage();
 
-    for (const filePath of jsonFiles) {
+    for (const [index, filePath] of jsonFiles.entries()) {
       const resumeData = JSON.parse(fs.readFileSync(filePath, 'utf8')) as Record<string, unknown>;
       const mergedResumeData = applyOverrides(resumeData);
       const relativePath = path.relative(profilesDir, filePath);
+      const normalizedRelativePath = relativePath.split(path.sep).join('/');
+      spinner.message(`Building PDF ${index + 1} of ${jsonFiles.length}: ${normalizedRelativePath}`);
       const pathParts = relativePath.split(path.sep);
       const lang = pathParts[pathParts.length - 2] ?? 'en';
 
