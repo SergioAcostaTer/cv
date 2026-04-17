@@ -319,8 +319,7 @@ export const generateStrategyOptions = async ({ inputPath, provider, providerOpt
     inputPath: absolutePath,
     sourceData: data,
     options,
-    providerConfig,
-    fallbackUsed: false
+    providerConfig
   };
 };
 

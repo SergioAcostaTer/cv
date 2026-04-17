@@ -5,10 +5,8 @@
     "packageManager": "pnpm@10.8.0",
     "main": "generate.ts",
     "scripts": {
+        "dev": "tsx cli.ts",
         "build": "tsx generate.ts",
-        "build:minimal": "tsx generate.ts minimal",
-        "build:modern": "tsx generate.ts modern",
-        "linkedin": "tsx generate-linkedin.ts",
         "typecheck": "tsc --noEmit"
     },
     "dependencies": {

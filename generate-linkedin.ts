@@ -397,10 +397,6 @@ const run = async (): Promise<void> => {
   clearScreen();
   header('Strategy Generated', strategy.options.analysisSummary || 'No analysis summary returned by model.');
   console.log(color(`Provider: ${strategy.providerConfig.label} (${strategy.providerConfig.model})`, ANSI.dim));
-  console.log(color(`Fallback mode: ${strategy.fallbackUsed ? 'yes' : 'no'}`, ANSI.dim));
-  if (strategy.fallbackUsed && strategy.fallbackReason) {
-    console.log(color(`Fallback reason: ${clampText(strategy.fallbackReason, UI.width)}`, ANSI.dim));
-  }
 
   const options = strategy.options.options || {};
   const recommended = strategy.options.recommended || {};
@@ -474,7 +470,6 @@ const run = async (): Promise<void> => {
     preferredPath,
     cvInsights: {
       analysisSummary: strategy.options.analysisSummary || '',
-      fallbackUsed: strategy.fallbackUsed,
       selector: {
         sourcePath: inputPath,
         selectedKeywordCluster: selectedKeywordClusterName
