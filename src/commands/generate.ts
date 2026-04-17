@@ -2,8 +2,8 @@ import * as clack from '@clack/prompts';
 import fs from 'fs';
 import Handlebars from 'handlebars';
 import path from 'path';
-import puppeteer from 'puppeteer';
-import { getAppPaths } from '../core/runtime';
+import puppeteer, { type Browser } from 'puppeteer';
+import { clearRuntimeCache, getAppPaths } from '../core/runtime';
 import { applyOverrides, resolveOutputFilename } from '../utils/config-loader';
 import { info, note, runCliEntry, secondary, success, unwrapCancel } from '../utils/ui';
 
@@ -70,7 +70,7 @@ const listThemes = (): string[] => {
     .sort((a, b) => a.localeCompare(b));
 };
 
-const buildResumes = async (selectedTheme: string): Promise<void> => {
+const buildResumes = async (selectedTheme: string, existingBrowser?: Browser): Promise<void> => {
   const { profilesDir, distDir, templatesDir, exampleResumePath } = getAppPaths();
   const jsonFiles = findJsonFiles(profilesDir);
 
@@ -88,7 +88,8 @@ const buildResumes = async (selectedTheme: string): Promise<void> => {
   const spinner = clack.spinner();
   spinner.start(`Building PDFs with theme ${selectedTheme}`);
 
-  const browser = await puppeteer.launch();
+  const ownsBrowser = !existingBrowser;
+  const browser = existingBrowser ?? (await puppeteer.launch());
 
   try {
     const page = await browser.newPage();
@@ -139,7 +140,9 @@ const buildResumes = async (selectedTheme: string): Promise<void> => {
     spinner.stop('PDF build complete');
     success(`Resumes available in ${distDir}`);
   } finally {
-    await browser.close();
+    if (ownsBrowser) {
+      await browser.close();
+    }
   }
 };
 
@@ -173,12 +176,17 @@ const parseRunOptions = (argv: string[]): BuildOptions => {
 };
 
 const watchResumes = async (selectedTheme: string): Promise<void> => {
-  const { profilesDir } = getAppPaths();
+  const { profilesDir, configDir } = getAppPaths();
+  const browser = await puppeteer.launch();
 
-  info(`Watching ${path.relative(process.cwd(), profilesDir)} for JSON changes...`);
+  info(
+    `Watching ${path.relative(process.cwd(), profilesDir)} and ${path.relative(process.cwd(), configDir)} for changes...`
+  );
+
   await new Promise<void>((resolve) => {
     let isBuilding = false;
     let queuedBuild = false;
+    let hasStopped = false;
     let debounceTimer: NodeJS.Timeout | undefined;
 
     const triggerBuild = (): void => {
@@ -188,7 +196,7 @@ const watchResumes = async (selectedTheme: string): Promise<void> => {
       }
 
       isBuilding = true;
-      void buildResumes(selectedTheme)
+      void buildResumes(selectedTheme, browser)
         .catch((buildError: unknown) => {
           info(`Build failed: ${buildError instanceof Error ? buildError.message : String(buildError)}`);
         })
@@ -201,7 +209,7 @@ const watchResumes = async (selectedTheme: string): Promise<void> => {
         });
     };
 
-    const watcher = fs.watch(profilesDir, { recursive: true }, (_eventType, changedFile) => {
+    const profilesWatcher = fs.watch(profilesDir, { recursive: true }, (_eventType, changedFile) => {
       if (!changedFile?.toLowerCase().endsWith('.json')) {
         return;
       }
@@ -217,17 +225,45 @@ const watchResumes = async (selectedTheme: string): Promise<void> => {
       }, 250);
     });
 
-    const stopWatching = (): void => {
-      watcher.close();
+    const configWatcher = fs.watch(configDir, { recursive: true }, (_eventType, changedFile) => {
+      if (!changedFile?.toLowerCase().endsWith('.json')) {
+        return;
+      }
+
+      clearRuntimeCache();
+      info(`Config changed (${changedFile}), cache cleared and rebuilding...`);
+
       if (debounceTimer) {
         clearTimeout(debounceTimer);
       }
+
+      debounceTimer = setTimeout(() => {
+        triggerBuild();
+      }, 250);
+    });
+
+    const stopWatching = async (): Promise<void> => {
+      if (hasStopped) {
+        return;
+      }
+
+      hasStopped = true;
+      profilesWatcher.close();
+      configWatcher.close();
+      if (debounceTimer) {
+        clearTimeout(debounceTimer);
+      }
+      await browser.close();
       success('Watch mode stopped.');
       resolve();
     };
 
-    process.once('SIGINT', stopWatching);
-    process.once('SIGTERM', stopWatching);
+    process.once('SIGINT', () => {
+      void stopWatching();
+    });
+    process.once('SIGTERM', () => {
+      void stopWatching();
+    });
   });
 };
 

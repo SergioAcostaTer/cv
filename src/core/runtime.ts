@@ -42,6 +42,12 @@ const defaultConfig: PersonaConfig = {
 
 let cachedRuntime: RuntimeContext | null = null;
 
+const ensureDirectories = (directories: string[]): void => {
+  for (const directory of directories) {
+    fs.mkdirSync(directory, { recursive: true });
+  }
+};
+
 const readPersonaConfig = (): PersonaConfig => {
   const configPath = path.join(projectRoot, 'config', 'persona.config.json');
 
@@ -57,6 +63,10 @@ const buildPaths = (persona: PersonaConfig): AppPaths => {
   const srcDir = path.join(projectRoot, 'src');
   const distDir = path.join(projectRoot, 'dist');
   const profilesDir = path.join(projectRoot, 'data', 'local');
+  const configDir = path.join(projectRoot, 'config');
+  const themesDir = path.join(projectRoot, 'themes');
+
+  ensureDirectories([profilesDir, configDir, path.join(configDir, 'overrides'), themesDir]);
 
   return {
     rootDir: projectRoot,
@@ -64,8 +74,8 @@ const buildPaths = (persona: PersonaConfig): AppPaths => {
     distDir,
     profilesDir,
     templatesDir: path.join(projectRoot, 'templates'),
-    themesDir: path.join(projectRoot, 'themes'),
-    configDir: path.join(projectRoot, 'config'),
+    themesDir,
+    configDir,
     defaultResumePath: path.join(profilesDir, persona.defaultRole, persona.defaultLanguage, 'resume.json'),
     exampleResumePath: path.join(projectRoot, 'data', 'examples', 'resume.example.json'),
     linkedinOutputPath: path.join(distDir, 'linkedin.json')
@@ -87,3 +97,6 @@ export const getRuntime = (): RuntimeContext => {
 export const getProjectRoot = (): string => getRuntime().paths.rootDir;
 export const getPersonaConfig = (): PersonaConfig => getRuntime().persona;
 export const getAppPaths = (): AppPaths => getRuntime().paths;
+export const clearRuntimeCache = (): void => {
+  cachedRuntime = null;
+};

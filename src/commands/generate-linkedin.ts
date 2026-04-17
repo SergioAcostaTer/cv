@@ -335,15 +335,6 @@ export const run = async (providedArgs?: string[]): Promise<void> => {
     catalog: getProviderModelCatalog(provider)
   });
 
-  if (estimate.available) {
-    note(
-      `Model: ${providerOptions.model}\nEstimated tokens in/out: ${estimate.totalInputTokens} / ${estimate.totalOutputTokens}\nEstimated cost in/out: ${fmtUsd(estimate.inputCost)} / ${fmtUsd(estimate.outputCost)}\nEstimated total cost: ${fmtUsd(estimate.totalCost)}`,
-      'Estimated Cost'
-    );
-  } else {
-    note(estimate.reason, 'Estimated Cost');
-  }
-
   const generationSpinner = clack.spinner();
   generationSpinner.start(`Generating LinkedIn JSON with ${provider} (${providerOptions.model})`);
 
@@ -360,6 +351,12 @@ export const run = async (providedArgs?: string[]): Promise<void> => {
   success(`Provider: ${providerConfig.label}`);
   success(`Model: ${providerConfig.model}`);
   success(`Output: ${path.relative(process.cwd(), generatedPath)}`);
+
+  const estimatedTotal = estimate.available ? fmtUsd(estimate.totalCost) : '$0.00';
+  clack.note(
+    `Generated ${languages.length || preselectedLanguages.length || 1} languages using ${providerConfig.model}.\nEstimated Cost: ${estimatedTotal}`,
+    'Operation Receipt'
+  );
 };
 
 if (require.main === module) {
