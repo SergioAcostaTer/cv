@@ -1,4 +1,4 @@
-﻿import * as clack from '@clack/prompts';
+import * as clack from '@clack/prompts';
 import clipboardy from 'clipboardy';
 import fs from 'fs';
 import { marked } from 'marked';
