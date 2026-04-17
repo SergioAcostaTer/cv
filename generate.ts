@@ -1,6 +1,6 @@
 import fs from 'fs';
-import path from 'path';
 import Handlebars from 'handlebars';
+import path from 'path';
 import puppeteer from 'puppeteer';
 import { applyOverrides, resolveOutputFilename } from './lib/config-loader';
 

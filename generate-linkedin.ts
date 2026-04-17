@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
+import { prompt } from 'enquirer';
 import fs from 'fs';
 import path from 'path';
-import { prompt } from 'enquirer';
 import { generateLinkedinProfiles, generateStrategyOptions } from './lib/linkedin-generator';
 
 type PromptChoice = { name: string; message: string };
