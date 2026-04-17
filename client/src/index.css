@@ -1,0 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@500;600;700;800&display=swap');
+@import 'tailwindcss';
+
+body {
+  margin: 0;
+  font-family: 'Manrope', 'Segoe UI', sans-serif;
+  color: #020617;
+  background:
+    radial-gradient(circle at 4% -6%, #ffe4d6 0%, transparent 34%),
+    radial-gradient(circle at 88% -10%, #d5f9f0 0%, transparent 36%),
+    radial-gradient(circle at 50% 120%, #dbeafe 0%, transparent 40%),
+    #f1f5f9;
+}

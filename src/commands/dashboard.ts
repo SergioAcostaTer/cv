@@ -1,14 +1,14 @@
 import { intro, outro, spinner } from "@clack/prompts";
 import cors from "cors";
 import express from "express";
-import { promises as fs } from "node:fs";
+import type { FSWatcher } from "node:fs";
+import nodeFs, { promises as fs } from "node:fs";
 import { createServer, type Server } from "node:http";
 import path from "node:path";
 import process from "node:process";
 import open from "open";
 import pc from "picocolors";
 import { getRuntime } from "../core/runtime";
-import { getDashboardHtml } from "../utils/dashboard-html";
 import { runCliEntry } from "../utils/ui";
 
 type DashboardFile = {
@@ -21,6 +21,11 @@ type LibraryResponse = {
   resumes: DashboardFile[];
   linkedinDrafts: DashboardFile[];
   roadmaps: DashboardFile[];
+};
+
+type SseClient = {
+  id: number;
+  res: express.Response;
 };
 
 const isNotFound = (error: unknown): boolean => {
@@ -153,6 +158,9 @@ export const runDashboard = async (): Promise<void> => {
 
   const runtime = getRuntime();
   const app = express();
+  const sseClients = new Map<number, SseClient>();
+  let nextClientId = 1;
+  const watchers: FSWatcher[] = [];
 
   app.use(cors());
 
@@ -217,10 +225,48 @@ export const runDashboard = async (): Promise<void> => {
     }
   });
 
-  app.use("/pdfs", express.static(runtime.paths.distDir));
+  app.get("/api/events", (req, res) => {
+    res.setHeader("Content-Type", "text/event-stream");
+    res.setHeader("Cache-Control", "no-cache");
+    res.setHeader("Connection", "keep-alive");
+    res.flushHeaders();
 
-  app.get("/", (_req, res) => {
-    res.type("text/html; charset=utf-8").send(getDashboardHtml());
+    const id = nextClientId;
+    nextClientId += 1;
+
+    sseClients.set(id, { id, res });
+    res.write(`event: connected\ndata: ${JSON.stringify({ ok: true })}\n\n`);
+
+    req.on("close", () => {
+      sseClients.delete(id);
+    });
+  });
+
+  const emitLibraryUpdated = (): void => {
+    for (const client of sseClients.values()) {
+      client.res.write(`event: library-updated\ndata: ${JSON.stringify({ ts: Date.now() })}\n\n`);
+    }
+  };
+
+  const watchPath = (dirPath: string): void => {
+    if (!nodeFs.existsSync(dirPath)) {
+      return;
+    }
+
+    const watcher = nodeFs.watch(dirPath, { recursive: true }, () => {
+      emitLibraryUpdated();
+    });
+
+    watchers.push(watcher);
+  };
+
+  watchPath(runtime.paths.distDir);
+  watchPath(runtime.paths.historyDir);
+
+  app.use("/pdfs", express.static(runtime.paths.distDir));
+  app.use(express.static(path.join(runtime.paths.rootDir, "dist-client")));
+  app.get(/.*/, (_req, res) => {
+    res.sendFile(path.join(runtime.paths.rootDir, "dist-client", "index.html"));
   });
 
   const serverSpinner = spinner();
@@ -233,6 +279,14 @@ export const runDashboard = async (): Promise<void> => {
   await open(url);
 
   const closeServer = (): void => {
+    for (const watcher of watchers) {
+      watcher.close();
+    }
+
+    for (const client of sseClients.values()) {
+      client.res.end();
+    }
+
     server.close(() => {
       outro(`Dashboard server stopped (${pc.cyan(url)}).`);
       process.exit(0);

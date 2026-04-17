@@ -10,7 +10,6 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['text', 'html'],
-      all: true,
       include: ['src/core/**/*.ts', 'src/utils/**/*.ts'],
       exclude: ['src/utils/linkedin-generator.ts']
     }

@@ -51,13 +51,13 @@ describe('config-loader', () => {
     const originalSplit = String.prototype.split;
     const splitSpy = vi
       .spyOn(String.prototype, 'split')
-      .mockImplementation(function (this: string, separator: string | RegExp, limit?: number): string[] {
+      .mockImplementation(function (this: string, separator: unknown, limit?: number): string[] {
         if (this === 'SENTINEL' && separator === 'T') {
           return [];
         }
 
-        return originalSplit.call(this, separator as never, limit);
-      });
+        return originalSplit.call(this, separator as Parameters<typeof originalSplit>[0], limit);
+      } as unknown as (...args: Parameters<typeof originalSplit>) => ReturnType<typeof originalSplit>);
 
     const filename = resolveOutputFilename('en', 'backend');
 
