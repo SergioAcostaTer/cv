@@ -1,4 +1,5 @@
-import { LibraryBig } from 'lucide-react';
+import { AtSign, FileText, LibraryBig, Map } from 'lucide-react';
+import type { ReactElement } from 'react';
 import { categoryLabels } from '../features/library/constants';
 import { formatDate } from '../features/library/format';
 import type { Category, LibraryPayload } from '../types';
@@ -11,21 +12,30 @@ type LibrarySidebarProps = {
 };
 
 export const LibrarySidebar = (props: LibrarySidebarProps) => {
+  const categoryIcon: Record<Category, ReactElement> = {
+    resumes: <FileText size={14} />,
+    linkedinDrafts: <AtSign size={14} />,
+    roadmaps: <Map size={14} />
+  };
+
   return (
-    <aside className="min-h-0 overflow-hidden rounded-2xl border border-white/70 bg-white/80 shadow-[0_22px_56px_rgba(15,23,42,0.12)] backdrop-blur-xl">
-      <header className="border-b border-slate-200/90 p-4">
+    <aside className="min-h-0 overflow-hidden border-b border-slate-200 bg-white lg:border-r lg:border-b-0">
+      <header className="border-b border-slate-200 px-4 py-3">
         <h1 className="m-0 flex items-center gap-2 text-base font-extrabold tracking-tight">
           <LibraryBig size={18} /> CV Studio Library
         </h1>
-        <p className="mt-1.5 text-sm text-slate-600">Browse generated resumes, LinkedIn drafts and roadmaps.</p>
+        <p className="mt-1.5 text-sm text-slate-600">Browse resumes, LinkedIn assets and roadmap outputs.</p>
       </header>
 
-      <div className="grid max-h-full gap-3 overflow-auto p-3">
+      <div className="grid h-[calc(100%-84px)] gap-3 overflow-auto p-3">
         {(['resumes', 'linkedinDrafts', 'roadmaps'] as Category[]).map((category) => (
-          <Card className="overflow-hidden bg-white/70" key={category}>
+          <Card className="overflow-hidden border-slate-200 bg-white" key={category}>
             <CardHeader className="px-3 py-2">
-              <CardTitle className="text-sm">{categoryLabels[category]}</CardTitle>
-              <Badge>{props.library[category].length}</Badge>
+              <CardTitle className="flex items-center gap-1.5 text-sm">
+                {categoryIcon[category]}
+                {categoryLabels[category]}
+              </CardTitle>
+              <Badge variant="muted">{props.library[category].length}</Badge>
             </CardHeader>
             <CardContent className="grid gap-2 p-2">
               {props.library[category].map((item, index) => {
@@ -34,10 +44,10 @@ export const LibrarySidebar = (props: LibrarySidebarProps) => {
                   <Button
                     key={key}
                     type="button"
-                    variant="secondary"
-                    className={`h-auto w-full justify-start rounded-lg px-3 py-2 text-left ${
+                    variant="ghost"
+                    className={`h-auto w-full justify-start rounded-lg border px-3 py-2 text-left ${
                       props.selectedKey === key
-                        ? 'border-teal-300 bg-teal-50 text-slate-900'
+                        ? 'border-slate-900 bg-slate-100 text-slate-900'
                         : 'border-slate-200 bg-white text-slate-800 hover:-translate-y-px hover:border-slate-300'
                     }`}
                     onClick={() => props.onSelect(category, index)}

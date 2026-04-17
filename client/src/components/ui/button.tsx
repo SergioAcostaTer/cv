@@ -9,12 +9,15 @@ const buttonVariants = cva(
       variant: {
         default: 'bg-slate-900 text-white hover:bg-slate-800',
         secondary: 'border border-slate-300 bg-white text-slate-800 hover:bg-slate-100',
-        brand: 'bg-gradient-to-r from-teal-700 to-teal-500 text-white hover:from-teal-600 hover:to-teal-400'
+        brand: 'border border-slate-900 bg-slate-900 text-white hover:bg-slate-800',
+        ghost: 'border border-transparent bg-transparent text-slate-700 hover:border-slate-200 hover:bg-slate-100',
+        outline: 'border border-slate-300 bg-transparent text-slate-800 hover:bg-slate-100'
       },
       size: {
         default: 'h-9 px-3 py-2',
         sm: 'h-8 px-2.5',
-        lg: 'h-10 px-4'
+        lg: 'h-10 px-4',
+        icon: 'h-8 w-8 rounded-full p-0'
       }
     },
     defaultVariants: {

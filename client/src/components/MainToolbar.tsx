@@ -11,12 +11,12 @@ type MainToolbarProps = {
 export const MainToolbar = (props: MainToolbarProps) => {
   return (
     <header className="flex items-center justify-between gap-3 border-b border-slate-200 px-4 py-3">
-      <p className="m-0 text-sm font-bold">{props.title}</p>
+      <p className="m-0 max-w-[55%] truncate text-sm font-bold">{props.title}</p>
       <div className="flex items-center gap-2">
         {props.showCopyAll ? (
           <Button
             type="button"
-            variant="brand"
+            variant="outline"
             onClick={props.onCopyAll}
           >
             <Copy size={14} /> Copy All

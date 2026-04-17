@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { ArtifactView } from './components/ArtifactView';
 import { LibrarySidebar } from './components/LibrarySidebar';
+import { MainArea } from './components/MainArea';
 import { MainToolbar } from './components/MainToolbar';
 import { StatusToast } from './components/StatusToast';
 import { useArtifactContent } from './hooks/useArtifactContent';
@@ -13,7 +13,7 @@ export const App = () => {
   const [selectedArtifact, setSelectedArtifact] = useState<Selection | null>(null);
   const [status, setStatus] = useState('');
 
-  const { rawMarkdown, sections, clearContent } = useArtifactContent(selectedArtifact);
+  const { rawContent, sections, parsedJson, kind, clearContent } = useArtifactContent(selectedArtifact);
 
   const selectedKey = selectedArtifact ? `${selectedArtifact.category}:${selectedArtifact.item.path}` : null;
 
@@ -78,25 +78,28 @@ export const App = () => {
 
   return (
     <>
-      <div className="grid h-screen grid-cols-1 grid-rows-[44vh_1fr] gap-4 p-4 lg:grid-cols-[330px_1fr] lg:grid-rows-1">
+      <div className="grid h-full grid-cols-1 grid-rows-[38dvh_1fr] lg:grid-cols-[340px_1fr] lg:grid-rows-1">
         <LibrarySidebar library={library} selectedKey={selectedKey} onSelect={onSelect} />
 
-        <main className="min-h-0 overflow-hidden rounded-2xl border border-white/70 bg-white/80 shadow-[0_22px_56px_rgba(15,23,42,0.12)] backdrop-blur-xl">
+        <main className="min-h-0 overflow-hidden border-t border-slate-200 bg-white lg:border-t-0 lg:border-l">
           <MainToolbar
             title={title}
-            showCopyAll={Boolean(rawMarkdown)}
+            showCopyAll={kind === 'markdown' && Boolean(rawContent)}
             onCopyAll={() => {
-              void copyText(rawMarkdown, 'Full document');
+              void copyText(rawContent, 'Full document');
             }}
             onRefresh={() => {
               void refreshWithStatus();
             }}
           />
 
-          <section className="min-h-0 overflow-auto p-5">
-            <ArtifactView
+          <section className="h-[calc(100%-57px)] overflow-auto p-4 lg:p-5">
+            <MainArea
               selectedArtifact={selectedArtifact}
               sections={sections}
+              parsedJson={parsedJson}
+              kind={kind}
+              rawContent={rawContent}
               onCopySection={(text, label) => {
                 void copyText(text, label);
               }}

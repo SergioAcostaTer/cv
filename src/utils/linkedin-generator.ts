@@ -1,16 +1,16 @@
 import fs from 'fs';
 import path from 'path';
 import { z } from 'zod';
-import {
-  createAIClient,
-  getModelsForProvider,
-  resolveProviderConfig,
-  type ClientConfig,
-  type ModelCatalogItem,
-  type ProviderConfig,
-  type ProviderId
-} from './api';
 import { getAppPaths } from '../core/runtime';
+import {
+    createAIClient,
+    getModelsForProvider,
+    resolveProviderConfig,
+    type ClientConfig,
+    type ModelCatalogItem,
+    type ProviderConfig,
+    type ProviderId
+} from './api';
 
 const optionSchema = z.object({
   label: z.string(),
@@ -190,6 +190,102 @@ type GenerateProfilesInput = {
   outputPath?: string;
 };
 
+const TRENDING_SKILL_PRIORITY: Record<string, number> = {
+  postgresql: 100,
+  postgres: 100,
+  kubernetes: 98,
+  aws: 97,
+  azure: 96,
+  gcp: 95,
+  terraform: 94,
+  docker: 93,
+  python: 92,
+  typescript: 91,
+  node: 90,
+  kotlin: 89,
+  java: 88,
+  spring: 87,
+  kafka: 86,
+  redis: 85,
+  mongodb: 84,
+  db2: 40
+};
+
+const normalizeSkill = (skill: string): string => skill.trim().toLowerCase().replace(/\s+/g, ' ');
+
+const skillPriorityScore = (skill: string): number => {
+  const normalized = normalizeSkill(skill);
+  if (normalized in TRENDING_SKILL_PRIORITY) {
+    return TRENDING_SKILL_PRIORITY[normalized] ?? 50;
+  }
+
+  if (normalized.includes('postgres')) {
+    return TRENDING_SKILL_PRIORITY.postgresql;
+  }
+
+  if (normalized.includes('db2')) {
+    return TRENDING_SKILL_PRIORITY.db2;
+  }
+
+  return 60;
+};
+
+const prioritizeTrendingSkills = (skills: string[]): string[] => {
+  const withIndex = skills
+    .map((skill, index) => ({
+      skill,
+      index,
+      score: skillPriorityScore(skill)
+    }))
+    .filter((entry) => entry.skill.trim().length > 0);
+
+  withIndex.sort((left, right) => {
+    if (right.score !== left.score) {
+      return right.score - left.score;
+    }
+
+    return left.index - right.index;
+  });
+
+  const seen = new Set<string>();
+  const deduped: string[] = [];
+  for (const entry of withIndex) {
+    const key = normalizeSkill(entry.skill);
+    if (seen.has(key)) {
+      continue;
+    }
+
+    seen.add(key);
+    deduped.push(entry.skill);
+  }
+
+  return deduped;
+};
+
+const prioritizeProfileSkills = (profile: LinkedinProfile): LinkedinProfile => {
+  const top = prioritizeTrendingSkills(profile.skills.top);
+  const keywords = prioritizeTrendingSkills(profile.skills.keywords);
+  const byCategory = profile.skills.byCategory.map((group) => ({
+    ...group,
+    items: prioritizeTrendingSkills(group.items)
+  }));
+
+  const normalizedByCategory = byCategory.map((group) => ({
+    ...group,
+    items: group.items.filter((item) => item.trim().length > 0)
+  }));
+
+  return {
+    ...profile,
+    skills: {
+      ...profile.skills,
+      top,
+      keywords,
+      byCategory: normalizedByCategory
+    }
+  };
+};
+
 const readJsonFile = (inputPath: string): { absolutePath: string; data: unknown } => {
   const absolutePath = path.resolve(inputPath);
   const content = fs.readFileSync(absolutePath, 'utf8');
@@ -328,6 +424,7 @@ const buildUserPrompt = (input: { sourceData: unknown; answers: GeneratorAnswers
         'Each experience.techContext must include 5 to 12 concrete technologies/tools actually used in that role.',
         'Experience achievement bullets must be under 180 characters each.',
         'Top skills should be a maximum of 25 entries.',
+        'When multiple valid technologies exist, place the most market-trending skill first in skills.top and skills.keywords (example: PostgreSQL before DB2) without deleting true enterprise experience.',
         'Keywords should be recruiter/ATS-friendly terms.',
         'Include as many fields as possible from schema, but do not invent missing factual data.',
         'Prefer null or empty arrays over fabricated values.'
@@ -492,12 +589,14 @@ export const generateLinkedinProfiles = async (
 
   const profiles: Record<string, LinkedinProfile> = {};
   for (const language of normalizedLanguages) {
-    profiles[language] = await requestCompletion({
+    const profile = await requestCompletion({
       providerConfig,
       language,
       sourceData,
       answers: input.answers
     });
+
+    profiles[language] = prioritizeProfileSkills(profile);
   }
 
   const parsedResult = linkedinResultSchema.parse({
