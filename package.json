@@ -9,6 +9,7 @@
         "build": "tsx src/commands/generate.ts",
         "chat": "tsx src/commands/chat-cv.ts",
         "linkedin": "tsx src/commands/generate-linkedin.ts",
+        "roadmap": "tsx src/commands/roadmap.ts",
         "typecheck": "tsc --noEmit",
         "test": "vitest run",
         "test:watch": "vitest",

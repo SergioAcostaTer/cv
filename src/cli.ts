@@ -5,10 +5,11 @@ import pc from 'picocolors';
 import { run as runChat } from './commands/chat-cv';
 import { run as runBuild } from './commands/generate';
 import { run as runLinkedin } from './commands/generate-linkedin';
+import { run as runRoadmap } from './commands/roadmap';
 import { loadEnv } from './utils/env-loader';
 import { CliAbort, clearScreen, colors, outro, runCliEntry, secondary, unwrapCancel } from './utils/ui';
 
-type CommandId = 'linkedin' | 'chat' | 'build' | 'exit';
+type CommandId = 'linkedin' | 'chat' | 'build' | 'roadmap' | 'exit';
 
 export const main = async (): Promise<void> => {
   loadEnv();
@@ -26,6 +27,11 @@ export const main = async (): Promise<void> => {
         { value: 'linkedin', label: 'LinkedIn Generator', hint: secondary('AI-tailored LinkedIn JSON') },
         { value: 'chat', label: 'Chat with CV', hint: secondary('Career advisor with live streaming') },
         { value: 'build', label: 'Build Resumes', hint: secondary('Render PDFs from Handlebars + Puppeteer') },
+        {
+          value: 'roadmap',
+          label: 'Career Roadmap',
+          hint: secondary('AI-generated career paths & salary optimization')
+        },
         { value: 'exit', label: 'Exit', hint: secondary('Close the CLI') }
       ]
     });
@@ -47,6 +53,12 @@ export const main = async (): Promise<void> => {
           break;
         case 'build':
           await runBuild();
+          clearScreen();
+          clack.intro(brandIntro);
+          break;
+        case 'roadmap':
+          clearScreen();
+          await runRoadmap();
           clearScreen();
           clack.intro(brandIntro);
           break;
